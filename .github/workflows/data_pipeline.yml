@@ -1,0 +1,97 @@
+name: BCB Data Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "Data inicial opcional (YYYY-MM-DD)"
+        required: false
+        type: string
+      end_date:
+        description: "Data final opcional (YYYY-MM-DD)"
+        required: false
+        type: string
+      lookback_days:
+        description: "Janela de reprocessamento incremental"
+        required: false
+        default: "7"
+        type: string
+  schedule:
+    - cron: "30 12 * * 1-5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bcb-data-pipeline-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Install Python and dependencies
+        run: |
+          uv python install 3.14
+          uv sync --dev
+
+      - name: Lint and format check
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Unit and integration tests
+        run: uv run pytest
+
+      - name: Run incremental pipeline
+        env:
+          START_DATE: ${{ inputs.start_date }}
+          END_DATE: ${{ inputs.end_date }}
+          LOOKBACK_DAYS: ${{ inputs.lookback_days }}
+        run: |
+          args=(--lookback-days "${LOOKBACK_DAYS:-7}")
+          if [[ -n "$START_DATE" ]]; then args+=(--start-date "$START_DATE"); fi
+          if [[ -n "$END_DATE" ]]; then args+=(--end-date "$END_DATE"); fi
+          uv run python -m src.pipelines.run "${args[@]}"
+
+      - name: Validate data quality
+        env:
+          END_DATE: ${{ inputs.end_date }}
+        run: |
+          args=(--database data/gold/bcb_macro.duckdb --max-staleness-days 10)
+          if [[ -n "$END_DATE" ]]; then args+=(--as-of-date "$END_DATE"); fi
+          uv run python -m src.pipelines.quality "${args[@]}"
+
+      - name: Upload pipeline logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs-${{ github.run_id }}
+          path: logs/*.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Commit new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Nenhum dado novo para versionar."
+            exit 0
+          fi
+          git commit -m "data: atualiza indicadores do BCB"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

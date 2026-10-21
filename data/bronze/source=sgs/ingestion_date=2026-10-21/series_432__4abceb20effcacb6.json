@@ -1,0 +1,45 @@
+{
+  "ingestion_date": "2026-10-21",
+  "payload_sha256": "4abceb20effcacb66417b914f8de8a53463a5a520f636f24edd5a3a32515a470",
+  "record_count": 8,
+  "records": [
+    {
+      "data": "14/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "15/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "16/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "17/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "18/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "19/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "20/10/2026",
+      "valor": "13.75"
+    },
+    {
+      "data": "21/10/2026",
+      "valor": "13.75"
+    }
+  ],
+  "request": {
+    "codigo_serie": 432,
+    "data_final": "2026-10-21",
+    "data_inicial": "2026-10-14"
+  },
+  "source": "sgs"
+}

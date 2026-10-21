@@ -1,0 +1,10 @@
+.venv/
+.agents/
+.vscode/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+logs/
+skills-lock.json
