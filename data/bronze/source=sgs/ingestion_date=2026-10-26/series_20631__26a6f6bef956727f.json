@@ -1,0 +1,21 @@
+{
+  "ingestion_date": "2026-10-26",
+  "payload_sha256": "26a6f6bef956727f5db93588aca707d25bbc4da3c4e9cdd3bfe42615656a6b67",
+  "record_count": 2,
+  "records": [
+    {
+      "data": "01/07/2026",
+      "valor": "730323"
+    },
+    {
+      "data": "01/08/2026",
+      "valor": "729247"
+    }
+  ],
+  "request": {
+    "codigo_serie": 20631,
+    "data_final": "2026-10-26",
+    "data_inicial": "2026-07-25"
+  },
+  "source": "sgs"
+}
