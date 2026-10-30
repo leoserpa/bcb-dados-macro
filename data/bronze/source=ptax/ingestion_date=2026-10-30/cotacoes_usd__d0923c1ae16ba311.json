@@ -1,0 +1,293 @@
+{
+  "ingestion_date": "2026-10-30",
+  "payload_sha256": "d0923c1ae16ba311e090e8fa51c53d7257c99ce4916669ab0f3a621f1b4332ab",
+  "record_count": 35,
+  "records": [
+    {
+      "cotacaoCompra": 5.0385,
+      "cotacaoVenda": 5.0391,
+      "dataHoraCotacao": "2026-10-22 10:06:13.26202",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.0359,
+      "cotacaoVenda": 5.0365,
+      "dataHoraCotacao": "2026-10-22 11:04:09.607366",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0408,
+      "cotacaoVenda": 5.0414,
+      "dataHoraCotacao": "2026-10-22 12:04:11.748142",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0357,
+      "cotacaoVenda": 5.0363,
+      "dataHoraCotacao": "2026-10-22 13:12:09.201816",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0377,
+      "cotacaoVenda": 5.0383,
+      "dataHoraCotacao": "2026-10-22 13:12:09.300403",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.0378,
+      "cotacaoVenda": 5.0384,
+      "dataHoraCotacao": "2026-10-23 10:06:09.499347",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.0319,
+      "cotacaoVenda": 5.0325,
+      "dataHoraCotacao": "2026-10-23 11:06:09.403745",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0413,
+      "cotacaoVenda": 5.0419,
+      "dataHoraCotacao": "2026-10-23 12:11:10.204193",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0374,
+      "cotacaoVenda": 5.038,
+      "dataHoraCotacao": "2026-10-23 13:07:14.557792",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.0371,
+      "cotacaoVenda": 5.0377,
+      "dataHoraCotacao": "2026-10-23 13:07:14.754567",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.6036,
+      "cotacaoVenda": 5.6052,
+      "dataHoraCotacao": "2026-10-26 10:11:39.211173",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.4962,
+      "cotacaoVenda": 5.4968,
+      "dataHoraCotacao": "2026-10-26 11:09:12.593517",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4497,
+      "cotacaoVenda": 5.4503,
+      "dataHoraCotacao": "2026-10-26 12:08:13.867609",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4498,
+      "cotacaoVenda": 5.4504,
+      "dataHoraCotacao": "2026-10-26 13:09:51.019788",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4998,
+      "cotacaoVenda": 5.5007,
+      "dataHoraCotacao": "2026-10-26 13:09:51.106105",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.339,
+      "cotacaoVenda": 5.3396,
+      "dataHoraCotacao": "2026-10-27 10:02:19.872077",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.3174,
+      "cotacaoVenda": 5.318,
+      "dataHoraCotacao": "2026-10-27 11:02:17.880132",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3401,
+      "cotacaoVenda": 5.3407,
+      "dataHoraCotacao": "2026-10-27 12:04:11.87351",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3395,
+      "cotacaoVenda": 5.3401,
+      "dataHoraCotacao": "2026-10-27 13:05:26.513631",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.334,
+      "cotacaoVenda": 5.3346,
+      "dataHoraCotacao": "2026-10-27 13:05:26.521898",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.3233,
+      "cotacaoVenda": 5.3239,
+      "dataHoraCotacao": "2026-10-28 10:11:10.510783",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.3131,
+      "cotacaoVenda": 5.3137,
+      "dataHoraCotacao": "2026-10-28 11:07:12.0054",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3621,
+      "cotacaoVenda": 5.3627,
+      "dataHoraCotacao": "2026-10-28 12:05:10.518076",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3672,
+      "cotacaoVenda": 5.3678,
+      "dataHoraCotacao": "2026-10-28 13:05:31.406702",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3414,
+      "cotacaoVenda": 5.342,
+      "dataHoraCotacao": "2026-10-28 13:05:31.600448",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.3484,
+      "cotacaoVenda": 5.349,
+      "dataHoraCotacao": "2026-10-29 10:10:54.921",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.3662,
+      "cotacaoVenda": 5.3668,
+      "dataHoraCotacao": "2026-10-29 11:03:53.702626",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3856,
+      "cotacaoVenda": 5.3862,
+      "dataHoraCotacao": "2026-10-29 12:05:12.7406",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3951,
+      "cotacaoVenda": 5.3957,
+      "dataHoraCotacao": "2026-10-29 13:11:53.548333",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.3738,
+      "cotacaoVenda": 5.3744,
+      "dataHoraCotacao": "2026-10-29 13:11:53.555689",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    },
+    {
+      "cotacaoCompra": 5.4286,
+      "cotacaoVenda": 5.4292,
+      "dataHoraCotacao": "2026-10-30 10:06:14.559127",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Abertura"
+    },
+    {
+      "cotacaoCompra": 5.4191,
+      "cotacaoVenda": 5.4197,
+      "dataHoraCotacao": "2026-10-30 11:03:11.760147",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4073,
+      "cotacaoVenda": 5.4079,
+      "dataHoraCotacao": "2026-10-30 12:11:11.649708",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4272,
+      "cotacaoVenda": 5.4278,
+      "dataHoraCotacao": "2026-10-30 13:04:18.600235",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Intermediário"
+    },
+    {
+      "cotacaoCompra": 5.4206,
+      "cotacaoVenda": 5.4212,
+      "dataHoraCotacao": "2026-10-30 13:04:18.706316",
+      "paridadeCompra": 1.0,
+      "paridadeVenda": 1.0,
+      "tipoBoletim": "Fechamento"
+    }
+  ],
+  "request": {
+    "data_final": "2026-10-30",
+    "data_inicial": "2026-10-22",
+    "moeda": "USD"
+  },
+  "source": "ptax"
+}
