@@ -1,0 +1,41 @@
+{
+  "ingestion_date": "2026-11-09",
+  "payload_sha256": "bcc408e1f8cf97f5035bba6e46942eb3b15f29f60dd0d86488fae8b1957c292a",
+  "record_count": 7,
+  "records": [
+    {
+      "data": "29/10/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "30/10/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "03/11/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "04/11/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "05/11/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "06/11/2026",
+      "valor": "0.050788"
+    },
+    {
+      "data": "09/11/2026",
+      "valor": "0.050788"
+    }
+  ],
+  "request": {
+    "codigo_serie": 11,
+    "data_final": "2026-11-09",
+    "data_inicial": "2026-10-29"
+  },
+  "source": "sgs"
+}
