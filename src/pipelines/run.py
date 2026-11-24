@@ -19,9 +19,11 @@ from src.extractors.sgs import SGS_SERIES, ExtractionError, SGSExtractor
 from src.pipelines.gold import build_gold
 from src.transformers.medallion import (
     FOCUS_SCHEMA,
+    FOCUS_TOP5_SCHEMA,
     PTAX_SCHEMA,
     SGS_SCHEMA,
     transform_focus,
+    transform_focus_top5,
     transform_ptax,
     transform_sgs,
     upsert_parquet,
@@ -56,6 +58,7 @@ def run_pipeline(config: PipelineConfig) -> dict[str, int | bool | str | list[st
     gold_root = config.data_root / "gold"
     sgs_path = silver_root / "sgs" / "sgs.parquet"
     focus_path = silver_root / "focus" / "focus.parquet"
+    focus_top5_path = silver_root / "focus_top5" / "focus_top5.parquet"
     ptax_path = silver_root / "ptax" / "ptax.parquet"
 
     initial_date = date.fromisoformat(
@@ -164,38 +167,83 @@ def run_pipeline(config: PipelineConfig) -> dict[str, int | bool | str | list[st
             sort_by=["indicador", "data_referencia", "data"],
         )
 
-        ptax_start = config.start_date or _incremental_start(
-            ptax_path,
-            date_column="data_referencia",
+        top5_start = config.start_date or _incremental_start(
+            focus_top5_path,
+            date_column="data",
             initial_date=initial_date,
             lookback_days=config.lookback_days,
-            filter_expression=pl.col("moeda") == config.currency.upper(),
         )
-        _validate_interval(ptax_start, config.end_date)
-        LOGGER.info("Extraindo PTAX %s de %s a %s", config.currency, ptax_start, config.end_date)
+        _validate_interval(top5_start, config.end_date)
+        LOGGER.info("Extraindo Focus Top 5 de %s a %s", top5_start, config.end_date)
         try:
-            raw_ptax = olinda_extractor.fetch_ptax(ptax_start, config.end_date, config.currency)
+            raw_top5 = olinda_extractor.fetch_focus_top5(top5_start, config.end_date)
             write_bronze_json(
                 bronze_root,
-                source="ptax",
+                source="focus_top5",
                 ingestion_date=ingestion_date,
-                file_name=f"cotacoes_{config.currency.lower()}.json",
-                records=raw_ptax,
+                file_name="expectativas_top5_anuais.json",
+                records=raw_top5,
                 request_metadata={
-                    "moeda": config.currency.upper(),
-                    "data_inicial": ptax_start.isoformat(),
+                    "data_inicial": top5_start.isoformat(),
                     "data_final": config.end_date.isoformat(),
                 },
             )
-            incoming_ptax = transform_ptax(
-                raw_ptax,
-                currency=config.currency,
-                ingested_at=ingested_at,
-            )
+            incoming_top5 = transform_focus_top5(raw_top5, ingested_at=ingested_at)
         except (requests.RequestException, ExtractionError) as error:
-            failed_sources.append("ptax")
-            LOGGER.warning("PTAX indisponível; preservando dados anteriores: %s", error)
-            incoming_ptax = pl.DataFrame(schema=PTAX_SCHEMA)
+            failed_sources.append("focus_top5")
+            LOGGER.warning("Focus Top 5 indisponível; preservando dados anteriores: %s", error)
+            incoming_top5 = pl.DataFrame(schema=FOCUS_TOP5_SCHEMA)
+        final_top5, top5_changed = upsert_parquet(
+            incoming_top5,
+            focus_top5_path,
+            primary_key=["data", "indicador", "data_referencia", "tipo_calculo"],
+            sort_by=["indicador", "data_referencia", "tipo_calculo", "data"],
+        )
+
+        currencies = [c.strip().upper() for c in config.currency.split(",") if c.strip()]
+        ptax_frames: list[pl.DataFrame] = []
+        for currency in currencies:
+            ptax_start = config.start_date or _incremental_start(
+                ptax_path,
+                date_column="data_referencia",
+                initial_date=initial_date,
+                lookback_days=config.lookback_days,
+                filter_expression=pl.col("moeda") == currency,
+            )
+            _validate_interval(ptax_start, config.end_date)
+            LOGGER.info("Extraindo PTAX %s de %s a %s", currency, ptax_start, config.end_date)
+            try:
+                raw_ptax = olinda_extractor.fetch_ptax(ptax_start, config.end_date, currency)
+                write_bronze_json(
+                    bronze_root,
+                    source="ptax",
+                    ingestion_date=ingestion_date,
+                    file_name=f"cotacoes_{currency.lower()}.json",
+                    records=raw_ptax,
+                    request_metadata={
+                        "moeda": currency,
+                        "data_inicial": ptax_start.isoformat(),
+                        "data_final": config.end_date.isoformat(),
+                    },
+                )
+                ptax_frames.append(
+                    transform_ptax(
+                        raw_ptax,
+                        currency=currency,
+                        ingested_at=ingested_at,
+                    )
+                )
+            except (requests.RequestException, ExtractionError) as error:
+                failed_sources.append(f"ptax:{currency}")
+                LOGGER.warning(
+                    "PTAX %s indisponível; preservando dados anteriores: %s", currency, error
+                )
+
+        incoming_ptax = (
+            pl.concat(ptax_frames, how="vertical_relaxed")
+            if ptax_frames
+            else pl.DataFrame(schema=PTAX_SCHEMA)
+        )
         final_ptax, ptax_changed = upsert_parquet(
             incoming_ptax,
             ptax_path,
@@ -206,12 +254,13 @@ def run_pipeline(config: PipelineConfig) -> dict[str, int | bool | str | list[st
         session.close()
 
     gold_missing = not (gold_root / "bcb_macro.duckdb").exists()
-    silver_changed = sgs_changed or focus_changed or ptax_changed
+    silver_changed = sgs_changed or focus_changed or top5_changed or ptax_changed
     if silver_changed or gold_missing:
         LOGGER.info("Reconstruindo camada Gold")
         build_gold(
             sgs_path=sgs_path,
             focus_path=focus_path,
+            focus_top5_path=focus_top5_path,
             ptax_path=ptax_path,
             gold_root=gold_root,
         )
@@ -222,6 +271,7 @@ def run_pipeline(config: PipelineConfig) -> dict[str, int | bool | str | list[st
         "end_date": config.end_date.isoformat(),
         "sgs_rows": final_sgs.height,
         "focus_rows": final_focus.height,
+        "focus_top5_rows": final_top5.height,
         "ptax_rows": final_ptax.height,
         "silver_changed": silver_changed,
         "gold_rebuilt": silver_changed or gold_missing,
@@ -282,7 +332,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Data final YYYY-MM-DD",
     )
     parser.add_argument("--lookback-days", type=int, default=7)
-    parser.add_argument("--currency", default="USD")
+    parser.add_argument("--currency", default="USD,EUR")
     parser.add_argument("--data-root", type=Path, default=PROJECT_ROOT / "data")
     parser.add_argument("--log-dir", type=Path, default=PROJECT_ROOT / "logs")
     return parser

@@ -5,14 +5,19 @@ title: Câmbio (PTAX) & Setor Externo
 <div class="terminal-header">
   <div>
     <h1 class="terminal-title">Câmbio (PTAX) & Setor Externo</h1>
-    <p class="terminal-subtitle">ptax_daily (4.241 dias, priorizando Fechamento) + Reservas (13982) + Fluxos (13967, 13970)</p>
+    <p class="terminal-subtitle">ptax_daily (USD/EUR, priorizando Fechamento) · Reservas (13982) · Fluxos (13967, 13970)</p>
   </div>
   <div class="status-pills">
-    <span class="status-pill">Moeda: USD · Boletim Fechamento</span>
+    <span class="status-pill">Moeda: {inputs.moeda_ptax.value} · Boletim Fechamento</span>
   </div>
 </div>
 
 <div class="filter-bar">
+  <Dropdown name=moeda_ptax title="Moeda PTAX" defaultValue="USD">
+    <DropdownOption value="USD" valueLabel="USD — Dólar Americano" />
+    <DropdownOption value="EUR" valueLabel="EUR — Euro" />
+  </Dropdown>
+
   <Dropdown name=horizonte_cambio title="Horizonte Temporal" defaultValue="1825">
     <DropdownOption value="365" valueLabel="Último ano" />
     <DropdownOption value="1825" valueLabel="Últimos 5 anos" />
@@ -29,7 +34,7 @@ SELECT
     cotacao_venda - cotacao_compra AS spread,
     tipo_boletim
 FROM bcb_macro.ptax_daily
-WHERE moeda = 'USD'
+WHERE moeda = '${inputs.moeda_ptax.value}'
 ORDER BY data_referencia DESC
 LIMIT 1
 ```
@@ -49,7 +54,7 @@ WHERE fonte = 'SGS'
 <div class="kpi-grid-6">
   <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title="Cotação Compra" prefix="R$ " decimals={4} subtitle="Boletim Fechamento" icon="dollar" />
   <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title="Cotação Venda" prefix="R$ " decimals={4} subtitle="Boletim Fechamento" icon="dollar" />
-  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Paridade USD 1,00" icon="flow" />
+  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Diferença venda - compra" icon="flow" />
   <KPITerminalCard data={externo_sgs} value="reservas_usd_mi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="$ " decimals={0} subtitle="US$ milhões · Diária" icon="globe" />
   <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="$ " decimals={2} signed={true} subtitle="US$ milhões · Diária" icon="flow" />
   <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="$ " decimals={2} signed={true} subtitle="US$ milhões · Diária" icon="flow" />
@@ -59,7 +64,7 @@ WHERE fonte = 'SGS'
 WITH limite AS (
     SELECT MAX(data_referencia) AS max_data
     FROM bcb_macro.ptax_daily
-    WHERE moeda = 'USD'
+    WHERE moeda = '${inputs.moeda_ptax.value}'
 )
 SELECT
     p.data_referencia AS data,
@@ -67,14 +72,14 @@ SELECT
     p.cotacao_compra
 FROM bcb_macro.ptax_daily p
 CROSS JOIN limite l
-WHERE p.moeda = 'USD'
+WHERE p.moeda = '${inputs.moeda_ptax.value}'
   AND date_diff('day', p.data_referencia, l.max_data) <= CAST('${inputs.horizonte_cambio.value}' AS INTEGER)
 ORDER BY p.data_referencia
 ```
 
 <div class="terminal-panel" style="margin-bottom: 18px;">
-  <div class="terminal-panel-title">Evolução histórica da PTAX de fechamento — USD/BRL</div>
-  <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = 'USD' · priorizando Fechamento</div>
+  <div class="terminal-panel-title">Evolução histórica da PTAX de fechamento — {inputs.moeda_ptax.value}/BRL</div>
+  <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = '{inputs.moeda_ptax.value}' · priorizando Fechamento</div>
   <LineChart data={ptax_historico} x=data y=cotacao_venda yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=220 />
 </div>
 
@@ -126,13 +131,13 @@ SELECT
     cotacao_venda,
     cotacao_venda - cotacao_compra AS spread
 FROM bcb_macro.ptax_daily
-WHERE moeda = 'USD'
+WHERE moeda = '${inputs.moeda_ptax.value}'
 ORDER BY data_referencia DESC
 LIMIT 30
 ```
 
 <div class="terminal-panel">
-  <div class="terminal-panel-title">Últimos Boletins PTAX Diários (USD)</div>
+  <div class="terminal-panel-title">Últimos Boletins PTAX Diários ({inputs.moeda_ptax.value})</div>
   <div class="terminal-panel-sub">ptax_daily ORDER BY data_referencia DESC</div>
   <DataTable data={ptax_tabela} rows=10>
     <Column id=data title="Data" />

@@ -7,6 +7,8 @@ from pathlib import Path
 import duckdb
 import polars as pl
 
+from src.transformers.medallion import FOCUS_TOP5_SCHEMA
+
 
 def build_gold(
     *,
@@ -14,6 +16,7 @@ def build_gold(
     focus_path: Path,
     ptax_path: Path,
     gold_root: Path,
+    focus_top5_path: Path | None = None,
 ) -> None:
     """Atomically rebuild the analytical serving layer."""
     gold_root.mkdir(parents=True, exist_ok=True)
@@ -38,10 +41,17 @@ def build_gold(
     try:
         connection.register("_sgs", pl.read_parquet(sgs_path))
         connection.register("_focus", pl.read_parquet(focus_path))
+        connection.register(
+            "_focus_top5",
+            pl.read_parquet(focus_top5_path)
+            if focus_top5_path is not None and focus_top5_path.exists()
+            else pl.DataFrame(schema=FOCUS_TOP5_SCHEMA),
+        )
         connection.register("_ptax", pl.read_parquet(ptax_path))
 
         connection.execute("CREATE TABLE sgs_series AS SELECT * FROM _sgs")
         connection.execute("CREATE TABLE focus_expectations AS SELECT * FROM _focus")
+        connection.execute("CREATE TABLE focus_top5 AS SELECT * FROM _focus_top5")
         connection.execute("CREATE TABLE ptax_quotes AS SELECT * FROM _ptax")
 
         connection.execute(
@@ -263,6 +273,116 @@ def build_gold(
                 END AS regime_monetario
             FROM selic_meta s
             INNER JOIN ipca_day i ON s.data = i.data
+            """
+        )
+        connection.execute(
+            """
+            CREATE VIEW vw_juro_real_completo AS
+            WITH ipca_12m AS (
+                SELECT date_trunc('month', data) AS mes, valor AS ipca_12m_realizado
+                FROM sgs_series
+                WHERE codigo_serie = 13522
+            ),
+            selic_mensal AS (
+                SELECT date_trunc('month', data) AS mes, arg_max(valor, data) AS selic_meta
+                FROM sgs_series
+                WHERE codigo_serie = 432
+                GROUP BY 1
+            ),
+            ex_ante_mensal AS (
+                SELECT
+                    date_trunc('month', data) AS mes,
+                    arg_max(ipca_focus_ano, data) AS ipca_focus_ano,
+                    arg_max(juro_real_ex_ante, data) AS juro_real_ex_ante
+                FROM vw_macro_regime
+                GROUP BY 1
+            )
+            SELECT
+                s.mes AS data,
+                s.selic_meta,
+                i.ipca_12m_realizado,
+                e.ipca_focus_ano,
+                ((1 + s.selic_meta / 100.0) / (1 + i.ipca_12m_realizado / 100.0) - 1) * 100.0
+                    AS juro_real_ex_post,
+                e.juro_real_ex_ante
+            FROM selic_mensal s
+            INNER JOIN ipca_12m i ON s.mes = i.mes
+            LEFT JOIN ex_ante_mensal e ON s.mes = e.mes
+            """
+        )
+        connection.execute(
+            """
+            CREATE VIEW vw_focus_top5_vs_geral AS
+            WITH top5_latest AS (
+                SELECT
+                    indicador,
+                    data_referencia,
+                    tipo_calculo,
+                    data AS data_top5,
+                    mediana AS mediana_top5,
+                    media AS media_top5,
+                    desvio_padrao AS desvio_top5
+                FROM focus_top5
+                QUALIFY ROW_NUMBER() OVER (
+                    PARTITION BY indicador, data_referencia, tipo_calculo
+                    ORDER BY data DESC
+                ) = 1
+            ),
+            geral_latest AS (
+                SELECT
+                    indicador,
+                    data_referencia,
+                    data AS data_geral,
+                    mediana AS mediana_geral
+                FROM focus_expectations
+                WHERE base_calculo = 0 AND indicador_detalhe = ''
+                QUALIFY ROW_NUMBER() OVER (
+                    PARTITION BY indicador, data_referencia
+                    ORDER BY data DESC
+                ) = 1
+            )
+            SELECT
+                t.indicador,
+                t.data_referencia,
+                t.tipo_calculo,
+                t.data_top5,
+                t.mediana_top5,
+                g.mediana_geral,
+                t.mediana_top5 - g.mediana_geral AS spread_top5_vs_geral,
+                t.desvio_top5
+            FROM top5_latest t
+            INNER JOIN geral_latest g
+                ON t.indicador = g.indicador
+               AND t.data_referencia = g.data_referencia
+            """
+        )
+        connection.execute(
+            """
+            CREATE VIEW vw_lakehouse_lineage AS
+            SELECT 'sgs_series' AS tabela, 'SGS' AS fonte, COUNT(*) AS registros,
+                   MIN(data) AS data_minima, MAX(data) AS data_maxima,
+                   MAX(ingested_at) AS ultima_ingestao
+            FROM sgs_series
+            UNION ALL
+            SELECT 'focus_expectations', 'Olinda Focus', COUNT(*),
+                   MIN(data), MAX(data), MAX(ingested_at)
+            FROM focus_expectations
+            UNION ALL
+            SELECT 'focus_top5', 'Olinda Focus Top 5', COUNT(*),
+                   MIN(data), MAX(data), MAX(ingested_at)
+            FROM focus_top5
+            UNION ALL
+            SELECT 'ptax_quotes', 'Olinda PTAX (boletins)', COUNT(*),
+                   MIN(data_referencia), MAX(data_referencia), MAX(ingested_at)
+            FROM ptax_quotes
+            UNION ALL
+            SELECT 'ptax_daily', 'Gold PTAX Diária', COUNT(*),
+                   MIN(data_referencia), MAX(data_referencia), MAX(ingested_at)
+            FROM ptax_daily
+            UNION ALL
+            SELECT 'macro_indicators', 'Gold Consolidada', COUNT(*),
+                   MIN(data_observacao), MAX(data_observacao), MAX(ingested_at)
+            FROM macro_indicators
             """
         )
 

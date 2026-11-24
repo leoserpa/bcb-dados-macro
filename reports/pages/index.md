@@ -5,11 +5,11 @@ title: Panorama Macroeconômico — Banco Central do Brasil
 <div class="terminal-header">
   <div>
     <h1 class="terminal-title">Panorama Macroeconômico — Banco Central do Brasil</h1>
-    <p class="terminal-subtitle">Camada Gold · SGS (9 séries) + PTAX USD (4.241 dias) + Focus OData (122.217 obs.)</p>
+    <p class="terminal-subtitle">Camada Gold · SGS (17 séries) · PTAX (USD/EUR) · Focus & Top 5 OData</p>
   </div>
   <div class="status-pills">
     <span class="status-pill"><span class="status-dot"></span>Gold: bcb_macro.duckdb</span>
-    <span class="status-pill"><span class="status-dot"></span>23/23 Quality Gates OK</span>
+    <span class="status-pill"><span class="status-dot"></span>Quality Gates OK</span>
   </div>
 </div>
 
@@ -63,7 +63,7 @@ ORDER BY data_referencia DESC
 LIMIT 1
 ```
 
-<div class="section-kicker">Cobertura Completa — Todas as 9 Séries SGS + PTAX Fechamento</div>
+<div class="section-kicker">Principais Indicadores — SGS + PTAX Fechamento</div>
 
 <div class="kpi-grid-5">
   <KPITerminalCard data={kpi_sgs} value="meta_selic" dateCol="data_432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="Evento · % a.a." icon="percent" />
@@ -177,9 +177,9 @@ ORDER BY v.indicador, v.periodo_referencia
 
 <div class="terminal-grid-2">
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Últimas Observações — Todas as 9 Séries SGS</div>
+    <div class="terminal-panel-title">Últimas Observações — Todas as 17 Séries SGS</div>
     <div class="terminal-panel-sub">vw_macro_latest WHERE fonte = 'SGS'</div>
-    <DataTable data={tabela_sgs_latest} rows=10>
+    <DataTable data={tabela_sgs_latest} rows=20>
       <Column id=codigo title="Cod" />
       <Column id=serie title="Indicador" />
       <Column id=frequencia title="Freq" />

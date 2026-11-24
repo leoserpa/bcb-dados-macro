@@ -25,14 +25,22 @@ class SeriesDefinition:
 
 SGS_SERIES: dict[int, SeriesDefinition] = {
     11: SeriesDefinition(11, "Taxa Selic diária", "diaria"),
+    189: SeriesDefinition(189, "IGP-M variação mensal", "mensal"),
     432: SeriesDefinition(432, "Meta Selic definida pelo Copom", "evento"),
-    24364: SeriesDefinition(24364, "IBC-Br com ajuste sazonal", "mensal"),
+    433: SeriesDefinition(433, "IPCA variação mensal", "mensal"),
+    4513: SeriesDefinition(4513, "DLSP/PIB", "mensal"),
+    5793: SeriesDefinition(5793, "Resultado primário 12m/PIB", "mensal"),
+    13522: SeriesDefinition(13522, "IPCA acumulado 12 meses", "mensal"),
+    13762: SeriesDefinition(13762, "DBGG/PIB", "mensal"),
     13967: SeriesDefinition(13967, "Fluxo cambial comercial", "diaria"),
     13970: SeriesDefinition(13970, "Fluxo cambial financeiro", "diaria"),
     13982: SeriesDefinition(13982, "Reservas internacionais", "diaria"),
-    21082: SeriesDefinition(21082, "Inadimplência total do SFN", "mensal"),
     20631: SeriesDefinition(20631, "Concessões totais de crédito", "mensal"),
-    13762: SeriesDefinition(13762, "DBGG/PIB", "mensal"),
+    20714: SeriesDefinition(20714, "Taxa média de juros de crédito", "mensal"),
+    20783: SeriesDefinition(20783, "Spread médio do crédito", "mensal"),
+    21082: SeriesDefinition(21082, "Inadimplência total do SFN", "mensal"),
+    24364: SeriesDefinition(24364, "IBC-Br com ajuste sazonal", "mensal"),
+    24369: SeriesDefinition(24369, "Taxa de desocupação (PNAD)", "mensal"),
 }
 
 

@@ -94,6 +94,38 @@ class FocusRecord(ContractModel):
         return _parse_nullable_float(value)
 
 
+class FocusTop5Record(ContractModel):
+    """Normalized annual Top 5 market expectation from the Focus survey."""
+
+    indicador: str = Field(alias="Indicador")
+    data: date = Field(alias="Data")
+    data_referencia: str = Field(alias="DataReferencia")
+    tipo_calculo: str = Field(alias="tipoCalculo")
+    media: float | None = Field(default=None, alias="Media")
+    mediana: float | None = Field(default=None, alias="Mediana")
+    desvio_padrao: float | None = Field(default=None, alias="DesvioPadrao")
+    minimo: float | None = Field(default=None, alias="Minimo")
+    maximo: float | None = Field(default=None, alias="Maximo")
+    ingested_at: datetime
+
+    @field_validator("data", mode="before")
+    @classmethod
+    def parse_iso_date(cls, value: Any) -> Any:
+        if isinstance(value, str):
+            return date.fromisoformat(value[:10])
+        return value
+
+    @field_validator("data_referencia", "tipo_calculo", mode="before")
+    @classmethod
+    def normalize_text(cls, value: Any) -> str:
+        return str(value).strip()
+
+    @field_validator("media", "mediana", "desvio_padrao", "minimo", "maximo", mode="before")
+    @classmethod
+    def parse_statistics(cls, value: Any) -> float | None:
+        return _parse_nullable_float(value)
+
+
 class PTAXRecord(ContractModel):
     """Normalized exchange-rate bulletin from the PTAX service."""
 

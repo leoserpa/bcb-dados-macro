@@ -5,7 +5,7 @@ title: Expectativas de Mercado — Boletim Focus (OData)
 <div class="terminal-header">
   <div>
     <h1 class="terminal-title">Expectativas de Mercado — Boletim Focus (OData)</h1>
-    <p class="terminal-subtitle">122.217 observações · IPCA, Selic, Câmbio, PIB Total · Base 0 (30d) e Base 1 (5d úteis)</p>
+    <p class="terminal-subtitle">IPCA, Selic, Câmbio e PIB Total · Base 0 (30d), Base 1 (5d úteis) e Top 5</p>
   </div>
 </div>
 
@@ -119,7 +119,7 @@ WHERE f.base_calculo = CAST('${inputs.base_calculo.value}' AS INTEGER)
 ORDER BY f.indicador, f.data_referencia
 ```
 
-<div class="terminal-panel">
+<div class="terminal-panel" style="margin-bottom: 18px;">
   <div class="terminal-panel-title">Curva Completa de Expectativas — Todos os Indicadores</div>
   <div class="terminal-panel-sub">focus_expectations · última coleta por indicador e ano de referência</div>
   <DataTable data={focus_curva} rows=20>
@@ -131,5 +131,38 @@ ORDER BY f.indicador, f.data_referencia
     <Column id=minimo title="Mínimo" fmt=num2 />
     <Column id=maximo title="Máximo" fmt=num2 />
     <Column id=respondentes title="Respondentes" fmt=num0 />
+  </DataTable>
+</div>
+
+```sql focus_top5_comparativo
+WITH ano_atual AS (
+    SELECT YEAR(MAX(data_top5)) AS ano FROM bcb_macro.vw_focus_top5_vs_geral
+)
+SELECT
+    t.indicador,
+    t.data_referencia AS ano,
+    t.data_top5 AS coleta,
+    t.mediana_top5,
+    t.mediana_geral,
+    t.spread_top5_vs_geral AS spread_top5_geral,
+    t.desvio_top5
+FROM bcb_macro.vw_focus_top5_vs_geral t
+CROSS JOIN ano_atual a
+WHERE t.tipo_calculo = 'M'
+  AND TRY_CAST(t.data_referencia AS INTEGER) BETWEEN a.ano AND a.ano + 3
+ORDER BY t.indicador, t.data_referencia
+```
+
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Focus Top 5 (Médio Prazo) vs Consenso Geral</div>
+  <div class="terminal-panel-sub">vw_focus_top5_vs_geral · diferença entre as 5 instituições mais assertivas e o mercado geral</div>
+  <DataTable data={focus_top5_comparativo} rows=16>
+    <Column id=indicador title="Indicador" />
+    <Column id=ano title="Ano Ref." />
+    <Column id=coleta title="Coleta" />
+    <Column id=mediana_top5 title="Mediana Top 5" fmt=num2 />
+    <Column id=mediana_geral title="Mediana Geral" fmt=num2 />
+    <Column id=spread_top5_geral title="Spread (Top5 - Geral)" fmt=num3 />
+    <Column id=desvio_top5 title="Desvio Top 5" fmt=num2 />
   </DataTable>
 </div>

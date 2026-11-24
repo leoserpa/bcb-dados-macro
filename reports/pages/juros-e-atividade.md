@@ -5,7 +5,7 @@ title: Juros, Atividade Econômica, Crédito & Fiscal (SGS)
 <div class="terminal-header">
   <div>
     <h1 class="terminal-title">Juros, Atividade Econômica, Crédito & Fiscal (SGS)</h1>
-    <p class="terminal-subtitle">Séries 432, 11, 24364, 13762, 20631, 21082 · Histórico completo 2010–2026</p>
+    <p class="terminal-subtitle">Séries 432, 11, 24364, 13762, 4513, 5793, 20631, 21082 · Histórico a partir de 2010</p>
   </div>
 </div>
 
@@ -93,13 +93,17 @@ ORDER BY s.data
 
 ```sql dbgg_pib
 WITH limite AS (
-    SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie = 13762
+    SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie IN (13762, 4513)
 )
-SELECT s.data, s.valor AS dbgg_pib
+SELECT
+    s.data,
+    MAX(CASE WHEN s.codigo_serie = 13762 THEN s.valor END) AS dbgg_pib,
+    MAX(CASE WHEN s.codigo_serie = 4513 THEN s.valor END) AS dlsp_pib
 FROM bcb_macro.sgs_series s CROSS JOIN limite l
-WHERE s.codigo_serie = 13762
+WHERE s.codigo_serie IN (13762, 4513)
   AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte.value}' AS INTEGER)
-ORDER BY s.data
+GROUP BY 1
+ORDER BY 1
 ```
 
 <div class="terminal-grid-2">
@@ -109,10 +113,27 @@ ORDER BY s.data
     <LineChart data={ibc_br} x=data y=ibc_br yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=190 />
   </div>
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Trajetória fiscal — Dívida Bruta do Governo Geral (% PIB)</div>
-    <div class="terminal-panel-sub">SGS 13762 · % do PIB</div>
-    <LineChart data={dbgg_pib} x=data y=dbgg_pib yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=190 />
+    <div class="terminal-panel-title">Trajetória fiscal — DBGG/PIB vs DLSP/PIB</div>
+    <div class="terminal-panel-sub">SGS 13762 (Bruta em azul) vs SGS 4513 (Líquida em cinza) · % do PIB</div>
+    <LineChart data={dbgg_pib} x=data y={['dbgg_pib', 'dlsp_pib']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=190 />
   </div>
+</div>
+
+```sql primario_12m
+WITH limite AS (
+    SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie = 5793
+)
+SELECT s.data, s.valor AS resultado_primario_pib
+FROM bcb_macro.sgs_series s CROSS JOIN limite l
+WHERE s.codigo_serie = 5793
+  AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte.value}' AS INTEGER)
+ORDER BY s.data
+```
+
+<div class="terminal-panel" style="margin-bottom: 18px;">
+  <div class="terminal-panel-title">Resultado Primário Acumulado em 12 Meses (% PIB)</div>
+  <div class="terminal-panel-sub">SGS 5793 · Setor Público Consolidado (% do PIB)</div>
+  <BarChart data={primario_12m} x=data y=resultado_primario_pib yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=180 />
 </div>
 
 ```sql concessoes_credito

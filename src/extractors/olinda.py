@@ -15,6 +15,10 @@ FOCUS_URL = (
     "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/"
     "ExpectativasMercadoAnuais"
 )
+FOCUS_TOP5_URL = (
+    "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/"
+    "ExpectativasMercadoTop5Anuais"
+)
 PTAX_URL = (
     "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
     "CotacaoMoedaPeriodo(moeda=@moeda,dataInicial=@dataInicial,"
@@ -71,6 +75,34 @@ class OlindaExtractor:
             "$format": "json",
         }
         return self._fetch_paginated(FOCUS_URL, params)
+
+    def fetch_focus_top5(
+        self,
+        start_date: date | None = None,
+        end_date: date | None = None,
+        indicators: tuple[str, ...] = FOCUS_INDICATORS,
+    ) -> list[dict[str, Any]]:
+        """Fetch annual Focus Top 5 expectations for the configured indicators."""
+        escaped_indicators = (indicator.replace("'", "''") for indicator in indicators)
+        indicator_filter = " or ".join(
+            f"Indicador eq '{indicator}'" for indicator in escaped_indicators
+        )
+        filters = [f"({indicator_filter})"]
+        if start_date is not None:
+            filters.append(f"Data ge '{start_date.isoformat()}'")
+        if end_date is not None:
+            filters.append(f"Data le '{end_date.isoformat()}'")
+
+        params = {
+            "$filter": " and ".join(filters),
+            "$orderby": "Data desc,Indicador asc,DataReferencia asc,tipoCalculo asc",
+            "$select": (
+                "Indicador,Data,DataReferencia,tipoCalculo,Media,Mediana,DesvioPadrao,Minimo,Maximo"
+            ),
+            "$top": str(self.page_size),
+            "$format": "json",
+        }
+        return self._fetch_paginated(FOCUS_TOP5_URL, params)
 
     def fetch_ptax(
         self,

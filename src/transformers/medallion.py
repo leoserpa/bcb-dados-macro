@@ -8,7 +8,7 @@ from typing import Any
 
 import polars as pl
 
-from src.models.schemas import FocusRecord, PTAXRecord, SGSRecord
+from src.models.schemas import FocusRecord, FocusTop5Record, PTAXRecord, SGSRecord
 
 SGS_SCHEMA: dict[str, pl.DataType] = {
     "data": pl.Date,
@@ -31,6 +31,19 @@ FOCUS_SCHEMA: dict[str, pl.DataType] = {
     "maximo": pl.Float64,
     "numero_respondentes": pl.Int64,
     "base_calculo": pl.Int64,
+    "ingested_at": pl.Datetime(time_unit="us", time_zone="UTC"),
+}
+
+FOCUS_TOP5_SCHEMA: dict[str, pl.DataType] = {
+    "indicador": pl.String,
+    "data": pl.Date,
+    "data_referencia": pl.String,
+    "tipo_calculo": pl.String,
+    "media": pl.Float64,
+    "mediana": pl.Float64,
+    "desvio_padrao": pl.Float64,
+    "minimo": pl.Float64,
+    "maximo": pl.Float64,
     "ingested_at": pl.Datetime(time_unit="us", time_zone="UTC"),
 }
 
@@ -85,6 +98,19 @@ def transform_focus(
         pl.col("indicador_detalhe").fill_null(""),
         pl.col("base_calculo").fill_null(-1),
     )
+
+
+def transform_focus_top5(
+    raw_records: list[dict[str, Any]],
+    *,
+    ingested_at: datetime,
+) -> pl.DataFrame:
+    """Validate, normalize and type annual Focus Top 5 expectations."""
+    records = [
+        FocusTop5Record.model_validate({**raw_record, "ingested_at": ingested_at}).model_dump()
+        for raw_record in raw_records
+    ]
+    return _frame_from_records(records, FOCUS_TOP5_SCHEMA)
 
 
 def transform_ptax(

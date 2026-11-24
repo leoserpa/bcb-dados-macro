@@ -6,6 +6,7 @@ from pathlib import Path
 import duckdb
 import pytest
 
+from src.extractors.sgs import SGS_SERIES
 from src.pipelines.quality import validate_database
 
 
@@ -24,10 +25,18 @@ def valid_database(tmp_path: Path) -> Path:
                 valor DOUBLE,
                 ingested_at TIMESTAMPTZ
             );
+            """
+        )
+        connection.execute(
+            """
             INSERT INTO sgs_series
             SELECT DATE '2026-10-20', code, 'Série', 'diaria', 1.0, now()
-            FROM unnest([11, 432, 13762, 13967, 13970, 13982, 20631, 21082, 24364]) AS t(code);
-
+            FROM unnest(?) AS t(code)
+            """,
+            [sorted(SGS_SERIES)],
+        )
+        connection.execute(
+            """
             CREATE TABLE focus_expectations (
                 indicador VARCHAR,
                 indicador_detalhe VARCHAR,

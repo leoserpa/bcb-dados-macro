@@ -53,6 +53,22 @@ class OlindaExtractorStub:
             for indicator in ("IPCA", "Selic", "Câmbio", "PIB Total")
         ]
 
+    def fetch_focus_top5(self, start_date: date, end_date: date) -> list[dict[str, object]]:
+        return [
+            {
+                "Indicador": indicator,
+                "Data": end_date.isoformat(),
+                "DataReferencia": str(end_date.year),
+                "tipoCalculo": "M",
+                "Media": 10.1,
+                "Mediana": 10.2,
+                "DesvioPadrao": 0.1,
+                "Minimo": 9.5,
+                "Maximo": 10.8,
+            }
+            for indicator in ("IPCA", "Selic", "Câmbio")
+        ]
+
     def fetch_ptax(
         self,
         start_date: date,
@@ -99,6 +115,7 @@ def test_pipeline_builds_all_layers_and_is_idempotent(tmp_path: Path, monkeypatc
         "end_date": "2026-10-20",
         "sgs_rows": len(SGS_SERIES),
         "focus_rows": 4,
+        "focus_top5_rows": 3,
         "ptax_rows": 1,
         "silver_changed": True,
         "gold_rebuilt": True,
@@ -117,7 +134,10 @@ def test_pipeline_builds_all_layers_and_is_idempotent(tmp_path: Path, monkeypatc
     database = data_root / "gold" / "bcb_macro.duckdb"
     connection = duckdb.connect(str(database), read_only=True)
     try:
-        assert connection.execute("SELECT COUNT(*) FROM macro_indicators").fetchone()[0] == 13
+        assert (
+            connection.execute("SELECT COUNT(*) FROM macro_indicators").fetchone()[0]
+            == len(SGS_SERIES) + 4
+        )
         assert connection.execute("SELECT COUNT(*) FROM ptax_daily").fetchone()[0] == 1
     finally:
         connection.close()
