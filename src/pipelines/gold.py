@@ -279,26 +279,28 @@ def build_gold(
             """
             CREATE VIEW vw_juro_real_completo AS
             WITH ipca_12m AS (
-                SELECT date_trunc('month', data) AS mes, valor AS ipca_12m_realizado
+                SELECT CAST(date_trunc('month', data) AS DATE) AS mes, valor AS ipca_12m_realizado
                 FROM sgs_series
                 WHERE codigo_serie = 13522
             ),
             selic_mensal AS (
-                SELECT date_trunc('month', data) AS mes, arg_max(valor, data) AS selic_meta
+                SELECT
+                    CAST(date_trunc('month', data) AS DATE) AS mes,
+                    arg_max(valor, data) AS selic_meta
                 FROM sgs_series
                 WHERE codigo_serie = 432
                 GROUP BY 1
             ),
             ex_ante_mensal AS (
                 SELECT
-                    date_trunc('month', data) AS mes,
+                    CAST(date_trunc('month', data) AS DATE) AS mes,
                     arg_max(ipca_focus_ano, data) AS ipca_focus_ano,
                     arg_max(juro_real_ex_ante, data) AS juro_real_ex_ante
                 FROM vw_macro_regime
                 GROUP BY 1
             )
             SELECT
-                s.mes AS data,
+                CAST(s.mes AS DATE) AS data,
                 s.selic_meta,
                 i.ipca_12m_realizado,
                 e.ipca_focus_ano,

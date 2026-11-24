@@ -58,7 +58,7 @@ jobs:
         working-directory: reports
         run: |
           npm run sources
-          npm run build
+          npm run build:strict
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
