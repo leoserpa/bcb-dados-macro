@@ -20,7 +20,7 @@ on:
     - cron: "30 12 * * 1-5"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: bcb-data-pipeline-${{ github.ref }}
@@ -30,6 +30,8 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -41,12 +43,11 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-          version: "latest"
 
       - name: Install Python and dependencies
         run: |
           uv python install 3.14
-          uv sync --dev
+          uv sync --frozen --dev
 
       - name: Lint and format check
         run: |
@@ -54,7 +55,7 @@ jobs:
           uv run ruff format --check .
 
       - name: Unit and integration tests
-        run: uv run pytest
+        run: uv run pytest --cov=src --cov-report=term-missing --cov-fail-under=85
 
       - name: Run incremental pipeline
         env:
@@ -94,4 +95,5 @@ jobs:
             exit 0
           fi
           git commit -m "data: atualiza indicadores do BCB"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"

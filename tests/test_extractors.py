@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import date
-from typing import Any
+from typing import Any, ClassVar
 from urllib.parse import parse_qs, urlparse
 
 import pytest
@@ -34,7 +34,7 @@ class SessionStub:
 
 
 class InvalidJSONResponseStub(ResponseStub):
-    headers = {"Content-Type": "text/html"}
+    headers: ClassVar[dict[str, str]] = {"Content-Type": "text/html"}
 
     def json(self) -> Any:
         raise requests.exceptions.JSONDecodeError("resposta vazia", "", 0)
@@ -139,7 +139,9 @@ def test_focus_extractor_follows_odata_next_link() -> None:
     assert first_query["$filter"] == [
         "(Indicador eq 'IPCA') and Data ge '2026-10-01' and Data le '2026-10-20'"
     ]
-    assert "$orderby" in first_query
+    assert first_query["$orderby"] == [
+        "Data desc,Indicador asc,DataReferencia asc,IndicadorDetalhe asc,baseCalculo asc"
+    ]
     assert "%20" in first_url
     assert "+" not in first_url
     assert session.calls[1]["url"] == next_link
@@ -205,3 +207,9 @@ def test_olinda_rejects_invalid_page_size(page_size: int) -> None:
 def test_extractors_reject_non_positive_timeout(extractor) -> None:
     with pytest.raises(ValueError, match="timeout"):
         extractor(SessionStub([]), timeout=0)
+
+
+@pytest.mark.parametrize("extractor", [SGSExtractor, OlindaExtractor])
+def test_extractors_respect_explicit_timeout_above_default(extractor) -> None:
+    instance = extractor(SessionStub([]), timeout=60)
+    assert instance.timeout == 60

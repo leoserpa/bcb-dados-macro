@@ -38,7 +38,7 @@ class OlindaExtractor:
         if page_size <= 0:
             raise ValueError("page_size deve ser maior que zero")
         self.session = session
-        self.timeout = min(timeout, DEFAULT_TIMEOUT_SECONDS)
+        self.timeout = timeout
         self.page_size = page_size
 
     def fetch_focus(
@@ -60,7 +60,9 @@ class OlindaExtractor:
 
         params = {
             "$filter": " and ".join(filters),
-            "$orderby": "Data desc",
+            "$orderby": (
+                "Data desc,Indicador asc,DataReferencia asc,IndicadorDetalhe asc,baseCalculo asc"
+            ),
             "$select": (
                 "Indicador,IndicadorDetalhe,Data,DataReferencia,Media,Mediana,"
                 "DesvioPadrao,Minimo,Maximo,numeroRespondentes,baseCalculo"

@@ -55,7 +55,7 @@ class SGSExtractor:
         if max_span_days <= 0:
             raise ValueError("max_span_days deve ser maior que zero")
         self.session = session
-        self.timeout = min(timeout, DEFAULT_TIMEOUT_SECONDS)
+        self.timeout = timeout
         self.max_span_days = max_span_days
 
     def fetch_series(

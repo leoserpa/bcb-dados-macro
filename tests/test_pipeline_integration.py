@@ -72,6 +72,7 @@ class OlindaExtractorStub:
 
 
 def _configure_stubs(monkeypatch) -> None:
+    monkeypatch.setenv("BCB_INITIAL_DATE", "2010-01-01")
     monkeypatch.setattr("src.pipelines.run.create_http_session", SessionStub)
     monkeypatch.setattr("src.pipelines.run.SGSExtractor", SGSExtractorStub)
     monkeypatch.setattr("src.pipelines.run.OlindaExtractor", OlindaExtractorStub)
@@ -179,3 +180,131 @@ def test_cli_exits_with_error_when_pipeline_is_partial(monkeypatch, tmp_path: Pa
         main()
 
     assert error.value.code == 2
+
+
+def test_vw_macro_latest_returns_only_latest_sgs_and_preserves_focus_bases(
+    tmp_path: Path, monkeypatch
+) -> None:
+    class MultiDateSGSStub(SGSExtractorStub):
+        def fetch_series(self, code: int, start_date: date, end_date: date) -> list[dict[str, str]]:
+            return [
+                {"data": "19/10/2026", "valor": "1.00"},
+                {"data": "20/10/2026", "valor": "2.00"},
+            ]
+
+    class MultiBaseFocusStub(OlindaExtractorStub):
+        def fetch_focus(self, start_date: date, end_date: date) -> list[dict[str, object]]:
+            return [
+                {
+                    "Indicador": "IPCA",
+                    "IndicadorDetalhe": "",
+                    "Data": "2026-10-19",
+                    "DataReferencia": "2026",
+                    "Media": 4.1,
+                    "Mediana": 4.0,
+                    "DesvioPadrao": 0.1,
+                    "Minimo": 3.8,
+                    "Maximo": 4.4,
+                    "numeroRespondentes": 100,
+                    "baseCalculo": 1,
+                },
+                {
+                    "Indicador": "IPCA",
+                    "IndicadorDetalhe": "",
+                    "Data": "2026-10-20",
+                    "DataReferencia": "2026",
+                    "Media": 4.2,
+                    "Mediana": 4.1,
+                    "DesvioPadrao": 0.1,
+                    "Minimo": 3.9,
+                    "Maximo": 4.5,
+                    "numeroRespondentes": 100,
+                    "baseCalculo": 0,
+                },
+            ]
+
+    monkeypatch.setenv("BCB_INITIAL_DATE", "2010-01-01")
+    monkeypatch.setattr("src.pipelines.run.create_http_session", SessionStub)
+    monkeypatch.setattr("src.pipelines.run.SGSExtractor", MultiDateSGSStub)
+    monkeypatch.setattr("src.pipelines.run.OlindaExtractor", MultiBaseFocusStub)
+
+    data_root = tmp_path / "data"
+    run_pipeline(_config(data_root))
+
+    connection = duckdb.connect(str(data_root / "gold" / "bcb_macro.duckdb"), read_only=True)
+    try:
+        sgs_latest = connection.execute(
+            "SELECT COUNT(*), MIN(data_observacao) FROM vw_macro_latest WHERE fonte = 'SGS'"
+        ).fetchone()
+        focus_latest = connection.execute(
+            "SELECT detalhe, data_observacao FROM vw_macro_latest "
+            "WHERE fonte = 'FOCUS' ORDER BY detalhe"
+        ).fetchall()
+    finally:
+        connection.close()
+
+    assert sgs_latest == (len(SGS_SERIES), date(2026, 10, 20))
+    assert focus_latest == [
+        (" | base=0", date(2026, 10, 20)),
+        (" | base=1", date(2026, 10, 19)),
+    ]
+
+
+def test_incremental_ptax_filters_watermark_by_currency(tmp_path: Path, monkeypatch) -> None:
+    recorded_ptax_starts: list[tuple[str, date]] = []
+
+    class RecordingOlindaStub(OlindaExtractorStub):
+        def fetch_ptax(
+            self, start_date: date, end_date: date, currency: str
+        ) -> list[dict[str, object]]:
+            recorded_ptax_starts.append((currency.upper(), start_date))
+            return super().fetch_ptax(start_date, end_date, currency)
+
+    monkeypatch.setenv("BCB_INITIAL_DATE", "2010-01-01")
+    monkeypatch.setattr("src.pipelines.run.create_http_session", SessionStub)
+    monkeypatch.setattr("src.pipelines.run.SGSExtractor", SGSExtractorStub)
+    monkeypatch.setattr("src.pipelines.run.OlindaExtractor", RecordingOlindaStub)
+
+    data_root = tmp_path / "data"
+    run_pipeline(_config(data_root))
+    run_pipeline(
+        PipelineConfig(
+            data_root=data_root,
+            start_date=None,
+            end_date=date(2026, 10, 20),
+            lookback_days=7,
+            currency="EUR",
+        )
+    )
+
+    assert recorded_ptax_starts == [
+        ("USD", date(2026, 10, 20)),
+        ("EUR", date(2010, 1, 1)),
+    ]
+
+
+def test_gold_builds_market_intelligence_tables_and_views(tmp_path: Path, monkeypatch) -> None:
+    _configure_stubs(monkeypatch)
+    data_root = tmp_path / "data"
+    run_pipeline(_config(data_root))
+
+    connection = duckdb.connect(str(data_root / "gold" / "bcb_macro.duckdb"), read_only=True)
+    try:
+        ptax_risk = connection.execute(
+            "SELECT moeda, cotacao_venda, spread FROM ptax_risk_metrics"
+        ).fetchall()
+        focus_repricing = connection.execute("SELECT COUNT(*) FROM vw_focus_repricing").fetchone()[
+            0
+        ]
+        macro_regime = connection.execute(
+            "SELECT selic_meta, ipca_focus_ano, juro_real_ex_ante, regime_monetario "
+            "FROM vw_macro_regime"
+        ).fetchall()
+    finally:
+        connection.close()
+
+    assert len(ptax_risk) == 1
+    assert ptax_risk[0][0] == "USD"
+    assert focus_repricing == 4
+    assert len(macro_regime) == 1
+    assert macro_regime[0][3] in {"Restritivo", "Neutro", "Expansionista"}

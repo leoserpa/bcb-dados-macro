@@ -169,6 +169,7 @@ def run_pipeline(config: PipelineConfig) -> dict[str, int | bool | str | list[st
             date_column="data_referencia",
             initial_date=initial_date,
             lookback_days=config.lookback_days,
+            filter_expression=pl.col("moeda") == config.currency.upper(),
         )
         _validate_interval(ptax_start, config.end_date)
         LOGGER.info("Extraindo PTAX %s de %s a %s", config.currency, ptax_start, config.end_date)
@@ -239,7 +240,11 @@ def _incremental_start(
     if not path.exists():
         return initial_date
 
-    columns = [date_column, "codigo_serie"] if filter_expression is not None else [date_column]
+    columns = [date_column]
+    if filter_expression is not None:
+        for column in filter_expression.meta.root_names():
+            if column not in columns:
+                columns.append(column)
     frame = pl.read_parquet(path, columns=columns)
     if filter_expression is not None:
         frame = frame.filter(filter_expression)

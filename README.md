@@ -87,6 +87,19 @@ O workflow `.github/workflows/data_pipeline.yml` roda de segunda a sexta às 12:
 
 Se uma fonte falhar, os dados Silver anteriores são preservados e o pipeline termina com código `2`, indicando uma execução parcial.
 
+## Dashboard (Evidence + GitHub Pages)
+
+O diretório `reports/` contém um dashboard estático em **Evidence.dev** alimentado diretamente por `data/gold/bcb_macro.duckdb` e publicado automaticamente via `.github/workflows/deploy_pages.yml` em `https://leoserpa.github.io/bcb-dados-macro/`.
+
+Para rodar localmente (requer Node.js 20+):
+
+```powershell
+cd reports
+npm install
+npm run sources
+npm run dev
+```
+
 ## Documentação
 
 - [Documentação em português](docs/pt/README.md)

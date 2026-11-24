@@ -8,3 +8,9 @@ __pycache__/
 htmlcov/
 logs/
 skills-lock.json
+reports/node_modules/
+reports/build/
+reports/.evidence/
+reports/static/data/
+reports/sources/bcb_macro/*.duckdb
+reports/sources/bcb_macro/*.duckdb.wal

@@ -5,11 +5,15 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict, dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import duckdb
+
+from src.extractors.olinda import FOCUS_INDICATORS
+from src.extractors.sgs import SGS_SERIES
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATABASE = PROJECT_ROOT / "data" / "gold" / "bcb_macro.duckdb"
@@ -21,8 +25,8 @@ EXPECTED_TABLES = {
     "ptax_daily",
     "vw_macro_latest",
 }
-EXPECTED_SGS_SERIES = {11, 432, 13762, 13967, 13970, 13982, 20631, 21082, 24364}
-EXPECTED_FOCUS_INDICATORS = {"IPCA", "Selic", "Câmbio", "PIB Total"}
+EXPECTED_SGS_SERIES = set(SGS_SERIES)
+EXPECTED_FOCUS_INDICATORS = set(FOCUS_INDICATORS)
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,7 +73,7 @@ def validate_database(
     if max_staleness_days is not None and max_staleness_days < 0:
         raise ValueError("max_staleness_days deve ser maior ou igual a zero")
 
-    reference_date = as_of_date or date.today()
+    reference_date = as_of_date or datetime.now(ZoneInfo("America/Sao_Paulo")).date()
     connection = duckdb.connect(str(database), read_only=True)
     try:
         available_tables = {
@@ -103,7 +107,9 @@ def _add_table_checks(
         "focus_expectations": {
             "data",
             "indicador",
+            "indicador_detalhe",
             "data_referencia",
+            "media",
             "mediana",
             "base_calculo",
             "ingested_at",
@@ -134,8 +140,13 @@ def _add_table_checks(
             QualityCheck(f"{table}_required_columns", not missing_columns, missing_columns, [])
         )
 
-    for table in ("sgs_series", "focus_expectations", "ptax_quotes"):
-        row_count = connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+    row_count_queries = {
+        "sgs_series": "SELECT COUNT(*) FROM sgs_series",
+        "focus_expectations": "SELECT COUNT(*) FROM focus_expectations",
+        "ptax_quotes": "SELECT COUNT(*) FROM ptax_quotes",
+    }
+    for table, query in row_count_queries.items():
+        row_count = connection.execute(query).fetchone()[0]
         checks.append(QualityCheck(f"{table}_not_empty", row_count > 0, row_count, "> 0"))
 
     if not schema_valid:
@@ -148,8 +159,9 @@ def _add_table_checks(
         """,
         "focus_required_not_null": """
             SELECT COUNT(*) FROM focus_expectations
-            WHERE data IS NULL OR indicador IS NULL OR data_referencia IS NULL
-               OR mediana IS NULL OR ingested_at IS NULL
+            WHERE data IS NULL OR indicador IS NULL OR indicador_detalhe IS NULL
+               OR data_referencia IS NULL OR mediana IS NULL
+               OR base_calculo IS NULL OR ingested_at IS NULL
         """,
         "ptax_required_not_null": """
             SELECT COUNT(*) FROM ptax_quotes
@@ -269,18 +281,25 @@ def _add_date_checks(
     reference_date: date,
     max_staleness_days: int | None,
 ) -> None:
-    date_columns = {
-        "sgs": ("sgs_series", "data"),
-        "focus": ("focus_expectations", "data"),
-        "ptax": ("ptax_quotes", "data_referencia"),
+    date_queries = {
+        "sgs": (
+            "SELECT COUNT(*) FROM sgs_series WHERE data > ?",
+            "SELECT MAX(data) FROM sgs_series",
+        ),
+        "focus": (
+            "SELECT COUNT(*) FROM focus_expectations WHERE data > ?",
+            "SELECT MAX(data) FROM focus_expectations",
+        ),
+        "ptax": (
+            "SELECT COUNT(*) FROM ptax_quotes WHERE data_referencia > ?",
+            "SELECT MAX(data_referencia) FROM ptax_quotes",
+        ),
     }
-    for source, (table, column) in date_columns.items():
-        future_count = connection.execute(
-            f"SELECT COUNT(*) FROM {table} WHERE {column} > ?", [reference_date]
-        ).fetchone()[0]
+    for source, (future_query, latest_query) in date_queries.items():
+        future_count = connection.execute(future_query, [reference_date]).fetchone()[0]
         checks.append(QualityCheck(f"{source}_no_future_dates", future_count == 0, future_count, 0))
         if max_staleness_days is not None:
-            latest_date = connection.execute(f"SELECT MAX({column}) FROM {table}").fetchone()[0]
+            latest_date = connection.execute(latest_query).fetchone()[0]
             if latest_date is None:
                 checks.append(
                     QualityCheck(

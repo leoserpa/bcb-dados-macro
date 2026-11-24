@@ -1,0 +1,4 @@
+name: bcb_macro
+type: duckdb
+options:
+  filename: bcb_macro.duckdb

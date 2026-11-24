@@ -1,0 +1,10 @@
+.evidence/template
+.evidence/meta
+.svelte-kit
+build
+node_modules
+static/data
+*.options.yaml
+sources/bcb_macro/*.duckdb
+sources/bcb_macro/*.duckdb.wal
+.env

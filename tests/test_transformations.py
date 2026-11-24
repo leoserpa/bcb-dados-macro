@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import polars as pl
+import pytest
+from pydantic import ValidationError
 
 from src.transformers.medallion import (
     transform_focus,
@@ -151,3 +153,24 @@ def test_upsert_can_remove_rows_from_deactivated_series(tmp_path) -> None:
 
     assert changed is True
     assert final.get_column("codigo_serie").to_list() == [13967]
+
+
+def test_transform_sgs_normalizes_nan_and_rejects_infinity() -> None:
+    frame = transform_sgs(
+        [{"data": "20/10/2026", "valor": float("nan")}],
+        code=11,
+        name="Taxa Selic diária",
+        frequency="diaria",
+        ingested_at=datetime(2026, 10, 20, tzinfo=UTC),
+    )
+    assert frame.row(0, named=True)["valor"] is None
+
+    for non_finite in (float("inf"), float("-inf"), "Infinity", "-inf"):
+        with pytest.raises(ValidationError, match="non-finite"):
+            transform_sgs(
+                [{"data": "20/10/2026", "valor": non_finite}],
+                code=11,
+                name="Taxa Selic diária",
+                frequency="diaria",
+                ingested_at=datetime(2026, 10, 20, tzinfo=UTC),
+            )

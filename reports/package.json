@@ -1,0 +1,25 @@
+{
+  "name": "bcb-macro-dashboard",
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=7.0.0"
+  },
+  "scripts": {
+    "sync-db": "node -e \"import('node:fs').then(fs => fs.copyFileSync('../data/gold/bcb_macro.duckdb', 'sources/bcb_macro/bcb_macro.duckdb'))\"",
+    "dev": "npm run sync-db && evidence dev --open /bcb-dados-macro",
+    "sources": "npm run sync-db && evidence sources",
+    "sources:strict": "npm run sync-db && evidence sources --strict",
+    "build": "evidence build",
+    "build:strict": "evidence build:strict",
+    "preview": "evidence preview"
+  },
+  "dependencies": {
+    "@evidence-dev/core-components": "^5.4.2",
+    "@evidence-dev/duckdb": "^2.0.1",
+    "@evidence-dev/evidence": "^40.1.8"
+  }
+}

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+import math
+from datetime import UTC, date, datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -14,14 +15,20 @@ def _parse_nullable_float(value: Any) -> float | None:
     if isinstance(value, bool):
         raise ValueError("boolean is not a valid numeric value")
     if isinstance(value, int | float):
-        return float(value)
+        numeric = float(value)
+    else:
+        normalized = str(value).strip()
+        if normalized.lower() in {"", "nan", "null", "none", "-"}:
+            return None
+        if "," in normalized:
+            normalized = normalized.replace(".", "").replace(",", ".")
+        numeric = float(normalized)
 
-    normalized = str(value).strip()
-    if normalized.lower() in {"", "nan", "null", "none", "-"}:
+    if math.isnan(numeric):
         return None
-    if "," in normalized:
-        normalized = normalized.replace(".", "").replace(",", ".")
-    return float(normalized)
+    if not math.isfinite(numeric):
+        raise ValueError(f"non-finite numeric value is not allowed: {value!r}")
+    return numeric
 
 
 class ContractModel(BaseModel):
@@ -44,7 +51,7 @@ class SGSRecord(ContractModel):
     @classmethod
     def parse_brazilian_date(cls, value: Any) -> Any:
         if isinstance(value, str) and "/" in value:
-            return datetime.strptime(value, "%d/%m/%Y").date()
+            return datetime.strptime(value, "%d/%m/%Y").replace(tzinfo=UTC).date()
         return value
 
     @field_validator("valor", mode="before")

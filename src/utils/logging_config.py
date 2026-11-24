@@ -42,7 +42,9 @@ def configure_logging(log_dir: Path, *, level: int = logging.INFO) -> Path:
 
     root_logger = logging.getLogger()
     root_logger.setLevel(level)
-    root_logger.handlers.clear()
+    for handler in list(root_logger.handlers):
+        root_logger.removeHandler(handler)
+        handler.close()
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
     return log_path

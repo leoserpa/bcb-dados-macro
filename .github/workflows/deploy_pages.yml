@@ -1,0 +1,92 @@
+name: Deploy Evidence Dashboard
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/gold/**"
+      - "reports/**"
+      - ".github/workflows/deploy_pages.yml"
+  workflow_run:
+    workflows:
+      - "BCB Data Pipeline"
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Evidence dependencies
+        working-directory: reports
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      - name: Build Evidence sources and static site
+        working-directory: reports
+        run: |
+          npm run sources
+          npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Resolve build directory
+        id: pages_dir
+        run: |
+          if [ -f "reports/build/bcb-dados-macro/index.html" ]; then
+            BUILD_DIR="reports/build/bcb-dados-macro"
+          else
+            BUILD_DIR="reports/build"
+          fi
+          touch "${BUILD_DIR}/.nojekyll"
+          echo "path=${BUILD_DIR}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.pages_dir.outputs.path }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

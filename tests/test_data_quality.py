@@ -176,3 +176,35 @@ def test_missing_latest_date_fails_freshness_without_crashing(valid_database: Pa
 
     assert not report.passed
     assert _check(report, "sgs_freshness").actual is None
+
+
+def test_missing_focus_detail_and_mean_columns_are_reported(valid_database: Path) -> None:
+    connection = duckdb.connect(str(valid_database))
+    try:
+        connection.execute("ALTER TABLE focus_expectations DROP COLUMN indicador_detalhe")
+        connection.execute("ALTER TABLE focus_expectations DROP COLUMN media")
+    finally:
+        connection.close()
+
+    report = validate_database(valid_database, as_of_date=date(2026, 10, 21))
+
+    assert not report.passed
+    assert _check(report, "focus_expectations_required_columns").actual == [
+        "indicador_detalhe",
+        "media",
+    ]
+
+
+def test_null_focus_primary_key_columns_fail_not_null_check(valid_database: Path) -> None:
+    connection = duckdb.connect(str(valid_database))
+    try:
+        connection.execute(
+            "UPDATE focus_expectations SET indicador_detalhe = NULL WHERE indicador = 'IPCA'"
+        )
+    finally:
+        connection.close()
+
+    report = validate_database(valid_database, as_of_date=date(2026, 10, 21))
+
+    assert not report.passed
+    assert _check(report, "focus_required_not_null").actual == 1

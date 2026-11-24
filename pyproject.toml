@@ -7,6 +7,7 @@ name = "bcb-macro-lakehouse"
 version = "0.1.0"
 description = "Pipeline Medallion para dados macroeconômicos do Banco Central do Brasil"
 readme = "README.md"
+license = "GPL-3.0-only"
 requires-python = ">=3.11"
 dependencies = [
     "duckdb>=1.1",
@@ -33,10 +34,13 @@ packages = ["src"]
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-exclude = [".agents", ".venv", "data"]
+exclude = [".agents", ".venv", "data", "reports"]
 
 [tool.ruff.lint]
-select = ["B", "E", "F", "I", "SIM", "UP"]
+select = ["B", "DTZ", "E", "F", "I", "PERF", "PT", "RUF", "S", "SIM", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
 
 [tool.pytest.ini_options]
 addopts = "-q"
