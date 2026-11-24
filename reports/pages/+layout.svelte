@@ -209,6 +209,15 @@
     border-radius: 10px;
     padding: 18px 20px;
     min-width: 0;
+    --base-100: #161616;
+    --twc-base-100: 0 0% 8.6%;
+  }
+
+  :global(.terminal-panel .chart-container),
+  :global(.terminal-panel .chart-container > div),
+  :global(.terminal-panel .bg-base-100),
+  :global(.terminal-panel canvas) {
+    background-color: transparent !important;
   }
 
   :global(.terminal-panel-title) {

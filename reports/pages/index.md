@@ -123,6 +123,7 @@ ORDER BY p.data_referencia
       yGridlines=false
       xGridlines=false
       colorPalette={['#3b82f6']}
+      echartsOptions={{ backgroundColor: 'transparent' }}
       chartAreaHeight=210
     />
   </div>
@@ -137,6 +138,7 @@ ORDER BY p.data_referencia
       yGridlines=false
       xGridlines=false
       colorPalette={['#3b82f6']}
+      echartsOptions={{ backgroundColor: 'transparent' }}
       chartAreaHeight=210
     />
   </div>

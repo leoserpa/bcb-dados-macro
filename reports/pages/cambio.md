@@ -75,7 +75,7 @@ ORDER BY p.data_referencia
 <div class="terminal-panel" style="margin-bottom: 18px;">
   <div class="terminal-panel-title">Evolução histórica da PTAX de fechamento — USD/BRL</div>
   <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = 'USD' · priorizando Fechamento</div>
-  <LineChart data={ptax_historico} x=data y=cotacao_venda yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} chartAreaHeight=220 />
+  <LineChart data={ptax_historico} x=data y=cotacao_venda yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=220 />
 </div>
 
 ```sql reservas_serie
@@ -108,12 +108,12 @@ ORDER BY 1, 2
   <div class="terminal-panel">
     <div class="terminal-panel-title">Evolução das Reservas Internacionais (colchão externo)</div>
     <div class="terminal-panel-sub">SGS 13982 · US$ milhões</div>
-    <LineChart data={reservas_serie} x=data y=reservas_usd_mi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#737373']} chartAreaHeight=200 />
+    <LineChart data={reservas_serie} x=data y=reservas_usd_mi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Fluxo cambial mensal — Comercial vs Financeiro</div>
     <div class="terminal-panel-sub">SGS 13967 (Comercial) vs SGS 13970 (Financeiro) · US$ milhões/mês</div>
-    <BarChart data={fluxo_cambial_mensal} x=mes y=fluxo_usd_mi series=segmento yFmt=num0 type=grouped yGridlines=false xGridlines=false colorPalette={['#525252', '#3b82f6']} chartAreaHeight=200 />
+    <BarChart data={fluxo_cambial_mensal} x=mes y=fluxo_usd_mi series=segmento yFmt=num0 type=grouped yGridlines=false xGridlines=false colorPalette={['#525252', '#3b82f6']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
   </div>
 </div>
 

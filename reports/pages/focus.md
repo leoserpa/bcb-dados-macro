@@ -77,12 +77,12 @@ ORDER BY data
   <div class="terminal-panel">
     <div class="terminal-panel-title">Evolução da mediana vs média — {inputs.indicador.value} ({inputs.ano_ref.value})</div>
     <div class="terminal-panel-sub">Mediana em destaque (azul) vs Média (cinza)</div>
-    <LineChart data={focus_serie} x=data y={['mediana', 'media']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#737373']} chartAreaHeight=210 />
+    <LineChart data={focus_serie} x=data y={['mediana', 'media']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Dispersão de mercado — Mediana entre piso e teto</div>
     <div class="terminal-panel-sub">Mediana (azul) com limites mínimo e máximo (cinza)</div>
-    <LineChart data={focus_serie} x=data y={['mediana', 'minimo', 'maximo']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#525252', '#525252']} chartAreaHeight=210 />
+    <LineChart data={focus_serie} x=data y={['mediana', 'minimo', 'maximo']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#525252', '#525252']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
   </div>
 </div>
 
