@@ -2,7 +2,12 @@
 title: Juros, Atividade Econômica, Crédito & Fiscal (SGS)
 ---
 
-Séries domésticas do **Sistema Gerenciador de Séries Temporais (SGS)** do Banco Central (`432`, `11`, `24364`, `13762`, `20631`, `21082`) — histórico completo 2010–2026.
+<div class="terminal-header">
+  <div>
+    <h1 class="terminal-title">Juros, Atividade Econômica, Crédito & Fiscal (SGS)</h1>
+    <p class="terminal-subtitle">Séries 432, 11, 24364, 13762, 20631, 21082 · Histórico completo 2010–2026</p>
+  </div>
+</div>
 
 <div class="filter-bar">
   <Dropdown name=horizonte title="Horizonte Temporal" defaultValue="1825">
@@ -62,31 +67,18 @@ WHERE s.codigo_serie = 11
 ORDER BY s.data
 ```
 
-<Grid cols=2>
-    <LineChart
-        data={selic_meta}
-        x=data
-        y=meta_selic
-        title="Trajetória da Meta Selic definida pelo Copom"
-        subtitle="SGS 432 · Copom (% a.a.)"
-        yFmt=num2
-        step=true
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-    />
-    <LineChart
-        data={selic_diaria}
-        x=data
-        y=selic_diaria
-        title="Taxa Selic efetiva diária"
-        subtitle="SGS 11 · Taxa efetiva diária (%)"
-        yFmt=num4
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#737373']}
-    />
-</Grid>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Trajetória da Meta Selic definida pelo Copom</div>
+    <div class="terminal-panel-sub">SGS 432 · % a.a.</div>
+    <LineChart data={selic_meta} x=data y=meta_selic yFmt=num2 step=true yGridlines=false xGridlines=false colorPalette={['#3b82f6']} chartAreaHeight=190 />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Taxa Selic efetiva diária</div>
+    <div class="terminal-panel-sub">SGS 11 · % ao dia</div>
+    <LineChart data={selic_diaria} x=data y=selic_diaria yFmt=num4 yGridlines=false xGridlines=false colorPalette={['#737373']} chartAreaHeight=190 />
+  </div>
+</div>
 
 ```sql ibc_br
 WITH limite AS (
@@ -110,30 +102,18 @@ WHERE s.codigo_serie = 13762
 ORDER BY s.data
 ```
 
-<Grid cols=2>
-    <LineChart
-        data={ibc_br}
-        x=data
-        y=ibc_br
-        title="Atividade econômica — IBC-Br com ajuste sazonal"
-        subtitle="SGS 24364 · Índice com ajuste sazonal"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#737373']}
-    />
-    <LineChart
-        data={dbgg_pib}
-        x=data
-        y=dbgg_pib
-        title="Trajetória fiscal — Dívida Bruta do Governo Geral (% PIB)"
-        subtitle="SGS 13762 · Dívida Bruta do Governo Geral (% PIB)"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-    />
-</Grid>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Atividade econômica — IBC-Br com ajuste sazonal</div>
+    <div class="terminal-panel-sub">SGS 24364 · Índice dessazonalizado</div>
+    <LineChart data={ibc_br} x=data y=ibc_br yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#737373']} chartAreaHeight=190 />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Trajetória fiscal — Dívida Bruta do Governo Geral (% PIB)</div>
+    <div class="terminal-panel-sub">SGS 13762 · % do PIB</div>
+    <LineChart data={dbgg_pib} x=data y=dbgg_pib yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} chartAreaHeight=190 />
+  </div>
+</div>
 
 ```sql concessoes_credito
 WITH limite AS (
@@ -157,27 +137,15 @@ WHERE s.codigo_serie = 21082
 ORDER BY s.data
 ```
 
-<Grid cols=2>
-    <BarChart
-        data={concessoes_credito}
-        x=data
-        y=concessoes_r_mi
-        title="Volume mensal de concessões totais de crédito"
-        subtitle="SGS 20631 · R$ milhões"
-        yFmt=num0
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#525252']}
-    />
-    <LineChart
-        data={inadimplencia_sfn}
-        x=data
-        y=inadimplencia_pct
-        title="Evolução da inadimplência total do SFN"
-        subtitle="SGS 21082 · % da carteira total"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-    />
-</Grid>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Volume mensal de concessões totais de crédito</div>
+    <div class="terminal-panel-sub">SGS 20631 · R$ milhões</div>
+    <BarChart data={concessoes_credito} x=data y=concessoes_r_mi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#525252']} chartAreaHeight=190 />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Evolução da inadimplência total do SFN</div>
+    <div class="terminal-panel-sub">SGS 21082 · % da carteira total</div>
+    <LineChart data={inadimplencia_sfn} x=data y=inadimplencia_pct yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} chartAreaHeight=190 />
+  </div>
+</div>

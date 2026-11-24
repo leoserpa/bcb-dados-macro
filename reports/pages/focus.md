@@ -2,7 +2,12 @@
 title: Expectativas de Mercado — Boletim Focus (OData)
 ---
 
-Expectativas anuais coletadas via **API Olinda (Focus)** — 122.217 observações para **IPCA**, **Selic**, **Câmbio** e **PIB Total** (Base 0 e Base 1).
+<div class="terminal-header">
+  <div>
+    <h1 class="terminal-title">Expectativas de Mercado — Boletim Focus (OData)</h1>
+    <p class="terminal-subtitle">122.217 observações · IPCA, Selic, Câmbio, PIB Total · Base 0 (30d) e Base 1 (5d úteis)</p>
+  </div>
+</div>
 
 ```sql focus_indicadores
 SELECT DISTINCT indicador
@@ -68,32 +73,18 @@ WHERE indicador = '${inputs.indicador.value}'
 ORDER BY data
 ```
 
-<Grid cols=2>
-    <LineChart
-        data={focus_serie}
-        x=data
-        y={['mediana', 'media']}
-        title="Evolução da mediana vs média — {inputs.indicador.value} ({inputs.ano_ref.value})"
-        subtitle="Mediana em destaque (azul) vs Média (cinza)"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6', '#737373']}
-        chartAreaHeight=220
-    />
-    <LineChart
-        data={focus_serie}
-        x=data
-        y={['mediana', 'minimo', 'maximo']}
-        title="Dispersão de mercado — Mediana entre piso e teto das projeções"
-        subtitle="Mediana (azul) com limites mínimo e máximo (cinza)"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6', '#525252', '#525252']}
-        chartAreaHeight=220
-    />
-</Grid>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Evolução da mediana vs média — {inputs.indicador.value} ({inputs.ano_ref.value})</div>
+    <div class="terminal-panel-sub">Mediana em destaque (azul) vs Média (cinza)</div>
+    <LineChart data={focus_serie} x=data y={['mediana', 'media']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#737373']} chartAreaHeight=210 />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Dispersão de mercado — Mediana entre piso e teto</div>
+    <div class="terminal-panel-sub">Mediana (azul) com limites mínimo e máximo (cinza)</div>
+    <LineChart data={focus_serie} x=data y={['mediana', 'minimo', 'maximo']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6', '#525252', '#525252']} chartAreaHeight=210 />
+  </div>
+</div>
 
 ```sql focus_curva
 WITH ultima_coleta AS (
@@ -128,9 +119,10 @@ WHERE f.base_calculo = CAST('${inputs.base_calculo.value}' AS INTEGER)
 ORDER BY f.indicador, f.data_referencia
 ```
 
-### Curva Completa de Expectativas — Todos os Indicadores (2026–2030)
-
-<DataTable data={focus_curva} rows=20>
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Curva Completa de Expectativas — Todos os Indicadores</div>
+  <div class="terminal-panel-sub">focus_expectations · última coleta por indicador e ano de referência</div>
+  <DataTable data={focus_curva} rows=20>
     <Column id=indicador title="Indicador" />
     <Column id=ano_referencia title="Ano Ref." />
     <Column id=data_coleta title="Data Coleta" />
@@ -139,4 +131,5 @@ ORDER BY f.indicador, f.data_referencia
     <Column id=minimo title="Mínimo" fmt=num2 />
     <Column id=maximo title="Máximo" fmt=num2 />
     <Column id=respondentes title="Respondentes" fmt=num0 />
-</DataTable>
+  </DataTable>
+</div>

@@ -2,7 +2,16 @@
 title: Panorama Macroeconômico — Banco Central do Brasil
 ---
 
-Camada **Gold** (`bcb_macro.duckdb`) · 9 séries **SGS** + **PTAX USD** (4.241 dias úteis) + **Focus OData** (122.217 observações).
+<div class="terminal-header">
+  <div>
+    <h1 class="terminal-title">Panorama Macroeconômico — Banco Central do Brasil</h1>
+    <p class="terminal-subtitle">Camada Gold · SGS (9 séries) + PTAX USD (4.241 dias) + Focus OData (122.217 obs.)</p>
+  </div>
+  <div class="status-pills">
+    <span class="status-pill"><span class="status-dot"></span>Gold: bcb_macro.duckdb</span>
+    <span class="status-pill"><span class="status-dot"></span>23/23 Quality Gates OK</span>
+  </div>
+</div>
 
 <div class="filter-bar">
   <Dropdown name=horizonte_overview title="Período" defaultValue="1825">
@@ -12,7 +21,7 @@ Camada **Gold** (`bcb_macro.duckdb`) · 9 séries **SGS** + **PTAX USD** (4.241 
     <DropdownOption value="36500" valueLabel="Todo o histórico (2010+)" />
   </Dropdown>
 
-  <Dropdown name=base_focus title="Base do Consenso Focus" defaultValue="0">
+  <Dropdown name=base_focus title="Base Focus" defaultValue="0">
     <DropdownOption value="0" valueLabel="Base 0 — Últimos 30 dias" />
     <DropdownOption value="1" valueLabel="Base 1 — Últimos 5 dias úteis" />
   </Dropdown>
@@ -101,33 +110,37 @@ WHERE p.moeda = 'USD'
 ORDER BY p.data_referencia
 ```
 
-<Grid cols=2>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Evolução da Meta Selic — ciclos de política monetária</div>
+    <div class="terminal-panel-sub">bcb_macro.sgs_series · codigo_serie = 432 · % a.a.</div>
     <LineChart
-        data={selic_recente}
-        x=data
-        y=meta_selic
-        title="Evolução da Meta Selic — ciclos de política monetária"
-        subtitle="Copom (SGS 432) · % a.a."
-        yFmt=num2
-        step=true
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-        chartAreaHeight=220
+      data={selic_recente}
+      x=data
+      y=meta_selic
+      yFmt=num2
+      step=true
+      yGridlines=false
+      xGridlines=false
+      colorPalette={['#3b82f6']}
+      chartAreaHeight=210
     />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Evolução da PTAX de fechamento — USD/BRL</div>
+    <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = 'USD'</div>
     <LineChart
-        data={ptax_recente}
-        x=data
-        y=cotacao_venda
-        title="Evolução da PTAX de fechamento — USD/BRL"
-        subtitle="Boletim de fechamento USD/BRL (ptax_daily)"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-        chartAreaHeight=220
+      data={ptax_recente}
+      x=data
+      y=cotacao_venda
+      yFmt=num2
+      yGridlines=false
+      xGridlines=false
+      colorPalette={['#3b82f6']}
+      chartAreaHeight=210
     />
-</Grid>
+  </div>
+</div>
 
 ```sql tabela_sgs_latest
 SELECT
@@ -160,33 +173,26 @@ WHERE v.fonte = 'FOCUS'
 ORDER BY v.indicador, v.periodo_referencia
 ```
 
-<Grid cols=2>
-  <div>
-    <h3>Últimas Observações — Todas as 9 Séries SGS</h3>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Últimas Observações — Todas as 9 Séries SGS</div>
+    <div class="terminal-panel-sub">vw_macro_latest WHERE fonte = 'SGS'</div>
     <DataTable data={tabela_sgs_latest} rows=10>
-      <Column id=codigo title="Série" />
+      <Column id=codigo title="Cod" />
       <Column id=serie title="Indicador" />
-      <Column id=frequencia title="Frequência" />
-      <Column id=ultima_data title="Última Data" />
+      <Column id=frequencia title="Freq" />
+      <Column id=ultima_data title="Data" />
       <Column id=valor title="Valor" fmt=num2 />
     </DataTable>
   </div>
-  <div>
-    <h3>Consenso Boletim Focus (Base {inputs.base_focus.value})</h3>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Consenso Boletim Focus (Base {inputs.base_focus.value})</div>
+    <div class="terminal-panel-sub">vw_macro_latest WHERE fonte = 'FOCUS'</div>
     <DataTable data={focus_resumo} rows=16>
       <Column id=indicador title="Indicador" />
-      <Column id=ano title="Ano Ref." />
+      <Column id=ano title="Ano" />
       <Column id=data_coleta title="Coleta" />
       <Column id=mediana title="Mediana" fmt=num2 />
     </DataTable>
   </div>
-</Grid>
-
----
-
-### Explorar em Detalhe
-
-- [Inteligência de Mercado, Regimes & Simulador](./inteligencia-de-mercado)
-- [Juros, Atividade, Crédito e Fiscal (SGS)](./juros-e-atividade)
-- [Câmbio (PTAX) e Setor Externo](./cambio)
-- [Expectativas de Mercado (Boletim Focus)](./focus)
+</div>

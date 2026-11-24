@@ -2,7 +2,15 @@
 title: Câmbio (PTAX) & Setor Externo
 ---
 
-Cotações diárias **PTAX** (priorizando o boletim de fechamento), **Reservas Internacionais (`13982`)** e **Fluxos Cambiais (`13967` e `13970`)**.
+<div class="terminal-header">
+  <div>
+    <h1 class="terminal-title">Câmbio (PTAX) & Setor Externo</h1>
+    <p class="terminal-subtitle">ptax_daily (4.241 dias, priorizando Fechamento) + Reservas (13982) + Fluxos (13967, 13970)</p>
+  </div>
+  <div class="status-pills">
+    <span class="status-pill">Moeda: USD · Boletim Fechamento</span>
+  </div>
+</div>
 
 <div class="filter-bar">
   <Dropdown name=horizonte_cambio title="Horizonte Temporal" defaultValue="1825">
@@ -64,18 +72,11 @@ WHERE p.moeda = 'USD'
 ORDER BY p.data_referencia
 ```
 
-<LineChart
-    data={ptax_historico}
-    x=data
-    y=cotacao_venda
-    title="Evolução histórica da PTAX de fechamento — USD/BRL"
-    subtitle="ptax_daily · USD/BRL (boletim de fechamento)"
-    yFmt=num2
-    yGridlines=false
-    xGridlines=false
-    colorPalette={['#3b82f6']}
-    chartAreaHeight=240
-/>
+<div class="terminal-panel" style="margin-bottom: 18px;">
+  <div class="terminal-panel-title">Evolução histórica da PTAX de fechamento — USD/BRL</div>
+  <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = 'USD' · priorizando Fechamento</div>
+  <LineChart data={ptax_historico} x=data y=cotacao_venda yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#3b82f6']} chartAreaHeight=220 />
+</div>
 
 ```sql reservas_serie
 WITH limite AS (
@@ -103,32 +104,18 @@ GROUP BY 1, 2
 ORDER BY 1, 2
 ```
 
-<Grid cols=2>
-    <LineChart
-        data={reservas_serie}
-        x=data
-        y=reservas_usd_mi
-        title="Evolução das Reservas Internacionais (colchão externo)"
-        subtitle="SGS 13982 · US$ milhões"
-        yFmt=num0
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#737373']}
-    />
-    <BarChart
-        data={fluxo_cambial_mensal}
-        x=mes
-        y=fluxo_usd_mi
-        series=segmento
-        title="Fluxo financeiro concentra oscilações frente ao saldo comercial"
-        subtitle="SGS 13967 (Comercial) vs SGS 13970 (Financeiro) · US$ milhões/mês"
-        yFmt=num0
-        type=grouped
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#525252', '#3b82f6']}
-    />
-</Grid>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Evolução das Reservas Internacionais (colchão externo)</div>
+    <div class="terminal-panel-sub">SGS 13982 · US$ milhões</div>
+    <LineChart data={reservas_serie} x=data y=reservas_usd_mi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#737373']} chartAreaHeight=200 />
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Fluxo cambial mensal — Comercial vs Financeiro</div>
+    <div class="terminal-panel-sub">SGS 13967 (Comercial) vs SGS 13970 (Financeiro) · US$ milhões/mês</div>
+    <BarChart data={fluxo_cambial_mensal} x=mes y=fluxo_usd_mi series=segmento yFmt=num0 type=grouped yGridlines=false xGridlines=false colorPalette={['#525252', '#3b82f6']} chartAreaHeight=200 />
+  </div>
+</div>
 
 ```sql ptax_tabela
 SELECT
@@ -144,13 +131,15 @@ ORDER BY data_referencia DESC
 LIMIT 30
 ```
 
-### Últimos Boletins PTAX Diários (USD)
-
-<DataTable data={ptax_tabela} rows=10>
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Últimos Boletins PTAX Diários (USD)</div>
+  <div class="terminal-panel-sub">ptax_daily ORDER BY data_referencia DESC</div>
+  <DataTable data={ptax_tabela} rows=10>
     <Column id=data title="Data" />
     <Column id=moeda title="Moeda" />
     <Column id=tipo_boletim title="Boletim" />
     <Column id=cotacao_compra title="Compra (R$)" fmt=num4 />
     <Column id=cotacao_venda title="Venda (R$)" fmt=num4 />
     <Column id=spread title="Spread (R$)" fmt=num4 />
-</DataTable>
+  </DataTable>
+</div>

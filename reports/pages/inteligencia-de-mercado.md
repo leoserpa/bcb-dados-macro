@@ -2,36 +2,44 @@
 title: Inteligência de Mercado, Regimes & Simulador
 ---
 
-Motor analítico sobre a camada **Gold** (`vw_macro_regime`, `ptax_risk_metrics`, `vw_focus_repricing`): **Juro Real Ex-Ante**, **Volatilidade & Z-Score PTAX**, **Repricing Focus (5d vs 30d)** e **Simulador de Cenários** no DuckDB-WASM.
+<div class="terminal-header">
+  <div>
+    <h1 class="terminal-title">Inteligência de Mercado, Regimes & Simulador</h1>
+    <p class="terminal-subtitle">Motor analítico Gold: Juro Real Ex-Ante · Repricing Focus (5d vs 30d) · Volatilidade & Z-Score PTAX · Cenários</p>
+  </div>
+  <div class="status-pills">
+    <span class="status-pill"><span class="status-dot"></span>DuckDB-WASM Live</span>
+  </div>
+</div>
 
 <div class="filter-bar">
-  <Dropdown name=horizonte_intel title="Horizonte Histórico" defaultValue="1825">
+  <Dropdown name=horizonte_intel title="Horizonte" defaultValue="1825">
     <DropdownOption value="730" valueLabel="Últimos 2 anos" />
     <DropdownOption value="1825" valueLabel="Últimos 5 anos" />
     <DropdownOption value="3650" valueLabel="Últimos 10 anos" />
   </Dropdown>
 
-  <Dropdown name=choque_selic title="Choque Selic (p.p.)" defaultValue="0">
-    <DropdownOption value="-1.0" valueLabel="-1,00 p.p. (Corte)" />
-    <DropdownOption value="-0.5" valueLabel="-0,50 p.p. (Corte)" />
+  <Dropdown name=choque_selic title="Choque Selic" defaultValue="0">
+    <DropdownOption value="-1.0" valueLabel="-1,00 p.p." />
+    <DropdownOption value="-0.5" valueLabel="-0,50 p.p." />
     <DropdownOption value="0" valueLabel="0,00 p.p. (Atual)" />
-    <DropdownOption value="0.5" valueLabel="+0,50 p.p. (Alta)" />
-    <DropdownOption value="1.0" valueLabel="+1,00 p.p. (Alta)" />
-    <DropdownOption value="1.5" valueLabel="+1,50 p.p. (Hawkish)" />
+    <DropdownOption value="0.5" valueLabel="+0,50 p.p." />
+    <DropdownOption value="1.0" valueLabel="+1,00 p.p." />
+    <DropdownOption value="1.5" valueLabel="+1,50 p.p." />
   </Dropdown>
 
-  <Dropdown name=choque_ipca title="Choque IPCA Focus (p.p.)" defaultValue="0">
-    <DropdownOption value="-0.5" valueLabel="-0,50 p.p. (Desinflação)" />
+  <Dropdown name=choque_ipca title="Choque IPCA" defaultValue="0">
+    <DropdownOption value="-0.5" valueLabel="-0,50 p.p." />
     <DropdownOption value="0" valueLabel="0,00 p.p. (Consenso)" />
-    <DropdownOption value="0.5" valueLabel="+0,50 p.p. (Pressão)" />
-    <DropdownOption value="1.0" valueLabel="+1,00 p.p. (Desancoragem)" />
+    <DropdownOption value="0.5" valueLabel="+0,50 p.p." />
+    <DropdownOption value="1.0" valueLabel="+1,00 p.p." />
   </Dropdown>
 
-  <Dropdown name=choque_fx title="Choque Câmbio Spot (%)" defaultValue="0">
-    <DropdownOption value="-5" valueLabel="-5% (Apreciação BRL)" />
+  <Dropdown name=choque_fx title="Choque Câmbio" defaultValue="0">
+    <DropdownOption value="-5" valueLabel="-5%" />
     <DropdownOption value="0" valueLabel="0% (PTAX Atual)" />
-    <DropdownOption value="5" valueLabel="+5% (Depreciação BRL)" />
-    <DropdownOption value="10" valueLabel="+10% (Stress Cambial)" />
+    <DropdownOption value="5" valueLabel="+5%" />
+    <DropdownOption value="10" valueLabel="+10%" />
   </Dropdown>
 </div>
 
@@ -108,7 +116,7 @@ SELECT
 FROM cenarios
 ```
 
-<div class="section-kicker">Resultado do Simulador de Cenários (Recalculado em Tempo Real)</div>
+<div class="section-kicker">Simulador Interativo de Cenários (Recalculado em Tempo Real)</div>
 
 <div class="kpi-grid-6">
   <KPITerminalCard data={simulador} value="selic_simulada" code="SIMULAÇÃO" title="Selic Simulada" suffix="%" decimals={2} icon="percent" />
@@ -137,19 +145,6 @@ FROM bcb_macro.vw_focus_repricing
 WHERE TRY_CAST(data_referencia AS INTEGER) BETWEEN 2026 AND 2028
 ORDER BY indicador, ano
 ```
-
-### Repricing Focus — Curto Prazo (Base 1: 5d úteis) vs Consenso (Base 0: 30d)
-
-<DataTable data={focus_repricing_tabela} rows=12>
-    <Column id=indicador title="Indicador" />
-    <Column id=ano title="Ano" />
-    <Column id=base_30d title="Base 0 (30d)" fmt=num2 />
-    <Column id=base_5d title="Base 1 (5d)" fmt=num2 />
-    <Column id=repricing_5d_vs_30d title="Repricing (5d-30d)" fmt=num3 />
-    <Column id=drift_30d title="Drift 30d" fmt=num3 />
-    <Column id=dispersao title="Desvio-Padrão" fmt=num2 />
-    <Column id=sinal title="Sinal" />
-</DataTable>
 
 ```sql regime_serie
 WITH limite AS (
@@ -181,29 +176,47 @@ WHERE p.moeda = 'USD'
 ORDER BY p.data_referencia
 ```
 
-<Grid cols=2>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Repricing Focus — Base 1 (5d úteis) vs Base 0 (30d)</div>
+    <div class="terminal-panel-sub">vw_focus_repricing · Drift 30d e dispersão institucional</div>
+    <DataTable data={focus_repricing_tabela} rows=12>
+      <Column id=indicador title="Indicador" />
+      <Column id=ano title="Ano" />
+      <Column id=base_30d title="Base 30d" fmt=num2 />
+      <Column id=base_5d title="Base 5d" fmt=num2 />
+      <Column id=repricing_5d_vs_30d title="Repricing" fmt=num3 />
+      <Column id=drift_30d title="Drift 30d" fmt=num3 />
+      <Column id=sinal title="Sinal" />
+    </DataTable>
+  </div>
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Juro Real Ex-Ante vs Selic Nominal e IPCA Focus</div>
+    <div class="terminal-panel-sub">vw_macro_regime · Juro Real (azul) vs Selic e IPCA (cinza)</div>
     <LineChart
-        data={regime_serie}
-        x=data
-        y={['juro_real_ex_ante', 'selic_meta', 'ipca_focus_ano']}
-        title="Juro Real Ex-Ante vs Selic Nominal e IPCA Focus"
-        subtitle="Juro Real (azul) vs Selic Nominal e IPCA Focus (cinza)"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6', '#737373', '#525252']}
-        chartAreaHeight=220
+      data={regime_serie}
+      x=data
+      y={['juro_real_ex_ante', 'selic_meta', 'ipca_focus_ano']}
+      yFmt=num2
+      yGridlines=false
+      xGridlines=false
+      colorPalette={['#3b82f6', '#737373', '#525252']}
+      chartAreaHeight=240
     />
-    <LineChart
-        data={vol_ptax_serie}
-        x=data
-        y=vol_anualizada_21d
-        title="Volatilidade anualizada de 21 dias — PTAX USD/BRL"
-        subtitle="Desvio-padrão anualizado dos retornos log diários da PTAX USD"
-        yFmt=num2
-        yGridlines=false
-        xGridlines=false
-        colorPalette={['#3b82f6']}
-        chartAreaHeight=220
-    />
-</Grid>
+  </div>
+</div>
+
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Volatilidade anualizada de 21 dias — PTAX USD/BRL</div>
+  <div class="terminal-panel-sub">ptax_risk_metrics · desvio-padrão anualizado dos retornos log diários</div>
+  <LineChart
+    data={vol_ptax_serie}
+    x=data
+    y=vol_anualizada_21d
+    yFmt=num2
+    yGridlines=false
+    xGridlines=false
+    colorPalette={['#3b82f6']}
+    chartAreaHeight=200
+  />
+</div>
