@@ -56,7 +56,7 @@
       .replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
-  $: builtSeries = yCols
+  $: seriesMeta = yCols
     .map((col, idx) => {
       const pts = [];
       let lastPt = null;
@@ -65,9 +65,7 @@
         const rawY = r[col];
         if (rawX === null || rawX === undefined) continue;
         const iso = toIsoDate(rawX);
-        if (rawY === null || rawY === undefined || rawY === '') {
-          pts.push([iso, null]);
-        } else {
+        if (rawY !== null && rawY !== undefined && rawY !== '') {
           const num = Number(rawY);
           if (!Number.isNaN(num)) {
             pts.push([iso, num]);
@@ -81,69 +79,74 @@
       const isPrimary = idx === 0;
       const isDashed = Array.isArray(dashedIndices) && dashedIndices.includes(idx);
       const name = labels[idx] || prettifyName(col);
+      const endText = formatVal(lastPt.val);
 
       return {
-        name,
-        type: 'line',
-        data: pts,
-        showSymbol: false,
-        smooth: false,
-        step: step && isPrimary ? 'end' : false,
-        connectNulls: true,
-        lineStyle: {
-          color,
-          width: isPrimary ? 2 : 1.35,
-          type: isDashed ? 'dashed' : 'solid',
-        },
-        itemStyle: { color },
-        emphasis: {
-          focus: 'series',
-          itemStyle: {
+        endText,
+        series: {
+          name,
+          type: 'line',
+          data: pts,
+          showSymbol: false,
+          smooth: false,
+          step: step && isPrimary ? 'end' : false,
+          connectNulls: true,
+          lineStyle: {
             color,
-            borderColor: '#161616',
-            borderWidth: 2,
+            width: isPrimary ? 2 : 1.35,
+            type: isDashed ? 'dashed' : 'solid',
           },
-        },
-        markPoint:
-          isPrimary && showEndLabel
+          itemStyle: { color },
+          emphasis: {
+            focus: 'series',
+            itemStyle: {
+              color,
+              borderColor: '#161616',
+              borderWidth: 2,
+            },
+          },
+          endLabel: showEndLabel
+            ? {
+                show: true,
+                distance: 10,
+                formatter: () => endText,
+                color: isPrimary ? color : '#a6a6a6',
+                fontFamily: 'IBM Plex Mono, ui-monospace, monospace',
+                fontWeight: isPrimary ? 700 : 500,
+                fontSize: isPrimary ? 11.5 : 10.5,
+              }
+            : { show: false },
+          labelLayout: showEndLabel ? { moveOverlap: 'shiftY' } : undefined,
+          markPoint: showEndLabel
             ? {
                 symbol: 'circle',
-                symbolSize: 8,
+                symbolSize: isPrimary ? 8 : 5,
                 silent: true,
+                label: { show: false },
                 itemStyle: {
                   color,
                   borderColor: '#161616',
-                  borderWidth: 2,
-                },
-                label: {
-                  show: true,
-                  position: 'top',
-                  distance: 7,
-                  align: 'right',
-                  formatter: () => formatVal(lastPt.val),
-                  color,
-                  fontFamily: 'IBM Plex Mono, ui-monospace, monospace',
-                  fontWeight: 700,
-                  fontSize: 11.5,
-                  backgroundColor: 'rgba(22, 22, 22, 0.88)',
-                  padding: [2, 5],
-                  borderRadius: 4,
+                  borderWidth: isPrimary ? 2 : 1.5,
                 },
                 data: [{ coord: [lastPt.x, lastPt.val] }],
               }
             : undefined,
+        },
       };
     })
     .filter(Boolean);
 
+  $: builtSeries = seriesMeta.map((m) => m.series);
   $: hasLegend = builtSeries.length > 1;
+  $: maxEndChars = seriesMeta.reduce((acc, m) => Math.max(acc, m.endText.length), 6);
+  $: rightPad = showEndLabel ? Math.max(62, maxEndChars * 8 + 20) : 16;
 
   $: config = {
     backgroundColor: 'transparent',
     animationDuration: 300,
     grid: {
-      top: hasLegend ? 38 : 28,
-      right: 18,
+      top: hasLegend ? 36 : 20,
+      right: rightPad,
       bottom: 24,
       left: 10,
       containLabel: true,
@@ -217,7 +220,7 @@
     yAxis: {
       type: 'value',
       scale: true,
-      boundaryGap: ['8%', '18%'],
+      boundaryGap: ['8%', '12%'],
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { show: false },
