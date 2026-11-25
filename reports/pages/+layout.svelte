@@ -242,19 +242,19 @@
   :global(html[data-theme='dark']) {
     color-scheme: dark;
     accent-color: #ff6b00;
-    --bcb-canvas: #0f0f0f;
-    --bcb-surface: #161616;
-    --bcb-elevated: #212121;
-    --bcb-border: #2a2a2a;
-    --bcb-divider: #202020;
+    --bcb-canvas: #191c1d;
+    --bcb-surface: #0d0e10;
+    --bcb-elevated: #1b1f20;
+    --bcb-border: #2b2f30;
+    --bcb-divider: #1d2021;
     --bcb-text: #f5f5f5;
     --bcb-text-secondary: #a6a6a6;
-    --bcb-text-muted: #737373;
-    --bcb-text-dim: #575757;
+    --bcb-text-muted: #8a9092;
+    --bcb-text-dim: #63696b;
     --bcb-accent: #ff6b00;
     --target-size: 28px;
-    --scrollbar-track: #161616;
-    --scrollbar-thumb: #525252;
+    --scrollbar-track: #191c1d;
+    --scrollbar-thumb: #525755;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
@@ -287,12 +287,12 @@
 
   :global(html) {
     scroll-padding-top: calc(4.25rem + env(safe-area-inset-top, 0px));
-    background-color: #0f0f0f !important;
+    background-color: #191c1d !important;
   }
 
   :global(html),
   :global(body) {
-    background-color: #0f0f0f !important;
+    background-color: #191c1d !important;
     color: #f5f5f5 !important;
     font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif !important;
     overflow-wrap: break-word;
@@ -302,7 +302,7 @@
   :global(main),
   :global(#evidence-main-article),
   :global(.content-container) {
-    background-color: #0f0f0f !important;
+    background-color: #191c1d !important;
     max-width: 100% !important;
     width: 100% !important;
     padding: 0 !important;
@@ -342,10 +342,10 @@
     overflow-wrap: anywhere;
   }
 
-  /* ==================== FULL-WIDTH SHELL & STICKY 60px HEADER (SIDRALAKE) ==================== */
+  /* ==================== CENTERED 1440px SIDRALAKE STAGE & FULL-BLEED 60px HEADER ==================== */
   .bcb-app-shell {
     min-block-size: 100dvh;
-    background: #0f0f0f;
+    background: #191c1d;
     color: #f5f5f5;
   }
 
@@ -353,17 +353,17 @@
     position: sticky;
     inset-block-start: 0;
     z-index: 40;
-    background: rgba(22, 22, 22, 0.96);
+    background: rgba(12, 14, 15, 0.96);
     backdrop-filter: blur(8px);
-    border-block-end: 1px solid #2a2a2a;
+    border-block-end: 1px solid #2b2f30;
     padding-block-start: env(safe-area-inset-top, 0px);
-    padding-inline-start: max(clamp(16px, 2.2vw, 36px), env(safe-area-inset-left, 0px));
-    padding-inline-end: max(clamp(16px, 2.2vw, 36px), env(safe-area-inset-right, 0px));
+    padding-inline-start: max(clamp(16px, 2.5vw, 32px), env(safe-area-inset-left, 0px));
+    padding-inline-end: max(clamp(16px, 2.5vw, 32px), env(safe-area-inset-right, 0px));
   }
 
   .header-inner {
     inline-size: 100%;
-    max-inline-size: 1920px;
+    max-inline-size: 1440px;
     margin-inline: auto;
     display: flex;
     align-items: center;
@@ -457,9 +457,9 @@
     list-style: none;
     overflow: auto;
     border-radius: 8px;
-    border: 1px solid #2a2a2a;
-    background: #161616;
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.6);
+    border: 1px solid #2b2f30;
+    background: #0d0e10;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65);
   }
 
   .site-menu::backdrop {
@@ -603,15 +603,15 @@
     }
   }
 
-  /* ==================== FULL-WIDTH PAGE CONTAINER (ZERO WASTED VOIDS) ==================== */
+  /* ==================== CENTERED 1440px PAGE CONTAINER (SIDRALAKE SIDE GUTTERS) ==================== */
   .bcb-page-container {
     inline-size: 100%;
-    max-inline-size: 1920px;
+    max-inline-size: 1440px;
     margin-inline: auto;
-    padding-block-start: 22px;
-    padding-block-end: max(32px, env(safe-area-inset-bottom, 0px));
-    padding-inline-start: max(clamp(16px, 2.2vw, 36px), env(safe-area-inset-left, 0px));
-    padding-inline-end: max(clamp(16px, 2.2vw, 36px), env(safe-area-inset-right, 0px));
+    padding-block-start: 24px;
+    padding-block-end: max(36px, env(safe-area-inset-bottom, 0px));
+    padding-inline-start: max(clamp(16px, 2.5vw, 32px), env(safe-area-inset-left, 0px));
+    padding-inline-end: max(clamp(16px, 2.5vw, 32px), env(safe-area-inset-right, 0px));
   }
 
   /* ==================== PAGE HEADER & INLINE FILTER BAR ==================== */
@@ -669,8 +669,8 @@
     min-block-size: 32px;
     padding: 5px 12px;
     border-radius: 6px;
-    background: #161616;
-    border: 1px solid #2a2a2a;
+    background: #0d0e10;
+    border: 1px solid #2b2f30;
     font-family: 'IBM Plex Mono', ui-monospace, monospace;
     font-size: 11px;
     font-weight: 500;
@@ -685,8 +685,8 @@
 
   /* ==================== BUTTON GROUPS & DROPDOWNS (BLOOMBERG ORANGE) ==================== */
   :global(.controls-bar [role='group']) {
-    background: #161616 !important;
-    border: 1px solid #2a2a2a !important;
+    background: #0d0e10 !important;
+    border: 1px solid #2b2f30 !important;
     border-radius: 6px !important;
     height: auto !important;
     min-block-size: max(34px, var(--target-size));
@@ -700,28 +700,28 @@
     font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
     font-size: 12px !important;
     font-weight: 500 !important;
-    border-color: #2a2a2a !important;
-    background-color: #161616 !important;
-    color: #737373 !important;
+    border-color: #2b2f30 !important;
+    background-color: #0d0e10 !important;
+    color: #8a9092 !important;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   :global(.controls-bar [role='group'] button:hover) {
-    background-color: #212121 !important;
+    background-color: #1b1f20 !important;
     color: #f5f5f5 !important;
   }
 
   :global(.controls-bar [role='group'] button.text-primary),
   :global(.controls-bar [role='group'] button.bg-base-200) {
-    background-color: #212121 !important;
+    background-color: #1b1f20 !important;
     color: #ff6b00 !important;
     font-weight: 600 !important;
   }
 
   :global(.controls-bar button[role='combobox']) {
     min-block-size: max(34px, var(--target-size));
-    background-color: #161616 !important;
-    border-color: #2a2a2a !important;
+    background-color: #0d0e10 !important;
+    border-color: #2b2f30 !important;
     color: #f5f5f5 !important;
     font-size: 12px !important;
   }
@@ -791,13 +791,13 @@
 
   /* ==================== PANELS & DATA-INK CHARTS ==================== */
   :global(.terminal-panel) {
-    background: #161616;
-    border: 1px solid #2a2a2a;
+    background: #0d0e10;
+    border: 1px solid #2b2f30;
     border-radius: 10px;
     padding: 20px 22px;
     min-inline-size: 0;
-    --base-100: #161616;
-    --twc-base-100: 0 0% 8.6%;
+    --base-100: #0d0e10;
+    --twc-base-100: 220 10% 5.7%;
   }
 
   :global(.terminal-panel .chart-container),
@@ -842,14 +842,14 @@
   :global(.terminal-panel:not(.exec-explorer) thead th) {
     position: sticky;
     inset-block-start: 0;
-    background: #161616 !important;
+    background: #0d0e10 !important;
     font-family: 'IBM Plex Mono', ui-monospace, monospace !important;
     font-size: 10.5px !important;
     font-weight: 600 !important;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #737373 !important;
-    border-bottom: 1px solid #202020 !important;
+    color: #8a9092 !important;
+    border-bottom: 1px solid #1d2021 !important;
     padding-block: 9px !important;
     white-space: nowrap;
   }
@@ -857,7 +857,7 @@
   :global(.terminal-panel:not(.exec-explorer) tbody td) {
     font-size: 12px !important;
     color: #d4d4d4 !important;
-    border-bottom: 1px solid #202020 !important;
+    border-bottom: 1px solid #1d2021 !important;
     padding-block: 8px !important;
     white-space: nowrap;
   }
@@ -870,13 +870,13 @@
   .bcb-footer {
     margin-block-start: 28px;
     padding-block-start: 16px;
-    border-block-start: 1px solid #202020;
+    border-block-start: 1px solid #2b2f30;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 8px 16px;
     font-size: 11px;
-    color: #575757;
+    color: #8a9092;
   }
 
   /* ==================== MOBILE & TABLET RESPONSIVENESS ==================== */
