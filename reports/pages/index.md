@@ -1,52 +1,47 @@
 ---
-title: Panorama Macroeconômico — Banco Central do Brasil
+title: Panorama Macroeconômico — BCB
 ---
 
-<div class="terminal-header">
-  <div>
-    <h1 class="terminal-title">Panorama Macroeconômico — Banco Central do Brasil</h1>
-    <p class="terminal-subtitle">Camada Gold · SGS (17 séries) · PTAX (USD/EUR) · Focus & Top 5 OData</p>
+<div class="page-hero">
+  <div class="page-title-group">
+    <h1 class="page-title">Panorama Macroeconômico — Brasil</h1>
+    <p class="page-subtitle">17 séries oficiais SGS · PTAX USD/EUR · Boletim Focus &amp; Top 5 · Leitura pré-atentiva</p>
   </div>
-  <div class="status-pills">
-    <span class="status-pill"><span class="status-dot"></span>Gold: bcb_macro.duckdb</span>
-    <span class="status-pill"><span class="status-dot"></span>Quality Gates OK</span>
+
+  <div class="controls-bar">
+    <div class="controls-left">
+      <ButtonGroup name=horizonte_overview>
+        <ButtonGroupItem valueLabel="2 Anos" value="730" />
+        <ButtonGroupItem valueLabel="5 Anos" value="1825" default />
+        <ButtonGroupItem valueLabel="10 Anos" value="3650" />
+        <ButtonGroupItem valueLabel="Máx" value="36500" />
+      </ButtonGroup>
+
+      <ButtonGroup name=base_focus>
+        <ButtonGroupItem valueLabel="Focus 30d" value="0" default />
+        <ButtonGroupItem valueLabel="Focus 5d" value="1" />
+      </ButtonGroup>
+
+      <ButtonGroup name=moeda_overview>
+        <ButtonGroupItem valueLabel="USD" value="USD" default />
+        <ButtonGroupItem valueLabel="EUR" value="EUR" />
+      </ButtonGroup>
+    </div>
+
+    <div class="controls-right">
+      <span class="status-chip"><span class="status-chip-accent">Atualização útil</span> · 09:30 BRT</span>
+    </div>
   </div>
-</div>
-
-<div class="filter-bar">
-  <Dropdown name=horizonte_overview title="Período" defaultValue="1825">
-    <DropdownOption value="730" valueLabel="Últimos 2 anos" />
-    <DropdownOption value="1825" valueLabel="Últimos 5 anos" />
-    <DropdownOption value="3650" valueLabel="Últimos 10 anos" />
-    <DropdownOption value="36500" valueLabel="Todo o histórico (2010+)" />
-  </Dropdown>
-
-  <Dropdown name=base_focus title="Base Focus" defaultValue="0">
-    <DropdownOption value="0" valueLabel="Base 0 — Últimos 30 dias" />
-    <DropdownOption value="1" valueLabel="Base 1 — Últimos 5 dias úteis" />
-  </Dropdown>
 </div>
 
 ```sql kpi_sgs
 SELECT
     MAX(CASE WHEN indicador_id = '432' THEN valor END) AS meta_selic,
     MAX(CASE WHEN indicador_id = '432' THEN data_observacao END) AS data_432,
-    MAX(CASE WHEN indicador_id = '11' THEN valor END) AS selic_diaria,
-    MAX(CASE WHEN indicador_id = '11' THEN data_observacao END) AS data_11,
-    MAX(CASE WHEN indicador_id = '24364' THEN valor END) AS ibc_br,
-    MAX(CASE WHEN indicador_id = '24364' THEN data_observacao END) AS data_24364,
+    MAX(CASE WHEN indicador_id = '13522' THEN valor END) AS ipca_12m,
+    MAX(CASE WHEN indicador_id = '13522' THEN data_observacao END) AS data_13522,
     MAX(CASE WHEN indicador_id = '13762' THEN valor END) AS dbgg_pib,
-    MAX(CASE WHEN indicador_id = '13762' THEN data_observacao END) AS data_13762,
-    MAX(CASE WHEN indicador_id = '20631' THEN valor END) AS concessoes_credito,
-    MAX(CASE WHEN indicador_id = '20631' THEN data_observacao END) AS data_20631,
-    MAX(CASE WHEN indicador_id = '21082' THEN valor END) AS inadimplencia,
-    MAX(CASE WHEN indicador_id = '21082' THEN data_observacao END) AS data_21082,
-    MAX(CASE WHEN indicador_id = '13982' THEN valor END) AS reservas_usd_mi,
-    MAX(CASE WHEN indicador_id = '13982' THEN data_observacao END) AS data_13982,
-    MAX(CASE WHEN indicador_id = '13967' THEN valor END) AS fluxo_comercial,
-    MAX(CASE WHEN indicador_id = '13967' THEN data_observacao END) AS data_13967,
-    MAX(CASE WHEN indicador_id = '13970' THEN valor END) AS fluxo_financeiro,
-    MAX(CASE WHEN indicador_id = '13970' THEN data_observacao END) AS data_13970
+    MAX(CASE WHEN indicador_id = '13762' THEN data_observacao END) AS data_13762
 FROM bcb_macro.vw_macro_latest
 WHERE fonte = 'SGS'
 ```
@@ -54,28 +49,29 @@ WHERE fonte = 'SGS'
 ```sql kpi_ptax
 SELECT
     cotacao_venda,
-    cotacao_compra,
-    data_referencia,
-    tipo_boletim
+    data_referencia
 FROM bcb_macro.ptax_daily
-WHERE moeda = 'USD'
+WHERE moeda = '${inputs.moeda_overview}'
 ORDER BY data_referencia DESC
 LIMIT 1
 ```
 
-<div class="section-kicker">Principais Indicadores — SGS + PTAX Fechamento</div>
+```sql kpi_regime
+SELECT
+    data,
+    juro_real_ex_ante,
+    regime_monetario
+FROM bcb_macro.vw_macro_regime
+ORDER BY data DESC
+LIMIT 1
+```
 
 <div class="kpi-grid-5">
-  <KPITerminalCard data={kpi_sgs} value="meta_selic" dateCol="data_432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="Evento · % a.a." icon="percent" />
-  <KPITerminalCard data={kpi_sgs} value="selic_diaria" dateCol="data_11" code="SGS 11" title="Taxa Selic Diária" suffix="%" decimals={4} subtitle="Diária · % ao dia" icon="trend" />
-  <KPITerminalCard data={kpi_ptax} value="cotacao_venda" dateCol="data_referencia" code="PTAX USD" title="PTAX Venda (Fech.)" prefix="R$ " decimals={4} subtitle="Boletim Fechamento" icon="dollar" />
-  <KPITerminalCard data={kpi_sgs} value="ibc_br" dateCol="data_24364" code="SGS 24364" title="IBC-Br Dessaz." decimals={2} subtitle="Mensal · Índice" icon="activity" />
-  <KPITerminalCard data={kpi_sgs} value="dbgg_pib" dateCol="data_13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="Mensal · % do PIB" icon="bank" />
-  <KPITerminalCard data={kpi_sgs} value="concessoes_credito" dateCol="data_20631" code="SGS 20631" title="Concessões Crédito" prefix="R$ " decimals={0} subtitle="Mensal · R$ milhões" icon="dollar" />
-  <KPITerminalCard data={kpi_sgs} value="inadimplencia" dateCol="data_21082" code="SGS 21082" title="Inadimplência SFN" suffix="%" decimals={2} subtitle="Mensal · % carteira" icon="alert" />
-  <KPITerminalCard data={kpi_sgs} value="reservas_usd_mi" dateCol="data_13982" code="SGS 13982" title="Reservas Internac." prefix="$ " decimals={0} subtitle="Diária · US$ milhões" icon="globe" />
-  <KPITerminalCard data={kpi_sgs} value="fluxo_comercial" dateCol="data_13967" code="SGS 13967" title="Fluxo Comercial" prefix="$ " decimals={2} signed={true} subtitle="Diária · US$ milhões" icon="flow" />
-  <KPITerminalCard data={kpi_sgs} value="fluxo_financeiro" dateCol="data_13970" code="SGS 13970" title="Fluxo Financeiro" prefix="$ " decimals={2} signed={true} subtitle="Diária · US$ milhões" icon="flow" />
+  <KPITerminalCard data={kpi_sgs} value="meta_selic" dateCol="data_432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="SGS 432 · % a.a." icon="bank" />
+  <KPITerminalCard data={kpi_sgs} value="ipca_12m" dateCol="data_13522" code="SGS 13522" title="IPCA Acum. 12m" suffix="%" decimals={2} subtitle="Meta CMN 3,0%" icon="percent" />
+  <KPITerminalCard data={kpi_ptax} value="cotacao_venda" dateCol="data_referencia" code="PTAX" title="PTAX Venda ({inputs.moeda_overview})" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
+  <KPITerminalCard data={kpi_regime} value="juro_real_ex_ante" dateCol="data" code="JURO REAL" title="Juro Real Ex-Ante" suffix="%" decimals={2} signed={true} subtitle="Selic vs IPCA Focus" icon="activity" />
+  <KPITerminalCard data={kpi_sgs} value="dbgg_pib" dateCol="data_13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="Dívida bruta" icon="trend" />
 </div>
 
 ```sql selic_recente
@@ -90,30 +86,41 @@ SELECT
 FROM bcb_macro.sgs_series s
 CROSS JOIN limite l
 WHERE s.codigo_serie = 432
-  AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte_overview.value}' AS INTEGER)
+  AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte_overview}' AS INTEGER)
 ORDER BY s.data
 ```
 
-```sql ptax_recente
+```sql ptax_vs_focus
 WITH limite AS (
     SELECT MAX(data_referencia) AS max_data
     FROM bcb_macro.ptax_daily
-    WHERE moeda = 'USD'
+    WHERE moeda = '${inputs.moeda_overview}'
+),
+focus_ano AS (
+    SELECT mediana_base0
+    FROM bcb_macro.vw_focus_repricing
+    WHERE indicador = 'Câmbio'
+      AND TRY_CAST(data_referencia AS INTEGER) = (
+          SELECT YEAR(MAX(data_base0)) FROM bcb_macro.vw_focus_repricing
+      )
+    LIMIT 1
 )
 SELECT
     p.data_referencia AS data,
-    p.cotacao_venda
+    p.cotacao_venda AS ptax_venda,
+    CASE WHEN '${inputs.moeda_overview}' = 'USD' THEN f.mediana_base0 ELSE NULL END AS consenso_focus
 FROM bcb_macro.ptax_daily p
 CROSS JOIN limite l
-WHERE p.moeda = 'USD'
-  AND date_diff('day', p.data_referencia, l.max_data) <= CAST('${inputs.horizonte_overview.value}' AS INTEGER)
+LEFT JOIN focus_ano f ON TRUE
+WHERE p.moeda = '${inputs.moeda_overview}'
+  AND date_diff('day', p.data_referencia, l.max_data) <= CAST('${inputs.horizonte_overview}' AS INTEGER)
 ORDER BY p.data_referencia
 ```
 
 <div class="terminal-grid-2">
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Evolução da Meta Selic — ciclos de política monetária</div>
-    <div class="terminal-panel-sub">bcb_macro.sgs_series · codigo_serie = 432 · % a.a.</div>
+    <div class="terminal-panel-title">Como evoluiu a Meta Selic nos últimos ciclos?</div>
+    <div class="terminal-panel-sub">Taxa básica definida pelo Copom (% a.a.) · série em degrau</div>
     <LineChart
       data={selic_recente}
       x=data
@@ -122,39 +129,175 @@ ORDER BY p.data_referencia
       step=true
       yGridlines=false
       xGridlines=false
-      colorPalette={['#3b82f6']}
+      colorPalette={['#ff6b00']}
       echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=210
+      chartAreaHeight=220
     />
   </div>
+
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Evolução da PTAX de fechamento — USD/BRL</div>
-    <div class="terminal-panel-sub">bcb_macro.ptax_daily · moeda = 'USD'</div>
+    <div class="terminal-panel-title">Como a PTAX ({inputs.moeda_overview}/BRL) se comporta frente ao Focus?</div>
+    <div class="terminal-panel-sub">Cotação diária de fechamento (laranja) frente à mediana anual do Focus (cinza, para USD)</div>
     <LineChart
-      data={ptax_recente}
+      data={ptax_vs_focus}
       x=data
-      y=cotacao_venda
+      y={['ptax_venda', 'consenso_focus']}
       yFmt=num2
       yGridlines=false
       xGridlines=false
-      colorPalette={['#3b82f6']}
+      colorPalette={['#ff6b00', '#737373']}
       echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=210
+      chartAreaHeight=220
     />
   </div>
 </div>
 
-```sql tabela_sgs_latest
+```sql ipca_meta_overview
+WITH limite AS (
+    SELECT MAX(data) AS max_data
+    FROM bcb_macro.sgs_series
+    WHERE codigo_serie = 13522
+)
 SELECT
-    indicador_id AS codigo,
-    indicador AS serie,
-    detalhe AS frequencia,
-    data_observacao AS ultima_data,
-    valor
-FROM bcb_macro.vw_macro_latest
-WHERE fonte = 'SGS'
-ORDER BY CAST(indicador_id AS INTEGER)
+    s.data,
+    s.valor AS ipca_12m,
+    4.5 AS teto_meta,
+    3.0 AS meta_cmn
+FROM bcb_macro.sgs_series s
+CROSS JOIN limite l
+WHERE s.codigo_serie = 13522
+  AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte_overview}' AS INTEGER)
+ORDER BY s.data
 ```
+
+```sql juro_real_overview
+WITH limite AS (
+    SELECT MAX(data) AS max_data
+    FROM bcb_macro.vw_juro_real_completo
+)
+SELECT
+    j.data,
+    j.juro_real_ex_ante,
+    j.juro_real_ex_post
+FROM bcb_macro.vw_juro_real_completo j
+CROSS JOIN limite l
+WHERE date_diff('day', j.data, l.max_data) <= CAST('${inputs.horizonte_overview}' AS INTEGER)
+ORDER BY j.data
+```
+
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">O IPCA 12m está acima do teto da meta do CMN?</div>
+    <div class="terminal-panel-sub">IPCA acumulado em 12 meses (laranja) vs teto 4,5% e centro 3,0% (cinza)</div>
+    <LineChart
+      data={ipca_meta_overview}
+      x=data
+      y={['ipca_12m', 'teto_meta', 'meta_cmn']}
+      yFmt=num2
+      yGridlines=false
+      xGridlines=false
+      colorPalette={['#ff6b00', '#737373', '#525252']}
+      echartsOptions={{ backgroundColor: 'transparent' }}
+      chartAreaHeight=220
+    />
+  </div>
+
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Qual a distância entre Juro Real Ex-Ante e Ex-Post?</div>
+    <div class="terminal-panel-sub">Ex-Ante via IPCA Focus (laranja) vs Ex-Post via IPCA 12m realizado (cinza) · % a.a.</div>
+    <LineChart
+      data={juro_real_overview}
+      x=data
+      y={['juro_real_ex_ante', 'juro_real_ex_post']}
+      yFmt=num2
+      yGridlines=false
+      xGridlines=false
+      colorPalette={['#ff6b00', '#737373']}
+      echartsOptions={{ backgroundColor: 'transparent' }}
+      chartAreaHeight=220
+    />
+  </div>
+</div>
+
+```sql tabela_sgs_explorador
+WITH regime_ult AS (
+    SELECT juro_real_ex_ante, regime_monetario
+    FROM bcb_macro.vw_macro_regime
+    ORDER BY data DESC
+    LIMIT 1
+),
+base AS (
+    SELECT
+        v.indicador_id AS codigo,
+        v.indicador AS serie,
+        CASE v.indicador_id
+            WHEN '432' THEN 'Política Monetária'
+            WHEN '11' THEN 'Política Monetária'
+            WHEN '13522' THEN 'Inflação'
+            WHEN '433' THEN 'Inflação'
+            WHEN '189' THEN 'Inflação'
+            WHEN '24369' THEN 'Trabalho'
+            WHEN '24364' THEN 'Atividade'
+            WHEN '13762' THEN 'Fiscal'
+            WHEN '4513' THEN 'Fiscal'
+            WHEN '5793' THEN 'Fiscal'
+            WHEN '20631' THEN 'Crédito'
+            WHEN '20714' THEN 'Crédito'
+            WHEN '20783' THEN 'Crédito'
+            WHEN '21082' THEN 'Crédito'
+            ELSE 'Setor Externo'
+        END AS dominio,
+        v.detalhe AS frequencia,
+        v.data_observacao AS ultima_data,
+        v.valor,
+        CASE v.indicador_id
+            WHEN '432' THEN concat('Juro real ', printf('%+.2f%%', r.juro_real_ex_ante))
+            WHEN '13522' THEN 'Teto CMN 4,50%'
+            WHEN '13762' THEN 'Ref. 80,0% PIB'
+            WHEN '4513' THEN '% do PIB'
+            WHEN '5793' THEN 'Acum. 12m PIB'
+            WHEN '11' THEN '% ao dia'
+            WHEN '433' THEN 'Var. mensal'
+            WHEN '189' THEN 'FGV mensal'
+            WHEN '24369' THEN 'Trim. móvel'
+            WHEN '24364' THEN 'Índice dessaz.'
+            WHEN '20631' THEN 'R$ milhões'
+            WHEN '20714' THEN 'Média % a.a.'
+            WHEN '20783' THEN 'Spread médio'
+            WHEN '21082' THEN '% carteira SFN'
+            ELSE 'US$ milhões'
+        END AS referencia,
+        CASE
+            WHEN v.indicador_id = '432' THEN r.regime_monetario
+            WHEN v.indicador_id = '13522' AND v.valor > 4.5 THEN 'Acima Teto'
+            WHEN v.indicador_id = '13522' AND v.valor < 1.5 THEN 'Abaixo Piso'
+            WHEN v.indicador_id = '13522' THEN 'Na Meta'
+            WHEN v.indicador_id = '13762' AND v.valor >= 80.0 THEN 'Atenção'
+            ELSE 'Normal'
+        END AS situacao
+    FROM bcb_macro.vw_macro_latest v
+    CROSS JOIN regime_ult r
+    WHERE v.fonte = 'SGS'
+)
+SELECT
+    codigo,
+    serie,
+    dominio,
+    frequencia,
+    ultima_data,
+    valor,
+    referencia,
+    situacao,
+    CASE WHEN situacao IN ('Restritivo', 'Acima Teto', 'Abaixo Piso', 'Atenção') THEN 1 ELSE 0 END AS alerta
+FROM base
+ORDER BY alerta DESC, CAST(codigo AS INTEGER)
+```
+
+<ExecutiveTable
+  data={tabela_sgs_explorador}
+  title="Explorador Executivo — Todas as 17 Séries Oficiais SGS"
+  subtitle="Últimas observações oficiais · Destaque tipográfico apenas nos desvios de regime ou meta"
+/>
 
 ```sql focus_resumo
 WITH ultimo_ano AS (
@@ -170,31 +313,18 @@ SELECT
 FROM bcb_macro.vw_macro_latest v
 CROSS JOIN ultimo_ano u
 WHERE v.fonte = 'FOCUS'
-  AND v.detalhe LIKE concat('%base=', '${inputs.base_focus.value}')
+  AND v.detalhe LIKE concat('%base=', '${inputs.base_focus}')
   AND TRY_CAST(v.periodo_referencia AS INTEGER) BETWEEN u.ano_ref AND u.ano_ref + 3
 ORDER BY v.indicador, v.periodo_referencia
 ```
 
-<div class="terminal-grid-2">
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Últimas Observações — Todas as 17 Séries SGS</div>
-    <div class="terminal-panel-sub">vw_macro_latest WHERE fonte = 'SGS'</div>
-    <DataTable data={tabela_sgs_latest} rows=20>
-      <Column id=codigo title="Cod" />
-      <Column id=serie title="Indicador" />
-      <Column id=frequencia title="Freq" />
-      <Column id=ultima_data title="Data" />
-      <Column id=valor title="Valor" fmt=num2 />
-    </DataTable>
-  </div>
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Consenso Boletim Focus (Base {inputs.base_focus.value})</div>
-    <div class="terminal-panel-sub">vw_macro_latest WHERE fonte = 'FOCUS'</div>
-    <DataTable data={focus_resumo} rows=16>
-      <Column id=indicador title="Indicador" />
-      <Column id=ano title="Ano" />
-      <Column id=data_coleta title="Coleta" />
-      <Column id=mediana title="Mediana" fmt=num2 />
-    </DataTable>
-  </div>
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Consenso Boletim Focus — Projeções Anuais (Base {inputs.base_focus})</div>
+  <div class="terminal-panel-sub">Medianas mais recentes das expectativas de mercado para os próximos 4 exercícios</div>
+  <DataTable data={focus_resumo} rows=16>
+    <Column id=indicador title="Indicador" />
+    <Column id=ano title="Ano" />
+    <Column id=data_coleta title="Coleta" />
+    <Column id=mediana title="Mediana" fmt=num2 />
+  </DataTable>
 </div>

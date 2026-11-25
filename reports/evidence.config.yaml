@@ -9,21 +9,21 @@ theme:
   colorPalettes:
     default:
       light:
-        - "#2563eb"
+        - "#ea580c"
         - "#737373"
         - "#a3a3a3"
         - "#525252"
         - "#d4d4d4"
       dark:
-        - "#3b82f6"
+        - "#ff6b00"
         - "#737373"
         - "#525252"
         - "#a3a3a3"
         - "#404040"
   colors:
     primary:
-      light: "#2563eb"
-      dark: "#3b82f6"
+      light: "#ea580c"
+      dark: "#ff6b00"
     accent:
       light: "#525252"
       dark: "#a3a3a3"
@@ -31,11 +31,11 @@ theme:
       light: "#ffffff"
       dark: "#0f0f0f"
     info:
-      light: "#2563eb"
-      dark: "#3b82f6"
+      light: "#ea580c"
+      dark: "#ff6b00"
     positive:
       light: "#16a34a"
-      dark: "#3b82f6"
+      dark: "#ff6b00"
     warning:
       light: "#737373"
       dark: "#a3a3a3"
