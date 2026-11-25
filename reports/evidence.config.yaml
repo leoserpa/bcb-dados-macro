@@ -29,7 +29,7 @@ theme:
       dark: "#a3a3a3"
     base:
       light: "#ffffff"
-      dark: "#191c1d"
+      dark: "#0f0f0f"
     info:
       light: "#ea580c"
       dark: "#ff6b00"
