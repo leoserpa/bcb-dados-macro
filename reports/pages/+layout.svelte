@@ -298,13 +298,16 @@
     overflow-wrap: break-word;
   }
 
+  :global(div:has(> main)),
   :global(main),
   :global(#evidence-main-article),
   :global(.content-container) {
     background-color: #0f0f0f !important;
     max-width: 100% !important;
+    width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    overflow-x: visible !important;
   }
 
   :global(#evidence-main-article h1.title) {
@@ -814,21 +817,21 @@
   }
 
   /* ==================== STANDARD EVIDENCE TABLES ==================== */
-  :global(.terminal-panel .table-container),
-  :global(.terminal-panel .overflow-auto),
-  :global(.terminal-panel .overflow-x-auto) {
+  :global(.terminal-panel:not(.exec-explorer) .table-container),
+  :global(.terminal-panel:not(.exec-explorer) .overflow-auto),
+  :global(.terminal-panel:not(.exec-explorer) .overflow-x-auto) {
     max-inline-size: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  :global(.terminal-panel table) {
+  :global(.terminal-panel:not(.exec-explorer) table) {
     background: transparent !important;
     border-collapse: collapse;
     inline-size: 100%;
   }
 
-  :global(.terminal-panel thead th) {
+  :global(.terminal-panel:not(.exec-explorer) thead th) {
     position: sticky;
     inset-block-start: 0;
     background: #161616 !important;
@@ -843,7 +846,7 @@
     white-space: nowrap;
   }
 
-  :global(.terminal-panel tbody td) {
+  :global(.terminal-panel:not(.exec-explorer) tbody td) {
     font-size: 12px !important;
     color: #d4d4d4 !important;
     border-bottom: 1px solid #202020 !important;
@@ -851,7 +854,7 @@
     white-space: nowrap;
   }
 
-  :global(.terminal-panel tbody tr:last-child td) {
+  :global(.terminal-panel:not(.exec-explorer) tbody tr:last-child td) {
     border-bottom: 0 !important;
   }
 

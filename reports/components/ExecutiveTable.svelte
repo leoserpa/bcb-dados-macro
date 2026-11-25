@@ -268,16 +268,16 @@
     color: #f5f5f5;
   }
 
-  .exec-table .status {
+  .exec-table tbody td.status {
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 11.5px;
     font-weight: 400;
     color: #737373;
   }
 
-  .exec-table .status.is-alert {
-    font-weight: 600;
-    color: #ff6b00;
+  .exec-table tbody td.status.is-alert {
+    font-weight: 600 !important;
+    color: #ff6b00 !important;
   }
 
   .exec-foot {

@@ -67,8 +67,8 @@ LIMIT 1
 ```
 
 <div class="kpi-grid-5">
-  <KPITerminalCard data={kpi_sgs} value="meta_selic" dateCol="data_432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="SGS 432 · % a.a." icon="bank" />
-  <KPITerminalCard data={kpi_sgs} value="ipca_12m" dateCol="data_13522" code="SGS 13522" title="IPCA Acum. 12m" suffix="%" decimals={2} subtitle="Meta CMN 3,0%" icon="percent" />
+  <KPITerminalCard data={kpi_sgs} value="meta_selic" dateCol="data_432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="SGS 432" icon="bank" />
+  <KPITerminalCard data={kpi_sgs} value="ipca_12m" dateCol="data_13522" code="SGS 13522" title="IPCA Acum. 12m" suffix="%" decimals={2} subtitle="Meta 3,0%" icon="percent" />
   <KPITerminalCard data={kpi_ptax} value="cotacao_venda" dateCol="data_referencia" code="PTAX" title="PTAX Venda ({inputs.moeda_overview})" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
   <KPITerminalCard data={kpi_regime} value="juro_real_ex_ante" dateCol="data" code="JURO REAL" title="Juro Real Ex-Ante" suffix="%" decimals={2} signed={true} subtitle="Selic vs IPCA Focus" icon="activity" />
   <KPITerminalCard data={kpi_sgs} value="dbgg_pib" dateCol="data_13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="Dívida bruta" icon="trend" />

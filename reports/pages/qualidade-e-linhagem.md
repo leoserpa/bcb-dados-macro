@@ -20,7 +20,7 @@ title: Qualidade & Linhagem do Lakehouse
 SELECT
     SUM(registros) AS total_registros_gold,
     COUNT(*) AS total_tabelas,
-    CAST(MAX(data_maxima) AS VARCHAR) AS ultima_observacao
+    LEFT(CAST(MAX(data_maxima) AS VARCHAR), 10) AS ultima_observacao
 FROM bcb_macro.vw_lakehouse_lineage
 WHERE tabela IN ('sgs_series', 'focus_expectations', 'focus_top5', 'ptax_quotes')
 ```
@@ -65,7 +65,7 @@ ORDER BY registros DESC
 
 ```sql cobertura_sgs
 SELECT
-    codigo_serie AS codigo,
+    CAST(codigo_serie AS VARCHAR) AS codigo,
     nome_serie AS serie,
     frequencia,
     COUNT(*) AS observacoes,
@@ -73,42 +73,40 @@ SELECT
     MAX(data) AS data_final,
     arg_max(valor, data) AS ultimo_valor
 FROM bcb_macro.sgs_series
-GROUP BY 1, 2, 3
-ORDER BY 1
+GROUP BY codigo_serie, nome_serie, frequencia
+ORDER BY codigo_serie
 ```
 
-<div class="terminal-grid-asym">
-  <div class="terminal-stack">
-    <div class="terminal-panel">
-      <div class="terminal-panel-title">Como os registros se distribuem por fonte oficial?</div>
-      <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver</div>
-      <DonutChart data={lineage_donut} nameCol="fonte" valueCol="registros" height="240px" />
-    </div>
-
-    <div class="terminal-panel">
-      <div class="terminal-panel-title">Inventário das Tabelas Analíticas</div>
-      <div class="terminal-panel-sub">Contagem de registros e janelas temporais disponíveis no catálogo</div>
-      <DataTable data={lineage_tabela} rows=10>
-        <Column id=tabela title="Conjunto" />
-        <Column id=fonte title="Origem" />
-        <Column id=registros title="Registros" fmt=num0 />
-        <Column id=data_minima title="Início" />
-        <Column id=data_maxima title="Último" />
-      </DataTable>
-    </div>
+<div class="terminal-grid-2">
+  <div class="terminal-panel">
+    <div class="terminal-panel-title">Como os registros se distribuem por fonte oficial?</div>
+    <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver</div>
+    <DonutChart data={lineage_donut} nameCol="fonte" valueCol="registros" height="240px" />
   </div>
 
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Cobertura Completa — Todas as 17 Séries SGS</div>
-    <div class="terminal-panel-sub">Volume de observações, janela histórica e último valor oficial por série</div>
-    <DataTable data={cobertura_sgs} rows=20>
-      <Column id=codigo title="Série" />
-      <Column id=serie title="Indicador" />
-      <Column id=frequencia title="Freq." />
-      <Column id=observacoes title="Obs." fmt=num0 />
-      <Column id=data_inicial title="Início" />
-      <Column id=data_final title="Último" />
-      <Column id=ultimo_valor title="Valor" fmt=num2 />
+    <div class="terminal-panel-title">Inventário das Tabelas Analíticas</div>
+    <div class="terminal-panel-sub">Contagem de registros e janelas temporais disponíveis no catálogo</div>
+    <DataTable data={lineage_tabela} rows=10>
+      <Column id=tabela title="Conjunto" />
+      <Column id=fonte title="Origem" />
+      <Column id=registros title="Registros" fmt=num0 />
+      <Column id=data_minima title="Início" />
+      <Column id=data_maxima title="Último" />
     </DataTable>
   </div>
+</div>
+
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Cobertura Completa — Todas as 17 Séries SGS</div>
+  <div class="terminal-panel-sub">Volume de observações, janela histórica e último valor oficial por série</div>
+  <DataTable data={cobertura_sgs} rows=20>
+    <Column id=codigo title="Série" />
+    <Column id=serie title="Indicador" />
+    <Column id=frequencia title="Frequência" />
+    <Column id=observacoes title="Obs." fmt=num0 />
+    <Column id=data_inicial title="Início" />
+    <Column id=data_final title="Última Data" />
+    <Column id=ultimo_valor title="Último Valor" fmt=num2 />
+  </DataTable>
 </div>
