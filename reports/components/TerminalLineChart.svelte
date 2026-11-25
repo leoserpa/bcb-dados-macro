@@ -81,8 +81,10 @@
       const name = labels[idx] || prettifyName(col);
       const endText = formatVal(lastPt.val);
 
+      const showSeriesEnd = showEndLabel && (isPrimary || !isDashed);
+
       return {
-        endText,
+        endText: showSeriesEnd ? endText : '',
         series: {
           name,
           type: 'line',
@@ -105,10 +107,11 @@
               borderWidth: 2,
             },
           },
-          endLabel: showEndLabel
+          endLabel: showSeriesEnd
             ? {
                 show: true,
                 distance: 10,
+                verticalAlign: 'middle',
                 formatter: () => endText,
                 color: isPrimary ? color : '#a6a6a6',
                 fontFamily: 'IBM Plex Mono, ui-monospace, monospace',
@@ -116,8 +119,8 @@
                 fontSize: isPrimary ? 11.5 : 10.5,
               }
             : { show: false },
-          labelLayout: showEndLabel ? { moveOverlap: 'shiftY' } : undefined,
-          markPoint: showEndLabel
+          labelLayout: showSeriesEnd ? { moveOverlap: 'shiftY' } : undefined,
+          markPoint: showSeriesEnd
             ? {
                 symbol: 'circle',
                 symbolSize: isPrimary ? 8 : 5,
