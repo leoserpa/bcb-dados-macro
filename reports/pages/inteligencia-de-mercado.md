@@ -198,16 +198,15 @@ ORDER BY f.indicador, ano
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como o Juro Real Ex-Ante se desloca frente à Selic e ao IPCA?</div>
     <div class="terminal-panel-sub">Juro real ex-ante (laranja) em comparação à Selic nominal e IPCA Focus (cinza) · % a.a.</div>
-    <LineChart
+    <TerminalLineChart
       data={regime_serie}
-      x=data
+      x="data"
       y={['juro_real_ex_ante', 'selic_meta', 'ipca_focus_ano']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#737373', '#525252']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=340
+      labels={['Juro Real Ex-Ante', 'Selic Meta', 'IPCA Focus']}
+      colors={['#ff6b00', '#737373', '#525252']}
+      suffix="%"
+      decimals={2}
+      height="380px"
     />
   </div>
 
@@ -247,15 +246,13 @@ ORDER BY p.data_referencia
 <div class="terminal-panel">
   <div class="terminal-panel-title">Como evoluiu a volatilidade anualizada (21d) da PTAX USD/BRL?</div>
   <div class="terminal-panel-sub">Desvio-padrão anualizado dos retornos logarítmicos diários · janela móvel de 21 pregões</div>
-  <LineChart
+  <TerminalLineChart
     data={vol_ptax_serie}
-    x=data
-    y=vol_anualizada_21d
-    yFmt=num2
-    yGridlines=false
-    xGridlines=false
-    colorPalette={['#ff6b00']}
-    echartsOptions={{ backgroundColor: 'transparent' }}
-    chartAreaHeight=210
+    x="data"
+    y="vol_anualizada_21d"
+    labels={['Volatilidade 21d']}
+    suffix="%"
+    decimals={2}
+    height="240px"
   />
 </div>

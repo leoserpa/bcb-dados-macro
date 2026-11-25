@@ -121,33 +121,31 @@ ORDER BY p.data_referencia
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a Meta Selic nos últimos ciclos?</div>
     <div class="terminal-panel-sub">Taxa básica definida pelo Copom (% a.a.) · série em degrau</div>
-    <LineChart
+    <TerminalLineChart
       data={selic_recente}
-      x=data
-      y=meta_selic
-      yFmt=num2
-      step=true
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      x="data"
+      y="meta_selic"
+      labels={['Meta Selic']}
+      suffix="%"
+      decimals={2}
+      step={true}
+      height="245px"
     />
   </div>
 
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como a PTAX ({inputs.moeda_overview}/BRL) se comporta frente ao Focus?</div>
     <div class="terminal-panel-sub">Cotação diária de fechamento (laranja) frente à mediana anual do Focus (cinza, para USD)</div>
-    <LineChart
+    <TerminalLineChart
       data={ptax_vs_focus}
-      x=data
+      x="data"
       y={['ptax_venda', 'consenso_focus']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#737373']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      labels={['PTAX Venda', 'Consenso Focus']}
+      colors={['#ff6b00', '#737373']}
+      dashedIndices={[1]}
+      prefix="R$ "
+      decimals={2}
+      height="245px"
     />
   </div>
 </div>
@@ -189,32 +187,31 @@ ORDER BY j.data
   <div class="terminal-panel">
     <div class="terminal-panel-title">O IPCA 12m está acima do teto da meta do CMN?</div>
     <div class="terminal-panel-sub">IPCA acumulado em 12 meses (laranja) vs teto 4,5% e centro 3,0% (cinza)</div>
-    <LineChart
+    <TerminalLineChart
       data={ipca_meta_overview}
-      x=data
+      x="data"
       y={['ipca_12m', 'teto_meta', 'meta_cmn']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#737373', '#525252']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      labels={['IPCA 12m', 'Teto 4,5%', 'Meta 3,0%']}
+      colors={['#ff6b00', '#737373', '#525252']}
+      dashedIndices={[1, 2]}
+      suffix="%"
+      decimals={2}
+      height="245px"
     />
   </div>
 
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual a distância entre Juro Real Ex-Ante e Ex-Post?</div>
     <div class="terminal-panel-sub">Ex-Ante via IPCA Focus (laranja) vs Ex-Post via IPCA 12m realizado (cinza) · % a.a.</div>
-    <LineChart
+    <TerminalLineChart
       data={juro_real_overview}
-      x=data
+      x="data"
       y={['juro_real_ex_ante', 'juro_real_ex_post']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#737373']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      labels={['Juro Real Ex-Ante', 'Juro Real Ex-Post']}
+      colors={['#ff6b00', '#737373']}
+      suffix="%"
+      decimals={2}
+      height="245px"
     />
   </div>
 </div>

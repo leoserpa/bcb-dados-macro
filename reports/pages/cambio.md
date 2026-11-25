@@ -97,16 +97,14 @@ LIMIT 30
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a PTAX de fechamento ({inputs.moeda_ptax}/BRL)?</div>
     <div class="terminal-panel-sub">Taxa oficial de venda publicada pelo Banco Central · priorizando fechamento</div>
-    <LineChart
+    <TerminalLineChart
       data={ptax_historico}
-      x=data
-      y=cotacao_venda
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=295
+      x="data"
+      y="cotacao_venda"
+      labels={['PTAX Venda']}
+      prefix="R$ "
+      decimals={2}
+      height="325px"
     />
   </div>
 
@@ -153,16 +151,15 @@ ORDER BY 1, 2
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o nível atual das Reservas Internacionais?</div>
     <div class="terminal-panel-sub">SGS 13982 · Colchão de liquidez externa (US$ milhões)</div>
-    <LineChart
+    <TerminalLineChart
       data={reservas_serie}
-      x=data
-      y=reservas_usd_mi
-      yFmt=num0
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#737373']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=210
+      x="data"
+      y="reservas_usd_mi"
+      labels={['Reservas Internacionais']}
+      colors={['#a6a6a6']}
+      prefix="$ "
+      decimals={0}
+      height="240px"
     />
   </div>
 

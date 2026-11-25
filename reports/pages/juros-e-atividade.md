@@ -81,12 +81,12 @@ ORDER BY 1
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual a trajetória da Meta Selic definida pelo Copom?</div>
     <div class="terminal-panel-sub">SGS 432 · Taxa básica (% a.a.) em escada</div>
-    <LineChart data={selic_meta} x=data y=meta_selic yFmt=num2 step=true yGridlines=false xGridlines=false colorPalette={['#ff6b00']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
+    <TerminalLineChart data={selic_meta} x="data" y="meta_selic" labels={['Meta Selic']} suffix="%" decimals={2} step={true} height="240px" />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evolui a dívida bruta (DBGG) frente à líquida (DLSP)?</div>
     <div class="terminal-panel-sub">DBGG/PIB (laranja) vs DLSP/PIB (cinza) · % do PIB</div>
-    <LineChart data={dbgg_pib} x=data y={['dbgg_pib', 'dlsp_pib']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00', '#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
+    <TerminalLineChart data={dbgg_pib} x="data" y={['dbgg_pib', 'dlsp_pib']} labels={['DBGG / PIB', 'DLSP / PIB']} colors={['#ff6b00', '#737373']} suffix="%" decimals={2} height="240px" />
   </div>
 </div>
 
@@ -127,7 +127,7 @@ ORDER BY s.data
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como está o ritmo da atividade (IBC-Br)?</div>
     <div class="terminal-panel-sub">SGS 24364 · Índice com ajuste sazonal</div>
-    <LineChart data={ibc_br} x=data y=ibc_br yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
+    <TerminalLineChart data={ibc_br} x="data" y="ibc_br" labels={['IBC-Br']} decimals={2} height="230px" />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o resultado primário em 12 meses?</div>
@@ -167,11 +167,11 @@ ORDER BY s.data
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como se comporta a Taxa Selic efetiva diária?</div>
     <div class="terminal-panel-sub">SGS 11 · Taxa overnight (% ao dia)</div>
-    <LineChart data={selic_diaria} x=data y=selic_diaria yFmt=num4 yGridlines=false xGridlines=false colorPalette={['#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
+    <TerminalLineChart data={selic_diaria} x="data" y="selic_diaria" labels={['Selic Diária']} colors={['#a6a6a6']} suffix="%" decimals={4} height="230px" />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">A inadimplência do SFN está pressionando a carteira?</div>
     <div class="terminal-panel-sub">SGS 21082 · Atrasos acima de 90 dias (% da carteira)</div>
-    <LineChart data={inadimplencia_sfn} x=data y=inadimplencia_pct yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
+    <TerminalLineChart data={inadimplencia_sfn} x="data" y="inadimplencia_pct" labels={['Inadimplência SFN']} suffix="%" decimals={2} height="230px" />
   </div>
 </div>

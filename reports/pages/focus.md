@@ -81,32 +81,29 @@ ORDER BY data
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a mediana frente à média — {inputs.indicador.value} ({inputs.ano_ref.value})?</div>
     <div class="terminal-panel-sub">Mediana em destaque (laranja) vs média institucional (cinza)</div>
-    <LineChart
+    <TerminalLineChart
       data={focus_serie}
-      x=data
+      x="data"
       y={['mediana', 'media']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#737373']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      labels={['Mediana', 'Média']}
+      colors={['#ff6b00', '#737373']}
+      decimals={2}
+      height="245px"
     />
   </div>
 
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual a amplitude entre piso e teto das projeções?</div>
     <div class="terminal-panel-sub">Mediana (laranja) delimitada pelos extremos mínimo e máximo (cinza)</div>
-    <LineChart
+    <TerminalLineChart
       data={focus_serie}
-      x=data
+      x="data"
       y={['mediana', 'minimo', 'maximo']}
-      yFmt=num2
-      yGridlines=false
-      xGridlines=false
-      colorPalette={['#ff6b00', '#525252', '#525252']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=220
+      labels={['Mediana', 'Mínimo', 'Máximo']}
+      colors={['#ff6b00', '#525252', '#525252']}
+      dashedIndices={[1, 2]}
+      decimals={2}
+      height="245px"
     />
   </div>
 </div>

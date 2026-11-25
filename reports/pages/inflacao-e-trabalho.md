@@ -83,12 +83,12 @@ ORDER BY j.data
   <div class="terminal-panel">
     <div class="terminal-panel-title">O IPCA 12m está acima do teto da meta do CMN?</div>
     <div class="terminal-panel-sub">SGS 13522 (laranja) vs teto 4,5% e centro 3,0% (cinza)</div>
-    <LineChart data={ipca_vs_meta} x=data y={['ipca_12m', 'teto_meta', 'meta_cmn']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00', '#737373', '#525252']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=220 />
+    <TerminalLineChart data={ipca_vs_meta} x="data" y={['ipca_12m', 'teto_meta', 'meta_cmn']} labels={['IPCA 12m', 'Teto 4,5%', 'Meta 3,0%']} colors={['#ff6b00', '#737373', '#525252']} dashedIndices={[1, 2]} suffix="%" decimals={2} height="245px" />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual a distância entre Juro Real Ex-Ante e Ex-Post?</div>
     <div class="terminal-panel-sub">Ex-Ante via IPCA Focus (laranja) vs Ex-Post via IPCA 12m realizado (cinza) · % a.a.</div>
-    <LineChart data={juro_real_comparativo} x=data y={['juro_real_ex_ante', 'juro_real_ex_post']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00', '#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=220 />
+    <TerminalLineChart data={juro_real_comparativo} x="data" y={['juro_real_ex_ante', 'juro_real_ex_post']} labels={['Juro Real Ex-Ante', 'Juro Real Ex-Post']} colors={['#ff6b00', '#737373']} suffix="%" decimals={2} height="245px" />
   </div>
 </div>
 
@@ -122,11 +122,11 @@ ORDER BY 1
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a taxa de desocupação (PNAD Contínua)?</div>
     <div class="terminal-panel-sub">SGS 24369 · Percentual da força de trabalho</div>
-    <LineChart data={desemprego_serie} x=data y=taxa_desocupacao yFmt=num1 yGridlines=false xGridlines=false colorPalette={['#ff6b00']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
+    <TerminalLineChart data={desemprego_serie} x="data" y="taxa_desocupacao" labels={['Desocupação PNAD']} suffix="%" decimals={1} height="240px" />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como a política monetária se transmite ao crédito?</div>
     <div class="terminal-panel-sub">Taxa média de juros do crédito (laranja) vs spread bancário (cinza) · % a.a. / p.p.</div>
-    <LineChart data={transmissao_credito} x=data y={['taxa_juros_credito', 'spread_bancario']} yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00', '#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=210 />
+    <TerminalLineChart data={transmissao_credito} x="data" y={['taxa_juros_credito', 'spread_bancario']} labels={['Juros Crédito', 'Spread Bancário']} colors={['#ff6b00', '#737373']} suffix="%" decimals={2} height="240px" />
   </div>
 </div>
