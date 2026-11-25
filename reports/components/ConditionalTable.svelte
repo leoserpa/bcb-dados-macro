@@ -28,7 +28,12 @@
       if (raw === 'evento') return 'Evento';
       return String(val);
     }
-    if (fmt === 'text' || fmt === 'id') {
+    if (fmt === 'id') {
+      const n = Number(val);
+      if (!Number.isNaN(n) && Number.isInteger(n)) return String(n);
+      return String(val);
+    }
+    if (fmt === 'text') {
       return String(val);
     }
     const num = Number(val);

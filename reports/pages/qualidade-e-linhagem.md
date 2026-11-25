@@ -70,7 +70,7 @@ WITH ref AS (
 agg AS (
     SELECT
         codigo_serie,
-        CAST(codigo_serie AS VARCHAR) AS codigo,
+        CAST(CAST(codigo_serie AS BIGINT) AS VARCHAR) AS codigo,
         nome_serie AS serie,
         frequencia,
         COUNT(*) AS observacoes,
