@@ -161,6 +161,7 @@
             color: '#a6a6a6',
             fontFamily: 'IBM Plex Sans, system-ui, sans-serif',
             fontSize: 11,
+            padding: [0, 0, 0, 3],
           },
         }
       : { show: false },
@@ -216,18 +217,7 @@
     yAxis: {
       type: 'value',
       scale: true,
-      max: (extent) => {
-        if (!Number.isFinite(extent.max) || !Number.isFinite(extent.min)) return undefined;
-        const span = extent.max - extent.min;
-        const pad = span > 0 ? span * 0.18 : Math.abs(extent.max || 1) * 0.14;
-        return Number((extent.max + pad).toFixed(4));
-      },
-      min: (extent) => {
-        if (!Number.isFinite(extent.max) || !Number.isFinite(extent.min)) return undefined;
-        const span = extent.max - extent.min;
-        const pad = span > 0 ? span * 0.08 : Math.abs(extent.min || 1) * 0.08;
-        return Number((extent.min - pad).toFixed(4));
-      },
+      boundaryGap: ['8%', '18%'],
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { show: false },
