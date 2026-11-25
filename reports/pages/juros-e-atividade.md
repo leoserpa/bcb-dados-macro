@@ -105,7 +105,10 @@ ORDER BY s.data
 WITH limite AS (
     SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie = 5793
 )
-SELECT s.data, s.valor AS resultado_primario_pib
+SELECT
+    s.data,
+    CASE WHEN s.valor >= 0 THEN s.valor ELSE NULL END AS superavit,
+    CASE WHEN s.valor < 0 THEN s.valor ELSE NULL END AS deficit
 FROM bcb_macro.sgs_series s CROSS JOIN limite l
 WHERE s.codigo_serie = 5793
   AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte}' AS INTEGER)
@@ -131,8 +134,8 @@ ORDER BY s.data
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o resultado primário em 12 meses?</div>
-    <div class="terminal-panel-sub">SGS 5793 · Setor público consolidado (% PIB)</div>
-    <BarChart data={primario_12m} x=data y=resultado_primario_pib yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
+    <div class="terminal-panel-sub">Superávit (laranja) vs déficit (cinza) · % do PIB</div>
+    <BarChart data={primario_12m} x=data y={['superavit', 'deficit']} type=stacked yFmt=num2 yGridlines=false xGridlines=false colorPalette={['#ff6b00', '#525252']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o volume mensal de concessões?</div>
