@@ -106,7 +106,7 @@ LIMIT 30
       xGridlines=false
       colorPalette={['#ff6b00']}
       echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=250
+      chartAreaHeight=295
     />
   </div>
 

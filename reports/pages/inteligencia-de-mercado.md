@@ -184,7 +184,7 @@ WHERE TRY_CAST(f.data_referencia AS INTEGER) BETWEEN a.ano AND a.ano + 2
 ORDER BY f.indicador, ano
 ```
 
-<div class="terminal-grid-asym">
+<div class="terminal-grid-chart-table">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como o Juro Real Ex-Ante se desloca frente à Selic e ao IPCA?</div>
     <div class="terminal-panel-sub">Juro real ex-ante (laranja) em comparação à Selic nominal e IPCA Focus (cinza) · % a.a.</div>
@@ -197,7 +197,7 @@ ORDER BY f.indicador, ano
       xGridlines=false
       colorPalette={['#ff6b00', '#737373', '#525252']}
       echartsOptions={{ backgroundColor: 'transparent' }}
-      chartAreaHeight=250
+      chartAreaHeight=340
     />
   </div>
 

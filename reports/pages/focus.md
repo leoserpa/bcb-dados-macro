@@ -163,33 +163,31 @@ WHERE t.tipo_calculo = 'M'
 ORDER BY t.indicador, t.data_referencia
 ```
 
-<div class="terminal-grid-2">
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Curva Completa de Expectativas (Base {inputs.base_calculo})</div>
-    <div class="terminal-panel-sub">Última coleta por indicador e ano de referência nos próximos 5 exercícios</div>
-    <DataTable data={focus_curva} rows=16>
-      <Column id=indicador title="Indicador" />
-      <Column id=ano_referencia title="Ano" />
-      <Column id=data_coleta title="Coleta" />
-      <Column id=mediana title="Mediana" fmt=num2 />
-      <Column id=media title="Média" fmt=num2 />
-      <Column id=minimo title="Mín." fmt=num2 />
-      <Column id=maximo title="Máx." fmt=num2 />
-      <Column id=respondentes title="Resp." fmt=num0 />
-    </DataTable>
-  </div>
+<div class="terminal-panel" style="margin-block-end: 18px;">
+  <div class="terminal-panel-title">Curva Completa de Expectativas (Base {inputs.base_calculo})</div>
+  <div class="terminal-panel-sub">Última coleta por indicador e ano de referência nos próximos 5 exercícios</div>
+  <DataTable data={focus_curva} rows=16>
+    <Column id=indicador title="Indicador" />
+    <Column id=ano_referencia title="Ano" />
+    <Column id=data_coleta title="Coleta" />
+    <Column id=mediana title="Mediana" fmt=num2 />
+    <Column id=media title="Média" fmt=num2 />
+    <Column id=minimo title="Mín." fmt=num2 />
+    <Column id=maximo title="Máx." fmt=num2 />
+    <Column id=respondentes title="Resp." fmt=num0 />
+  </DataTable>
+</div>
 
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Focus Top 5 (Médio Prazo) vs Consenso Geral</div>
-    <div class="terminal-panel-sub">Diferença entre as 5 instituições mais assertivas e a mediana geral de mercado</div>
-    <DataTable data={focus_top5_comparativo} rows=16>
-      <Column id=indicador title="Indicador" />
-      <Column id=ano title="Ano" />
-      <Column id=coleta title="Coleta" />
-      <Column id=mediana_top5 title="Top 5" fmt=num2 />
-      <Column id=mediana_geral title="Geral" fmt=num2 />
-      <Column id=spread_top5_geral title="Spread" fmt=num3 />
-      <Column id=desvio_top5 title="Desvio" fmt=num2 />
-    </DataTable>
-  </div>
+<div class="terminal-panel">
+  <div class="terminal-panel-title">Focus Top 5 (Médio Prazo) vs Consenso Geral</div>
+  <div class="terminal-panel-sub">Diferença entre as 5 instituições mais assertivas e a mediana geral de mercado</div>
+  <DataTable data={focus_top5_comparativo} rows=16>
+    <Column id=indicador title="Indicador" />
+    <Column id=ano title="Ano" />
+    <Column id=coleta title="Coleta" />
+    <Column id=mediana_top5 title="Top 5" fmt=num2 />
+    <Column id=mediana_geral title="Geral" fmt=num2 />
+    <Column id=spread_top5_geral title="Spread" fmt=num3 />
+    <Column id=desvio_top5 title="Desvio" fmt=num2 />
+  </DataTable>
 </div>

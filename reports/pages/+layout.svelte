@@ -757,6 +757,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
     margin-block-end: 18px;
+    align-items: stretch;
   }
 
   :global(.terminal-grid-3) {
@@ -764,14 +765,23 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
     margin-block-end: 18px;
+    align-items: stretch;
   }
 
   :global(.terminal-grid-asym) {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 18px;
     margin-block-end: 18px;
-    align-items: start;
+    align-items: stretch;
+  }
+
+  :global(.terminal-grid-chart-table) {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 18px;
+    margin-block-end: 18px;
+    align-items: stretch;
   }
 
   :global(.terminal-grid-donut) {
@@ -779,7 +789,7 @@
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
     gap: 18px;
     margin-block-end: 18px;
-    align-items: start;
+    align-items: stretch;
   }
 
   :global(.terminal-stack) {
@@ -791,6 +801,8 @@
 
   /* ==================== PANELS & DATA-INK CHARTS ==================== */
   :global(.terminal-panel) {
+    display: flex;
+    flex-direction: column;
     background: #161616;
     border: 1px solid #2a2a2a;
     border-radius: 10px;
@@ -892,6 +904,7 @@
   @media (max-width: 1024px) {
     :global(.terminal-grid-3),
     :global(.terminal-grid-asym),
+    :global(.terminal-grid-chart-table),
     :global(.terminal-grid-donut) {
       grid-template-columns: 1fr;
     }
