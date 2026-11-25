@@ -774,6 +774,14 @@
     align-items: start;
   }
 
+  :global(.terminal-grid-donut) {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+    gap: 18px;
+    margin-block-end: 18px;
+    align-items: start;
+  }
+
   :global(.terminal-stack) {
     display: flex;
     flex-direction: column;
@@ -883,7 +891,8 @@
 
   @media (max-width: 1024px) {
     :global(.terminal-grid-3),
-    :global(.terminal-grid-asym) {
+    :global(.terminal-grid-asym),
+    :global(.terminal-grid-donut) {
       grid-template-columns: 1fr;
     }
   }

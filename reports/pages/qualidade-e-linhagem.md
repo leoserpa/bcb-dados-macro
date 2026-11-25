@@ -77,7 +77,7 @@ GROUP BY codigo_serie, nome_serie, frequencia
 ORDER BY codigo_serie
 ```
 
-<div class="terminal-grid-2">
+<div class="terminal-grid-donut">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como os registros se distribuem por fonte oficial?</div>
     <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver</div>
@@ -101,7 +101,7 @@ ORDER BY codigo_serie
   <div class="terminal-panel-title">Cobertura Completa — Todas as 17 Séries SGS</div>
   <div class="terminal-panel-sub">Volume de observações, janela histórica e último valor oficial por série</div>
   <DataTable data={cobertura_sgs} rows=20>
-    <Column id=codigo title="Série" />
+    <Column id=codigo title="Série" fmt=id />
     <Column id=serie title="Indicador" />
     <Column id=frequencia title="Frequência" />
     <Column id=observacoes title="Obs." fmt=num0 />
