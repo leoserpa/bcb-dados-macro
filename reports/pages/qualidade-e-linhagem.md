@@ -108,8 +108,8 @@ ORDER BY codigo_serie
 <div class="terminal-grid-donut">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como os registros se distribuem por fonte oficial?</div>
-    <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver</div>
-    <DonutChart data={lineage_donut} nameCol="fonte" valueCol="registros" height="205px" totalLabel="Registros Silver" />
+    <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver · líder em laranja</div>
+    <HorizontalShareBars data={lineage_donut} nameCol="fonte" valueCol="registros" />
   </div>
 
   <div class="terminal-panel">
