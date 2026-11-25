@@ -413,10 +413,12 @@
   .site-nav {
     display: flex;
     align-items: center;
-    margin-inline-start: auto;
+    order: -1;
+    margin-inline-start: 0;
   }
 
   .site-header.is-wide .site-nav {
+    order: 0;
     margin-inline: auto;
   }
 
@@ -447,7 +449,7 @@
     inset: auto;
     inset-block-start: calc(3.85rem + env(safe-area-inset-top, 0px));
     inset-block-start: anchor(--menu-button bottom);
-    inset-inline-end: max(1rem, env(safe-area-inset-right, 0px));
+    inset-inline-start: max(1rem, env(safe-area-inset-left, 0px));
     inline-size: min(84dvw, 19rem);
     max-inline-size: calc(100dvw - 2rem);
     block-size: fit-content;
@@ -556,6 +558,11 @@
     align-items: center;
     gap: 8px;
     font-size: 11.5px;
+    margin-inline-start: auto;
+  }
+
+  .site-header.is-wide .header-provenance {
+    margin-inline-start: 0;
   }
 
   .prov-source {
@@ -589,6 +596,9 @@
   }
 
   @media (max-width: 720px) {
+    .header-inner {
+      gap: 12px;
+    }
     .prov-source,
     .prov-sep,
     .prov-engine {
