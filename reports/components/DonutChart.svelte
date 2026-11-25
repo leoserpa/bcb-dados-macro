@@ -25,8 +25,8 @@
     color: palette,
     tooltip: {
       trigger: 'item',
-      backgroundColor: '#191c1d',
-      borderColor: '#2b2f30',
+      backgroundColor: '#212121',
+      borderColor: '#2a2a2a',
       textStyle: {
         color: '#f5f5f5',
         fontFamily: 'IBM Plex Mono, monospace',
@@ -53,7 +53,7 @@
         center: ['50%', '43%'],
         avoidLabelOverlap: true,
         itemStyle: {
-          borderColor: '#0d0e10',
+          borderColor: '#161616',
           borderWidth: 2,
         },
         label: {
