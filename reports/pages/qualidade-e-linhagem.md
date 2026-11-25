@@ -64,16 +64,44 @@ ORDER BY registros DESC
 ```
 
 ```sql cobertura_sgs
+WITH ref AS (
+    SELECT MAX(data) AS max_ref FROM bcb_macro.sgs_series
+),
+agg AS (
+    SELECT
+        codigo_serie,
+        CAST(codigo_serie AS VARCHAR) AS codigo,
+        nome_serie AS serie,
+        frequencia,
+        COUNT(*) AS observacoes,
+        MIN(data) AS data_inicial,
+        MAX(data) AS data_final,
+        arg_max(valor, data) AS ultimo_valor,
+        date_diff('day', MAX(data), (SELECT max_ref FROM ref)) AS dias_defasagem
+    FROM bcb_macro.sgs_series
+    GROUP BY codigo_serie, nome_serie, frequencia
+)
 SELECT
-    CAST(codigo_serie AS VARCHAR) AS codigo,
-    nome_serie AS serie,
+    codigo,
+    serie,
     frequencia,
-    COUNT(*) AS observacoes,
-    MIN(data) AS data_inicial,
-    MAX(data) AS data_final,
-    arg_max(valor, data) AS ultimo_valor
-FROM bcb_macro.sgs_series
-GROUP BY codigo_serie, nome_serie, frequencia
+    observacoes,
+    data_inicial,
+    data_final,
+    ultimo_valor,
+    CASE
+        WHEN (frequencia = 'mensal' AND dias_defasagem > 95)
+          OR (frequencia <> 'mensal' AND dias_defasagem > 10)
+        THEN 'Atraso'
+        ELSE 'Em dia'
+    END AS sla_status,
+    CASE
+        WHEN (frequencia = 'mensal' AND dias_defasagem > 95)
+          OR (frequencia <> 'mensal' AND dias_defasagem > 10)
+        THEN 1
+        ELSE 0
+    END AS alerta_atraso
+FROM agg
 ORDER BY codigo_serie
 ```
 
@@ -97,16 +125,19 @@ ORDER BY codigo_serie
   </div>
 </div>
 
-<div class="terminal-panel">
-  <div class="terminal-panel-title">Cobertura Completa — Todas as 17 Séries SGS</div>
-  <div class="terminal-panel-sub">Volume de observações, janela histórica e último valor oficial por série</div>
-  <DataTable data={cobertura_sgs} rows=20>
-    <Column id=codigo title="Série" fmt=id />
-    <Column id=serie title="Indicador" />
-    <Column id=frequencia title="Frequência" />
-    <Column id=observacoes title="Obs." fmt=num0 />
-    <Column id=data_inicial title="Início" />
-    <Column id=data_final title="Última Data" />
-    <Column id=ultimo_valor title="Último Valor" fmt=num2 />
-  </DataTable>
-</div>
+<ConditionalTable
+  data={cobertura_sgs}
+  title="Cobertura Completa — Todas as 17 Séries SGS"
+  subtitle="Volume histórico, frescor e monitoramento de SLA (alerta em laranja apenas se exceder o prazo de publicação)"
+  minWidth="740px"
+  columns={[
+    { key: 'codigo', label: 'Série', format: 'id', emphasis: 'muted' },
+    { key: 'serie', label: 'Indicador', format: 'text', emphasis: 'primary' },
+    { key: 'frequencia', label: 'Frequência', format: 'freq', emphasis: 'muted' },
+    { key: 'observacoes', label: 'Obs.', align: 'right', format: 'num0', emphasis: 'muted' },
+    { key: 'data_inicial', label: 'Início', format: 'date', emphasis: 'muted' },
+    { key: 'data_final', label: 'Última Data', format: 'date', emphasis: 'muted', alertCol: 'alerta_atraso' },
+    { key: 'ultimo_valor', label: 'Último Valor', align: 'right', format: 'num2', emphasis: 'primary' },
+    { key: 'sla_status', label: 'SLA', align: 'right', format: 'text', emphasis: 'muted', alertCol: 'alerta_atraso' }
+  ]}
+/>

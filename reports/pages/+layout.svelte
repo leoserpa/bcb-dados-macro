@@ -847,21 +847,21 @@
   }
 
   /* ==================== STANDARD EVIDENCE TABLES ==================== */
-  :global(.terminal-panel:not(.exec-explorer) .table-container),
-  :global(.terminal-panel:not(.exec-explorer) .overflow-auto),
-  :global(.terminal-panel:not(.exec-explorer) .overflow-x-auto) {
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) .table-container),
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) .overflow-auto),
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) .overflow-x-auto) {
     max-inline-size: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  :global(.terminal-panel:not(.exec-explorer) table) {
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) table) {
     background: transparent !important;
     border-collapse: collapse;
     inline-size: 100%;
   }
 
-  :global(.terminal-panel:not(.exec-explorer) thead th) {
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) thead th) {
     position: sticky;
     inset-block-start: 0;
     background: #161616 !important;
@@ -876,7 +876,7 @@
     white-space: nowrap;
   }
 
-  :global(.terminal-panel:not(.exec-explorer) tbody td) {
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) tbody td) {
     font-size: 12px !important;
     color: #d4d4d4 !important;
     border-bottom: 1px solid #202020 !important;
@@ -884,7 +884,7 @@
     white-space: nowrap;
   }
 
-  :global(.terminal-panel:not(.exec-explorer) tbody tr:last-child td) {
+  :global(.terminal-panel:not(.exec-explorer):not(.cond-panel) tbody tr:last-child td) {
     border-bottom: 0 !important;
   }
 

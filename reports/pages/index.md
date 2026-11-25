@@ -255,7 +255,7 @@ base AS (
             WHEN '13522' THEN 'Teto CMN 4,50%'
             WHEN '13762' THEN 'Ref. 80,0% PIB'
             WHEN '4513' THEN '% do PIB'
-            WHEN '5793' THEN 'Acum. 12m PIB'
+            WHEN '5793' THEN 'Meta 0,0% PIB'
             WHEN '11' THEN '% ao dia'
             WHEN '433' THEN 'Var. mensal'
             WHEN '189' THEN 'FGV mensal'
@@ -264,7 +264,7 @@ base AS (
             WHEN '20631' THEN 'R$ milhões'
             WHEN '20714' THEN 'Média % a.a.'
             WHEN '20783' THEN 'Spread médio'
-            WHEN '21082' THEN '% carteira SFN'
+            WHEN '21082' THEN 'Ref. 5,00%'
             ELSE 'US$ milhões'
         END AS referencia,
         CASE
@@ -273,6 +273,9 @@ base AS (
             WHEN v.indicador_id = '13522' AND v.valor < 1.5 THEN 'Abaixo Piso'
             WHEN v.indicador_id = '13522' THEN 'Na Meta'
             WHEN v.indicador_id = '13762' AND v.valor >= 80.0 THEN 'Atenção'
+            WHEN v.indicador_id = '21082' AND v.valor >= 5.0 THEN 'Atenção'
+            WHEN v.indicador_id = '5793' AND v.valor < 0.0 THEN 'Déficit'
+            WHEN v.indicador_id = '5793' THEN 'Superávit'
             ELSE 'Normal'
         END AS situacao
     FROM bcb_macro.vw_macro_latest v
@@ -288,7 +291,7 @@ SELECT
     valor,
     referencia,
     situacao,
-    CASE WHEN situacao IN ('Restritivo', 'Acima Teto', 'Abaixo Piso', 'Atenção') THEN 1 ELSE 0 END AS alerta
+    CASE WHEN situacao IN ('Restritivo', 'Acima Teto', 'Abaixo Piso', 'Atenção', 'Déficit') THEN 1 ELSE 0 END AS alerta
 FROM base
 ORDER BY alerta DESC, CAST(codigo AS INTEGER)
 ```

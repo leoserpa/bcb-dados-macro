@@ -10,10 +10,12 @@
   export let decimals = 2;
   export let signed = false;
   export let icon = 'trend';
+  export let alertCol = null;
 
   $: row = data && data.length > 0 ? data[0] : null;
   $: rawVal = row && value ? row[value] : null;
   $: rawDate = row && dateCol ? row[dateCol] : '';
+  $: isAlert = Boolean(row && alertCol && Number(row[alertCol]) === 1);
 
   function formatValue(v) {
     if (v === null || v === undefined) return '—';
@@ -86,7 +88,7 @@
     </span>
   </div>
 
-  <div class="kpi-value">{formatValue(rawVal)}</div>
+  <div class="kpi-value" class:is-alert={isAlert}>{formatValue(rawVal)}</div>
 
   {#if metaText}
     <div class="kpi-sub">{metaText}</div>
@@ -137,6 +139,10 @@
     line-height: 1.15;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-value.is-alert {
+    color: #ff6b00;
   }
 
   .kpi-sub {

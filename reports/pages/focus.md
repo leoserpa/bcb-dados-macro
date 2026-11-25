@@ -155,6 +155,12 @@ SELECT
     t.mediana_top5,
     t.mediana_geral,
     t.spread_top5_vs_geral AS spread_top5_geral,
+    CASE
+        WHEN (t.indicador = 'Câmbio' AND ROUND(ABS(t.spread_top5_vs_geral), 3) >= 0.05)
+          OR (t.indicador <> 'Câmbio' AND ROUND(ABS(t.spread_top5_vs_geral), 3) >= 0.10)
+        THEN 1
+        ELSE 0
+    END AS alerta_spread,
     t.desvio_top5
 FROM bcb_macro.vw_focus_top5_vs_geral t
 CROSS JOIN ano_atual a
@@ -178,16 +184,18 @@ ORDER BY t.indicador, t.data_referencia
   </DataTable>
 </div>
 
-<div class="terminal-panel">
-  <div class="terminal-panel-title">Focus Top 5 (Médio Prazo) vs Consenso Geral</div>
-  <div class="terminal-panel-sub">Diferença entre as 5 instituições mais assertivas e a mediana geral de mercado</div>
-  <DataTable data={focus_top5_comparativo} rows=16>
-    <Column id=indicador title="Indicador" />
-    <Column id=ano title="Ano" />
-    <Column id=coleta title="Coleta" />
-    <Column id=mediana_top5 title="Top 5" fmt=num2 />
-    <Column id=mediana_geral title="Geral" fmt=num2 />
-    <Column id=spread_top5_geral title="Spread" fmt=num3 />
-    <Column id=desvio_top5 title="Desvio" fmt=num2 />
-  </DataTable>
-</div>
+<ConditionalTable
+  data={focus_top5_comparativo}
+  title="Focus Top 5 (Médio Prazo) vs Consenso Geral"
+  subtitle="Spread em laranja quando Top 5 diverge do consenso (≥ 0,10 em IPCA/Selic/PIB ou ≥ 0,05 em Câmbio)"
+  minWidth="640px"
+  columns={[
+    { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
+    { key: 'ano', label: 'Ano', format: 'id', emphasis: 'muted' },
+    { key: 'coleta', label: 'Coleta', format: 'date', emphasis: 'muted' },
+    { key: 'mediana_top5', label: 'Top 5', align: 'right', format: 'num2', emphasis: 'primary' },
+    { key: 'mediana_geral', label: 'Geral', align: 'right', format: 'num2', emphasis: 'muted' },
+    { key: 'spread_top5_geral', label: 'Spread', align: 'right', format: 'signed3', emphasis: 'muted', alertCol: 'alerta_spread' },
+    { key: 'desvio_top5', label: 'Desvio', align: 'right', format: 'num2', emphasis: 'muted' }
+  ]}
+/>

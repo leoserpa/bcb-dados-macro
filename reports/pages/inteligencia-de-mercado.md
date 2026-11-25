@@ -52,7 +52,8 @@ SELECT
     selic_meta,
     ipca_focus_ano,
     juro_real_ex_ante,
-    regime_monetario
+    regime_monetario,
+    CASE WHEN regime_monetario = 'Restritivo' THEN 1 ELSE 0 END AS alerta_regime
 FROM bcb_macro.vw_macro_regime
 ORDER BY data DESC
 LIMIT 1
@@ -64,6 +65,7 @@ SELECT
     r.cotacao_venda,
     r.vol_anualizada_21d,
     r.zscore_252d,
+    CASE WHEN ABS(r.zscore_252d) >= 2.0 THEN 1 ELSE 0 END AS alerta_zscore,
     f.mediana_base0 AS focus_cambio_atual,
     (r.cotacao_venda / f.mediana_base0 - 1) * 100.0 AS premio_vs_focus_pct
 FROM bcb_macro.ptax_risk_metrics r
@@ -83,8 +85,8 @@ LIMIT 1
 
 <div class="kpi-grid-5">
   <KPITerminalCard data={regime_atual} value="juro_real_ex_ante" dateCol="data" code="JURO REAL" title="Juro Real Ex-Ante" suffix="%" decimals={2} signed={true} subtitle="Selic vs IPCA Focus" icon="percent" />
-  <KPITerminalCard data={regime_atual} value="regime_monetario" dateCol="data" code="REGIME" title="Regime Monetário" subtitle="Classificação automática" icon="bank" />
-  <KPITerminalCard data={ptax_risco_atual} value="zscore_252d" dateCol="data_referencia" code="FX Z-SCORE" title="Desvio PTAX (252d)" suffix="σ" decimals={2} signed={true} subtitle="Distância da média 12m" icon="alert" />
+  <KPITerminalCard data={regime_atual} value="regime_monetario" dateCol="data" code="REGIME" title="Regime Monetário" subtitle="Classificação automática" icon="bank" alertCol="alerta_regime" />
+  <KPITerminalCard data={ptax_risco_atual} value="zscore_252d" dateCol="data_referencia" code="FX Z-SCORE" title="Desvio PTAX (252d)" suffix="σ" decimals={2} signed={true} subtitle="Alerta em |Z| ≥ 2,0σ" icon="alert" alertCol="alerta_zscore" />
   <KPITerminalCard data={ptax_risco_atual} value="vol_anualizada_21d" dateCol="data_referencia" code="VOL 21D" title="Volatilidade PTAX" suffix="%" decimals={2} subtitle="Anualizada (ret. log)" icon="activity" />
   <KPITerminalCard data={ptax_risco_atual} value="premio_vs_focus_pct" dateCol="data_referencia" code="FX GAP" title="Prêmio Spot vs Focus" suffix="%" decimals={2} signed={true} subtitle="PTAX frente ao consenso" icon="dollar" />
 </div>
@@ -120,6 +122,7 @@ cenarios AS (
         selic_meta + CAST('${inputs.choque_selic.value}' AS DOUBLE) AS selic_sim,
         ipca_focus_ano + CAST('${inputs.choque_ipca.value}' AS DOUBLE) AS ipca_sim,
         cotacao_venda * (1 + CAST('${inputs.choque_fx.value}' AS DOUBLE) / 100.0) AS ptax_sim,
+        CAST('${inputs.choque_fx.value}' AS DOUBLE) AS choque_fx_val,
         focus_cambio,
         juro_real_ex_ante AS juro_real_atual
     FROM base
@@ -129,8 +132,10 @@ SELECT
     ipca_sim AS ipca_simulado,
     ((1 + selic_sim / 100.0) / (1 + ipca_sim / 100.0) - 1) * 100.0 AS juro_real_simulado,
     (((1 + selic_sim / 100.0) / (1 + ipca_sim / 100.0) - 1) * 100.0) - juro_real_atual AS delta_juro_real_pp,
+    CASE WHEN ABS((((1 + selic_sim / 100.0) / (1 + ipca_sim / 100.0) - 1) * 100.0) - juro_real_atual) > 0.001 THEN 1 ELSE 0 END AS alerta_delta_juro,
     ptax_sim AS ptax_simulada,
-    (ptax_sim / focus_cambio - 1) * 100.0 AS premio_fx_simulado_pct
+    (ptax_sim / focus_cambio - 1) * 100.0 AS premio_fx_simulado_pct,
+    CASE WHEN ABS(choque_fx_val) > 0.001 THEN 1 ELSE 0 END AS alerta_choque_fx
 FROM cenarios
 ```
 
@@ -141,9 +146,9 @@ FROM cenarios
     <KPITerminalCard data={simulador} value="selic_simulada" code="SIMULAÇÃO" title="Selic Simulada" suffix="%" decimals={2} subtitle="Taxa nominal" icon="percent" />
     <KPITerminalCard data={simulador} value="ipca_simulado" code="SIMULAÇÃO" title="IPCA Simulado" suffix="%" decimals={2} subtitle="Expectativa 12m" icon="trend" />
     <KPITerminalCard data={simulador} value="juro_real_simulado" code="SIMULAÇÃO" title="Juro Real Simulado" suffix="%" decimals={2} signed={true} subtitle="Equação de Fisher" icon="bank" />
-    <KPITerminalCard data={simulador} value="delta_juro_real_pp" code="DELTA" title="Delta Juro Real" suffix=" p.p." decimals={2} signed={true} subtitle="Frente ao atual" icon="flow" />
+    <KPITerminalCard data={simulador} value="delta_juro_real_pp" code="DELTA" title="Delta Juro Real" suffix=" p.p." decimals={2} signed={true} subtitle="Frente ao atual" icon="flow" alertCol="alerta_delta_juro" />
     <KPITerminalCard data={simulador} value="ptax_simulada" code="SIMULAÇÃO" title="PTAX Simulada" prefix="R$ " decimals={4} subtitle="USD/BRL" icon="dollar" />
-    <KPITerminalCard data={simulador} value="premio_fx_simulado_pct" code="DELTA" title="Prêmio vs Focus" suffix="%" decimals={2} signed={true} subtitle="Gap simulado" icon="alert" />
+    <KPITerminalCard data={simulador} value="premio_fx_simulado_pct" code="DELTA" title="Prêmio vs Focus" suffix="%" decimals={2} signed={true} subtitle="Gap simulado" icon="alert" alertCol="alerta_choque_fx" />
   </div>
 </div>
 
@@ -177,7 +182,12 @@ SELECT
         WHEN f.repricing_b1_vs_b0 > 0.01 THEN 'Revisão Altista'
         WHEN f.repricing_b1_vs_b0 < -0.01 THEN 'Revisão Baixista'
         ELSE 'Estável'
-    END AS sinal
+    END AS sinal,
+    CASE
+        WHEN f.repricing_b1_vs_b0 > 0.01 THEN 'alert'
+        WHEN f.repricing_b1_vs_b0 < -0.01 THEN 'neutral'
+        ELSE 'muted'
+    END AS sinal_tone
 FROM bcb_macro.vw_focus_repricing f
 CROSS JOIN ano_atual a
 WHERE TRY_CAST(f.data_referencia AS INTEGER) BETWEEN a.ano AND a.ano + 2
@@ -201,19 +211,21 @@ ORDER BY f.indicador, ano
     />
   </div>
 
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Onde o mercado revisou projeções nos últimos 5 dias úteis?</div>
-    <div class="terminal-panel-sub">Comparativo Focus Base 1 (5d úteis) vs Base 0 (30d) e drift mensal</div>
-    <DataTable data={focus_repricing_tabela} rows=12>
-      <Column id=indicador title="Indicador" />
-      <Column id=ano title="Ano" />
-      <Column id=base_30d title="30d" fmt=num2 />
-      <Column id=base_5d title="5d" fmt=num2 />
-      <Column id=repricing_5d_vs_30d title="Repricing" fmt=num3 />
-      <Column id=drift_30d title="Drift 30d" fmt=num3 />
-      <Column id=sinal title="Sinal" />
-    </DataTable>
-  </div>
+  <ConditionalTable
+    data={focus_repricing_tabela}
+    title="Onde o mercado revisou projeções nos últimos 5 dias úteis?"
+    subtitle="Focus Base 1 (5d) vs Base 0 (30d) · Revisão Altista em destaque laranja"
+    minWidth="560px"
+    columns={[
+      { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
+      { key: 'ano', label: 'Ano', format: 'id', emphasis: 'muted' },
+      { key: 'base_30d', label: '30d', align: 'right', format: 'num2', emphasis: 'muted' },
+      { key: 'base_5d', label: '5d', align: 'right', format: 'num2', emphasis: 'primary' },
+      { key: 'repricing_5d_vs_30d', label: 'Repricing', align: 'right', format: 'signed3' },
+      { key: 'drift_30d', label: 'Drift 30d', align: 'right', format: 'signed3', emphasis: 'muted' },
+      { key: 'sinal', label: 'Sinal', align: 'right', format: 'text', toneCol: 'sinal_tone' }
+    ]}
+  />
 </div>
 
 ```sql vol_ptax_serie
