@@ -132,12 +132,12 @@
   }
 
   .kpi-value {
-    font-family: 'IBM Plex Mono', ui-monospace, monospace;
-    font-size: clamp(19px, 1.85vw, 24px);
+    font-family: 'Inter', 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    font-size: clamp(20px, 1.9vw, 25px);
     font-weight: 700;
     color: #f5f5f5;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     font-variant-numeric: tabular-nums;
   }
 

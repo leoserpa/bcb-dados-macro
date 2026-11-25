@@ -138,7 +138,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700&display=swap"
     rel="stylesheet"
   />
 </svelte:head>
@@ -179,17 +179,17 @@
             popovertarget="bcb-site-menu"
             popovertargetaction="toggle"
             aria-controls="bcb-site-menu"
+            aria-label="Abrir menu de navegação"
             on:click={handleFallbackToggle}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M4 7h16M4 12h16M4 17h16"
                 stroke="currentColor"
-                stroke-width="1.8"
+                stroke-width="1.9"
                 stroke-linecap="round"
               />
             </svg>
-            <span>Menu</span>
           </button>
 
           <ul bind:this={menuEl} id="bcb-site-menu" class="site-menu" popover="auto">
@@ -426,17 +426,14 @@
     anchor-name: --menu-button;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    min-block-size: var(--target-size);
-    min-inline-size: var(--target-size);
-    padding: 6px 12px;
+    justify-content: center;
+    min-block-size: max(36px, var(--target-size));
+    min-inline-size: max(36px, var(--target-size));
+    padding: 0;
     border-radius: 6px;
     border: 1px solid #2a2a2a;
     background: #212121;
     color: #f5f5f5;
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
-    font-size: 12px;
-    font-weight: 500;
     cursor: pointer;
   }
 
