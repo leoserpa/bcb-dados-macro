@@ -43,12 +43,12 @@ WHERE fonte = 'SGS'
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={sgs_domesticos_kpi} value="meta_selic" dateCol="d432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="Evento · % a.a." icon="bank" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="selic_diaria" dateCol="d11" code="SGS 11" title="Taxa Selic Diária" suffix="%" decimals={4} subtitle="Diária · % a.d." icon="trend" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="ibc_br" dateCol="d24364" code="SGS 24364" title="IBC-Br Dessaz." decimals={2} subtitle="Mensal · Índice" icon="activity" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="dbgg_pib" dateCol="d13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="Mensal · % PIB" icon="percent" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="concessoes" dateCol="d20631" code="SGS 20631" title="Concessões Crédito" prefix="R$ " decimals={0} subtitle="Mensal · R$ mi" icon="dollar" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="inadimplencia" dateCol="d21082" code="SGS 21082" title="Inadimplência SFN" suffix="%" decimals={2} subtitle="Mensal · % carteira" icon="alert" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="meta_selic" dateCol="d432" code="SGS 432" title="Meta Selic Copom" suffix="%" decimals={2} subtitle="% a.a." icon="bank" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="selic_diaria" dateCol="d11" code="SGS 11" title="Taxa Selic Diária" suffix="%" decimals={4} subtitle="% a.d." icon="trend" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="ibc_br" dateCol="d24364" code="SGS 24364" title="IBC-Br Dessaz." decimals={2} subtitle="Índice" icon="activity" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="dbgg_pib" dateCol="d13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="% PIB" icon="percent" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="concessoes" dateCol="d20631" code="SGS 20631" title="Concessões Crédito" prefix="R$ " decimals={0} subtitle="R$ mi" icon="dollar" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="inadimplencia" dateCol="d21082" code="SGS 21082" title="Inadimplência SFN" suffix="%" decimals={2} subtitle="% carteira" icon="alert" />
 </div>
 
 ```sql selic_meta

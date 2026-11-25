@@ -84,11 +84,11 @@ LIMIT 1
 ```
 
 <div class="kpi-grid-5">
-  <KPITerminalCard data={regime_atual} value="juro_real_ex_ante" dateCol="data" code="JURO REAL" title="Juro Real Ex-Ante" suffix="%" decimals={2} signed={true} subtitle="Selic vs IPCA Focus" icon="percent" />
-  <KPITerminalCard data={regime_atual} value="regime_monetario" dateCol="data" code="REGIME" title="Regime Monetário" subtitle="Classificação automática" icon="bank" alertCol="alerta_regime" />
-  <KPITerminalCard data={ptax_risco_atual} value="zscore_252d" dateCol="data_referencia" code="FX Z-SCORE" title="Desvio PTAX (252d)" suffix="σ" decimals={2} signed={true} subtitle="Alerta em |Z| ≥ 2,0σ" icon="alert" alertCol="alerta_zscore" />
-  <KPITerminalCard data={ptax_risco_atual} value="vol_anualizada_21d" dateCol="data_referencia" code="VOL 21D" title="Volatilidade PTAX" suffix="%" decimals={2} subtitle="Anualizada (ret. log)" icon="activity" />
-  <KPITerminalCard data={ptax_risco_atual} value="premio_vs_focus_pct" dateCol="data_referencia" code="FX GAP" title="Prêmio Spot vs Focus" suffix="%" decimals={2} signed={true} subtitle="PTAX frente ao consenso" icon="dollar" />
+  <KPITerminalCard data={regime_atual} value="juro_real_ex_ante" dateCol="data" code="JURO REAL" title="Juro Real Ex-Ante" suffix="%" decimals={2} signed={true} subtitle="Selic vs Focus" icon="percent" />
+  <KPITerminalCard data={regime_atual} value="regime_monetario" dateCol="data" code="REGIME" title="Regime Monetário" subtitle="Regime atual" icon="bank" alertCol="alerta_regime" />
+  <KPITerminalCard data={ptax_risco_atual} value="zscore_252d" dateCol="data_referencia" code="FX Z-SCORE" title="Desvio PTAX (252d)" suffix="σ" decimals={2} signed={true} subtitle="Alerta |Z| ≥ 2σ" icon="alert" alertCol="alerta_zscore" />
+  <KPITerminalCard data={ptax_risco_atual} value="vol_anualizada_21d" dateCol="data_referencia" code="VOL 21D" title="Volatilidade PTAX" suffix="%" decimals={2} subtitle="Anualizada 21d" icon="activity" />
+  <KPITerminalCard data={ptax_risco_atual} value="premio_vs_focus_pct" dateCol="data_referencia" code="FX GAP" title="Prêmio Spot vs Focus" suffix="%" decimals={2} signed={true} subtitle="Spot vs Focus" icon="dollar" />
 </div>
 
 ```sql simulador

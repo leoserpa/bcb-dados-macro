@@ -55,12 +55,12 @@ WHERE fonte = 'SGS'
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title="Cotação Compra" prefix="R$ " decimals={4} subtitle="Boletim Fechamento" icon="dollar" />
-  <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title="Cotação Venda" prefix="R$ " decimals={4} subtitle="Boletim Fechamento" icon="dollar" />
-  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Diferença venda - compra" icon="flow" />
-  <KPITerminalCard data={externo_sgs} value="reservas_usd_mi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="$ " decimals={0} subtitle="US$ milhões · Diária" icon="globe" />
-  <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="$ " decimals={2} signed={true} subtitle="US$ milhões · Diária" icon="flow" />
-  <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="$ " decimals={2} signed={true} subtitle="US$ milhões · Diária" icon="flow" />
+  <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title="Cotação Compra" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
+  <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title="Cotação Venda" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
+  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Venda − compra" icon="flow" />
+  <KPITerminalCard data={externo_sgs} value="reservas_usd_mi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="$ " decimals={0} subtitle="US$ mi" icon="globe" />
+  <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="$ " decimals={2} signed={true} subtitle="US$ mi" icon="flow" />
+  <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="$ " decimals={2} signed={true} subtitle="US$ mi" icon="flow" />
 </div>
 
 ```sql ptax_historico

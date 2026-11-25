@@ -43,12 +43,12 @@ WHERE fonte = 'SGS'
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={inflacao_kpis} value="ipca_12m" dateCol="d13522" code="SGS 13522" title="IPCA Acum. 12m" suffix="%" decimals={2} subtitle="Teto CMN: 4,50%" icon="percent" />
-  <KPITerminalCard data={inflacao_kpis} value="ipca_mes" dateCol="d433" code="SGS 433" title="IPCA Mensal" suffix="%" decimals={2} subtitle="Variação mensal IBGE" icon="trend" />
-  <KPITerminalCard data={inflacao_kpis} value="igpm_mes" dateCol="d189" code="SGS 189" title="IGP-M Mensal" suffix="%" decimals={2} subtitle="FGV · contratos" icon="activity" />
-  <KPITerminalCard data={inflacao_kpis} value="desemprego" dateCol="d24369" code="SGS 24369" title="Desocupação (PNAD)" suffix="%" decimals={1} subtitle="Trimestre móvel IBGE" icon="users" />
-  <KPITerminalCard data={inflacao_kpis} value="juros_credito" dateCol="d20714" code="SGS 20714" title="Juros Crédito SFN" suffix="%" decimals={2} subtitle="Taxa média % a.a." icon="bank" />
-  <KPITerminalCard data={inflacao_kpis} value="spread_credito" dateCol="d20783" code="SGS 20783" title="Spread Bancário" suffix=" pp" decimals={2} subtitle="Spread médio operações" icon="flow" />
+  <KPITerminalCard data={inflacao_kpis} value="ipca_12m" dateCol="d13522" code="SGS 13522" title="IPCA Acum. 12m" suffix="%" decimals={2} subtitle="Teto 4,50%" icon="percent" />
+  <KPITerminalCard data={inflacao_kpis} value="ipca_mes" dateCol="d433" code="SGS 433" title="IPCA Mensal" suffix="%" decimals={2} subtitle="IBGE mensal" icon="trend" />
+  <KPITerminalCard data={inflacao_kpis} value="igpm_mes" dateCol="d189" code="SGS 189" title="IGP-M Mensal" suffix="%" decimals={2} subtitle="FGV mensal" icon="activity" />
+  <KPITerminalCard data={inflacao_kpis} value="desemprego" dateCol="d24369" code="SGS 24369" title="Desocupação (PNAD)" suffix="%" decimals={1} subtitle="PNAD IBGE" icon="users" />
+  <KPITerminalCard data={inflacao_kpis} value="juros_credito" dateCol="d20714" code="SGS 20714" title="Juros Crédito SFN" suffix="%" decimals={2} subtitle="Média % a.a." icon="bank" />
+  <KPITerminalCard data={inflacao_kpis} value="spread_credito" dateCol="d20783" code="SGS 20783" title="Spread Bancário" suffix=" pp" decimals={2} subtitle="Spread médio" icon="flow" />
 </div>
 
 ```sql ipca_vs_meta

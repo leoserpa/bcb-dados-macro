@@ -37,7 +37,7 @@
     return String(d).slice(0, 10);
   }
 
-  $: metaText = [subtitle, rawDate ? formatDate(rawDate) : ''].filter(Boolean).join(' · ');
+  $: formattedDate = rawDate ? formatDate(rawDate) : '';
 </script>
 
 <div class="kpi-card" data-code={code || undefined}>
@@ -90,8 +90,15 @@
 
   <div class="kpi-value" class:is-alert={isAlert}>{formatValue(rawVal)}</div>
 
-  {#if metaText}
-    <div class="kpi-sub">{metaText}</div>
+  {#if subtitle || formattedDate}
+    <div class="kpi-sub">
+      {#if subtitle}
+        <span>{subtitle}</span>
+      {/if}
+      {#if formattedDate}
+        <span class="kpi-date">{formattedDate}</span>
+      {/if}
+    </div>
   {/if}
 </div>
 
@@ -146,13 +153,23 @@
   }
 
   .kpi-sub {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 8px;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 11px;
     color: #737373;
-    line-height: 1.3;
+    line-height: 1.35;
+  }
+
+  .kpi-date {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 10.5px;
+    color: #636363;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
   }
 
   @media (max-width: 640px) {

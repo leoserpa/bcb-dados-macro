@@ -55,12 +55,12 @@ LIMIT 1
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={focus_kpi} value="mediana" dateCol="data" code="MEDIANA" title="Mediana Focus" decimals={2} subtitle="Consenso central" icon="trend" />
-  <KPITerminalCard data={focus_kpi} value="media" dateCol="data" code="MÉDIA" title="Média Focus" decimals={2} subtitle="Média institucional" icon="activity" />
-  <KPITerminalCard data={focus_kpi} value="minimo" dateCol="data" code="MÍNIMO" title="Piso das Projeções" decimals={2} subtitle="Cenário mais baixo" icon="flow" />
-  <KPITerminalCard data={focus_kpi} value="maximo" dateCol="data" code="MÁXIMO" title="Teto das Projeções" decimals={2} subtitle="Cenário mais alto" icon="alert" />
-  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" decimals={2} subtitle="Dispersão entre casas" icon="percent" />
-  <KPITerminalCard data={focus_kpi} value="numero_respondentes" dateCol="data" code="AMOSTRA" title="Respondentes" decimals={0} subtitle="Instituições ativas" icon="users" />
+  <KPITerminalCard data={focus_kpi} value="mediana" dateCol="data" code="MEDIANA" title="Mediana Focus" decimals={2} subtitle="Consenso" icon="trend" />
+  <KPITerminalCard data={focus_kpi} value="media" dateCol="data" code="MÉDIA" title="Média Focus" decimals={2} subtitle="Média" icon="activity" />
+  <KPITerminalCard data={focus_kpi} value="minimo" dateCol="data" code="MÍNIMO" title="Piso das Projeções" decimals={2} subtitle="Mínimo" icon="flow" />
+  <KPITerminalCard data={focus_kpi} value="maximo" dateCol="data" code="MÁXIMO" title="Teto das Projeções" decimals={2} subtitle="Máximo" icon="alert" />
+  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" decimals={2} subtitle="Dispersão" icon="percent" />
+  <KPITerminalCard data={focus_kpi} value="numero_respondentes" dateCol="data" code="AMOSTRA" title="Respondentes" decimals={0} subtitle="Instituições" icon="users" />
 </div>
 
 ```sql focus_serie
