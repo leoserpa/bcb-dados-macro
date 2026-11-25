@@ -170,15 +170,15 @@
     inline-size: min(240px, 100%);
     padding: 6px 12px;
     border-radius: 6px;
-    border: 1px solid #2a2a2a;
-    background: #0f0f0f;
+    border: 1px solid #2b2f30;
+    background: #141618;
     color: #f5f5f5;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 12px;
   }
 
   .exec-search::placeholder {
-    color: #575757;
+    color: #63696b;
   }
 
   .exec-search:focus-visible,
@@ -192,8 +192,8 @@
     min-block-size: max(34px, var(--target-size));
     padding: 6px 14px;
     border-radius: 6px;
-    border: 1px solid #2a2a2a;
-    background: #212121;
+    border: 1px solid #2b2f30;
+    background: #191c1d;
     color: #f5f5f5;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 12px;
@@ -203,7 +203,7 @@
   }
 
   .exec-export:hover {
-    background: #2a2a2a;
+    background: #25292b;
   }
 
   .exec-table-scroll {
@@ -226,9 +226,9 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #737373;
-    border-block-end: 1px solid #202020;
-    background: #161616;
+    color: #8a9092;
+    border-block-end: 1px solid #1d2021;
+    background: #0d0e10;
     position: sticky;
     inset-block-start: 0;
   }
@@ -236,7 +236,7 @@
   .exec-table tbody td {
     padding: 10px 10px;
     font-size: 12px;
-    border-block-end: 1px solid #202020;
+    border-block-end: 1px solid #1d2021;
     white-space: nowrap;
   }
 

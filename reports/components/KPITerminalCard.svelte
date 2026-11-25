@@ -95,8 +95,8 @@
 
 <style>
   .kpi-card {
-    background: #161616;
-    border: 1px solid #2a2a2a;
+    background: #0d0e10;
+    border: 1px solid #2b2f30;
     border-radius: 10px;
     padding: 16px 18px;
     display: flex;
