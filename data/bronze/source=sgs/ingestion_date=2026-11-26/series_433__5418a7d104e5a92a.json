@@ -1,0 +1,21 @@
+{
+  "ingestion_date": "2026-11-26",
+  "payload_sha256": "5418a7d104e5a92aedf55e25b6cd5dfe7acf0b4df13f9005a1f73ef0372c2be3",
+  "record_count": 2,
+  "records": [
+    {
+      "data": "01/09/2026",
+      "valor": "0.82"
+    },
+    {
+      "data": "01/10/2026",
+      "valor": "0.14"
+    }
+  ],
+  "request": {
+    "codigo_serie": 433,
+    "data_final": "2026-11-26",
+    "data_inicial": "2026-09-24"
+  },
+  "source": "sgs"
+}
