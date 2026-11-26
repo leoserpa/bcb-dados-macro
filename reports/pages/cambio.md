@@ -44,7 +44,7 @@ LIMIT 1
 
 ```sql externo_sgs
 SELECT
-    MAX(CASE WHEN indicador_id = '13982' THEN valor END) AS reservas_usd_mi,
+    MAX(CASE WHEN indicador_id = '13982' THEN valor / 1000.0 END) AS reservas_usd_bi,
     MAX(CASE WHEN indicador_id = '13982' THEN data_observacao END) AS d13982,
     MAX(CASE WHEN indicador_id = '13967' THEN valor END) AS fluxo_com,
     MAX(CASE WHEN indicador_id = '13967' THEN data_observacao END) AS d13967,
@@ -58,9 +58,9 @@ WHERE fonte = 'SGS'
   <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title="Cotação Compra" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
   <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title="Cotação Venda" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
   <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Venda − compra" icon="flow" />
-  <KPITerminalCard data={externo_sgs} value="reservas_usd_mi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="$ " decimals={0} subtitle="US$ mi" icon="globe" />
-  <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="$ " decimals={2} signed={true} subtitle="US$ mi" icon="flow" />
-  <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="$ " decimals={2} signed={true} subtitle="US$ mi" icon="flow" />
+  <KPITerminalCard data={externo_sgs} value="reservas_usd_bi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="US$ " suffix=" bi" decimals={1} subtitle="Conceito liquidez" icon="globe" />
+  <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="US$ " suffix=" mi" decimals={0} signed={true} subtitle="Fluxo diário" icon="flow" />
+  <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="US$ " suffix=" mi" decimals={0} signed={true} subtitle="Fluxo diário" icon="flow" />
 </div>
 
 ```sql ptax_historico
@@ -127,7 +127,7 @@ LIMIT 10
 WITH limite AS (
     SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie = 13982
 )
-SELECT s.data, s.valor AS reservas_usd_mi
+SELECT s.data, s.valor / 1000.0 AS reservas_usd_bi
 FROM bcb_macro.sgs_series s CROSS JOIN limite l
 WHERE s.codigo_serie = 13982
   AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte_cambio}' AS INTEGER)
@@ -141,7 +141,7 @@ WITH limite AS (
 SELECT
     date_trunc('month', s.data) AS mes,
     s.nome_serie AS segmento,
-    SUM(s.valor) AS fluxo_usd_mi
+    SUM(s.valor) / 1000.0 AS fluxo_usd_bi
 FROM bcb_macro.sgs_series s CROSS JOIN limite l
 WHERE s.codigo_serie IN (13967, 13970)
   AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte_cambio}' AS INTEGER)
@@ -152,28 +152,29 @@ ORDER BY 1, 2
 <div class="terminal-grid-2">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o nível atual das Reservas Internacionais?</div>
-    <div class="terminal-panel-sub">SGS 13982 · Colchão de liquidez externa (US$ milhões)</div>
+    <div class="terminal-panel-sub">SGS 13982 · Colchão de liquidez externa (US$ bilhões)</div>
     <TerminalLineChart
       data={reservas_serie}
       x="data"
-      y="reservas_usd_mi"
+      y="reservas_usd_bi"
       labels={['Reservas Internacionais']}
       colors={['#a6a6a6']}
-      prefix="$ "
-      decimals={0}
+      prefix="US$ "
+      suffix=" bi"
+      decimals={1}
       height="240px"
     />
   </div>
 
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o balanço mensal entre Fluxo Comercial e Financeiro?</div>
-    <div class="terminal-panel-sub">Comercial (laranja) vs Financeiro (cinza) · consolidado mensal em US$ milhões</div>
+    <div class="terminal-panel-sub">Comercial (laranja) vs Financeiro (cinza) · consolidado mensal em US$ bilhões</div>
     <BarChart
       data={fluxo_cambial_mensal}
       x=mes
-      y=fluxo_usd_mi
+      y=fluxo_usd_bi
       series=segmento
-      yFmt=num0
+      yFmt=num1
       type=grouped
       yGridlines=false
       xGridlines=false

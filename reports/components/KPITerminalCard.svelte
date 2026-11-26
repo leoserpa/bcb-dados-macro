@@ -23,8 +23,10 @@
     if (typeof v === 'string') return `${prefix}${v}${suffix}`;
     const num = Number(v);
     if (Number.isNaN(num)) return String(v);
-    const sign = signed && num > 0 ? '+' : '';
-    const formatted = num.toLocaleString('pt-BR', {
+    const epsilon = 0.5 * Math.pow(10, -decimals);
+    const normalized = Math.abs(num) < epsilon ? 0 : num;
+    const sign = normalized < 0 ? '-' : signed && normalized > 0 ? '+' : '';
+    const formatted = Math.abs(normalized).toLocaleString('pt-BR', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     });
@@ -146,6 +148,10 @@
     line-height: 1.15;
     letter-spacing: -0.025em;
     font-variant-numeric: tabular-nums;
+  }
+
+  :global(.kpi-grid-6) .kpi-value {
+    font-size: clamp(18px, 1.45vw, 22px);
   }
 
   .kpi-value.is-alert {

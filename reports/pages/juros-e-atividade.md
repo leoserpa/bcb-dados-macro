@@ -34,7 +34,7 @@ SELECT
     MAX(CASE WHEN indicador_id = '24364' THEN data_observacao END) AS d24364,
     MAX(CASE WHEN indicador_id = '13762' THEN valor END) AS dbgg_pib,
     MAX(CASE WHEN indicador_id = '13762' THEN data_observacao END) AS d13762,
-    MAX(CASE WHEN indicador_id = '20631' THEN valor END) AS concessoes,
+    MAX(CASE WHEN indicador_id = '20631' THEN valor / 1000.0 END) AS concessoes_bi,
     MAX(CASE WHEN indicador_id = '20631' THEN data_observacao END) AS d20631,
     MAX(CASE WHEN indicador_id = '21082' THEN valor END) AS inadimplencia,
     MAX(CASE WHEN indicador_id = '21082' THEN data_observacao END) AS d21082
@@ -47,7 +47,7 @@ WHERE fonte = 'SGS'
   <KPITerminalCard data={sgs_domesticos_kpi} value="selic_diaria" dateCol="d11" code="SGS 11" title="Taxa Selic Diária" suffix="%" decimals={4} subtitle="% a.d." icon="trend" />
   <KPITerminalCard data={sgs_domesticos_kpi} value="ibc_br" dateCol="d24364" code="SGS 24364" title="IBC-Br Dessaz." decimals={2} subtitle="Índice" icon="activity" />
   <KPITerminalCard data={sgs_domesticos_kpi} value="dbgg_pib" dateCol="d13762" code="SGS 13762" title="DBGG / PIB" suffix="%" decimals={2} subtitle="% PIB" icon="percent" />
-  <KPITerminalCard data={sgs_domesticos_kpi} value="concessoes" dateCol="d20631" code="SGS 20631" title="Concessões Crédito" prefix="R$ " decimals={0} subtitle="R$ mi" icon="dollar" />
+  <KPITerminalCard data={sgs_domesticos_kpi} value="concessoes_bi" dateCol="d20631" code="SGS 20631" title="Concessões Crédito" prefix="R$ " suffix=" bi" decimals={1} subtitle="Mensal SFN" icon="dollar" />
   <KPITerminalCard data={sgs_domesticos_kpi} value="inadimplencia" dateCol="d21082" code="SGS 21082" title="Inadimplência SFN" suffix="%" decimals={2} subtitle="% carteira" icon="alert" />
 </div>
 
@@ -119,7 +119,7 @@ ORDER BY s.data
 WITH limite AS (
     SELECT MAX(data) AS max_data FROM bcb_macro.sgs_series WHERE codigo_serie = 20631
 )
-SELECT s.data, s.valor AS concessoes_r_mi
+SELECT s.data, s.valor / 1000.0 AS concessoes_r_bi
 FROM bcb_macro.sgs_series s CROSS JOIN limite l
 WHERE s.codigo_serie = 20631
   AND date_diff('day', s.data, l.max_data) <= CAST('${inputs.horizonte}' AS INTEGER)
@@ -139,8 +139,8 @@ ORDER BY s.data
   </div>
   <div class="terminal-panel">
     <div class="terminal-panel-title">Qual o volume mensal de concessões?</div>
-    <div class="terminal-panel-sub">SGS 20631 · Novas operações (R$ milhões)</div>
-    <BarChart data={concessoes_credito} x=data y=concessoes_r_mi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
+    <div class="terminal-panel-sub">SGS 20631 · Novas operações (R$ bilhões)</div>
+    <BarChart data={concessoes_credito} x=data y=concessoes_r_bi yFmt=num0 yGridlines=false xGridlines=false colorPalette={['#737373']} echartsOptions={{ backgroundColor: 'transparent' }} chartAreaHeight=200 />
   </div>
 </div>
 

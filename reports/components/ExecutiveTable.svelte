@@ -46,14 +46,14 @@
       return `${num.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}%`;
     }
     if (id === '13982') {
-      return `$ ${num.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} mi`;
+      return `US$ ${(num / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} bi`;
     }
     if (id === '20631') {
-      return `R$ ${num.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} mi`;
+      return `R$ ${(num / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} bi`;
     }
     if (id === '13967' || id === '13970') {
-      const sign = num > 0 ? '+' : '';
-      return `${sign}$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} mi`;
+      const sign = num < 0 ? '-' : num > 0 ? '+' : '';
+      return `${sign}US$ ${Math.abs(num).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} mi`;
     }
     if (id === '24364') {
       return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

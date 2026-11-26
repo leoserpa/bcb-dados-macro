@@ -59,7 +59,7 @@ LIMIT 1
   <KPITerminalCard data={focus_kpi} value="media" dateCol="data" code="MÉDIA" title="Média Focus" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Média" icon="activity" />
   <KPITerminalCard data={focus_kpi} value="minimo" dateCol="data" code="MÍNIMO" title="Piso das Projeções" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Mínimo" icon="flow" />
   <KPITerminalCard data={focus_kpi} value="maximo" dateCol="data" code="MÁXIMO" title="Teto das Projeções" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Máximo" icon="alert" />
-  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : ' p.p.'} decimals={2} subtitle="Dispersão" icon="percent" />
+  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : ' pp'} decimals={2} subtitle="Dispersão" icon="percent" />
   <KPITerminalCard data={focus_kpi} value="numero_respondentes" dateCol="data" code="AMOSTRA" title="Respondentes" decimals={0} subtitle="Instituições" icon="users" />
 </div>
 

@@ -258,10 +258,11 @@ base AS (
             WHEN '189' THEN 'FGV mensal'
             WHEN '24369' THEN 'Trim. móvel'
             WHEN '24364' THEN 'Índice dessaz.'
-            WHEN '20631' THEN 'R$ milhões'
+            WHEN '20631' THEN 'R$ bilhões'
             WHEN '20714' THEN 'Média % a.a.'
             WHEN '20783' THEN 'Spread médio'
             WHEN '21082' THEN 'Ref. 5,00%'
+            WHEN '13982' THEN 'US$ bilhões'
             ELSE 'US$ milhões'
         END AS referencia,
         CASE

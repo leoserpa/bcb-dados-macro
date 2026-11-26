@@ -34,8 +34,10 @@
     if (v === null || v === undefined) return '—';
     const num = Number(v);
     if (Number.isNaN(num)) return String(v);
-    const sign = signed && num > 0 ? '+' : '';
-    const formatted = num.toLocaleString('pt-BR', {
+    const epsilon = 0.5 * Math.pow(10, -decimals);
+    const normalized = Math.abs(num) < epsilon ? 0 : num;
+    const sign = normalized < 0 ? '-' : signed && normalized > 0 ? '+' : '';
+    const formatted = Math.abs(normalized).toLocaleString('pt-BR', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     });

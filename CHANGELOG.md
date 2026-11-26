@@ -12,7 +12,8 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o 
 - Este arquivo [CHANGELOG.md](CHANGELOG.md).
 
 ### Alterado
-- Sincronizada a documentação principal ([README.md](README.md), [README.en.md](README.en.md)) e a documentação bilíngue ([docs/pt/](docs/pt/README.md), [docs/en/](docs/en/README.md)) com as 17 séries SGS, Focus Top 5, PTAX `USD,EUR`, os 13 objetos Gold e o dashboard Evidence de 7 páginas.
+- Sincronizada a documentação principal ([README.md](README.md), [README.en.md](README.en.md)) e a documentação bilíngue ([docs/pt/](docs/pt/README.md), [docs/en/](docs/en/README.md)) com as 17 séries SGS, Focus Top 5, PTAX `USD,EUR`, os 13 objetos Gold e o dashboard Evidence de 7 páginas, substituindo diagramas ASCII por fluxogramas Mermaid.
+- Escalonamento visual para bilhões no dashboard Evidence: Reservas Internacionais (`SGS 13982` em `US$ bi`), Concessões de Crédito (`SGS 20631` em `R$ bi`) e Fluxo Cambial Mensal consolidado (`US$ bi`), além de sinal posicionado antes do prefixo monetário (`-US$ 1.279 mi`) e padronização de `pp` nos cartões KPI.
 
 ## [0.1.0] - 2026-11-25
 

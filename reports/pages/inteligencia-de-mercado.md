@@ -146,7 +146,7 @@ FROM cenarios
     <KPITerminalCard data={simulador} value="selic_simulada" code="SIMULAÇÃO" title="Selic Simulada" suffix="%" decimals={2} subtitle="Taxa nominal" icon="percent" />
     <KPITerminalCard data={simulador} value="ipca_simulado" code="SIMULAÇÃO" title="IPCA Simulado" suffix="%" decimals={2} subtitle="Expectativa 12m" icon="trend" />
     <KPITerminalCard data={simulador} value="juro_real_simulado" code="SIMULAÇÃO" title="Juro Real Simulado" suffix="%" decimals={2} signed={true} subtitle="Equação de Fisher" icon="bank" />
-    <KPITerminalCard data={simulador} value="delta_juro_real_pp" code="DELTA" title="Delta Juro Real" suffix=" p.p." decimals={2} signed={true} subtitle="Frente ao atual" icon="flow" alertCol="alerta_delta_juro" />
+    <KPITerminalCard data={simulador} value="delta_juro_real_pp" code="DELTA" title="Delta Juro Real" suffix=" pp" decimals={2} signed={true} subtitle="Frente ao atual" icon="flow" alertCol="alerta_delta_juro" />
     <KPITerminalCard data={simulador} value="ptax_simulada" code="SIMULAÇÃO" title="PTAX Simulada" prefix="R$ " decimals={4} subtitle="USD/BRL" icon="dollar" />
     <KPITerminalCard data={simulador} value="premio_fx_simulado_pct" code="DELTA" title="Prêmio vs Focus" suffix="%" decimals={2} signed={true} subtitle="Gap simulado" icon="alert" alertCol="alerta_choque_fx" />
   </div>
