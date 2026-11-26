@@ -680,15 +680,24 @@
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 12px;
     font-weight: 400;
+    line-height: 1.3;
     letter-spacing: -0.005em;
     color: #737373;
     white-space: nowrap;
   }
 
   :global(.status-chip + .status-chip) {
-    min-block-size: 16px;
-    padding-inline-start: 12px;
-    border-inline-start: 1px solid #2a2a2a;
+    gap: 8px;
+  }
+
+  :global(.status-chip + .status-chip::before) {
+    content: '';
+    display: inline-block;
+    inline-size: 1px;
+    block-size: 14px;
+    margin-inline-end: 4px;
+    background: #2a2a2a;
+    flex-shrink: 0;
   }
 
   :global(.status-chip-accent) {
