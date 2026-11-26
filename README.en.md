@@ -143,7 +143,7 @@ If an upstream source fails, its existing Silver dataset is preserved, the failu
 
 ## Dashboard (Evidence.dev + GitHub Pages)
 
-The `reports/` workspace compiles a static **Evidence.dev** analytical terminal with 7 pages (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus`, and `Linhagem`), 11 SQL sources under `reports/sources/bcb_macro/`, and 4 custom Svelte components (`KPITerminalCard`, `ExecutiveTable`, `ConditionalTable`, `TerminalLineChart`).
+The `reports/` workspace compiles a static **Evidence.dev** analytical terminal with 7 pages (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus`, and `Linhagem`), 11 SQL sources under `reports/sources/bcb_macro/`, and 5 custom Svelte components (`KPITerminalCard`, `ExecutiveTable`, `ConditionalTable`, `TerminalLineChart`, `FilterBar`).
 
 Run or strictly validate locally (Node.js 20+ recommended):
 

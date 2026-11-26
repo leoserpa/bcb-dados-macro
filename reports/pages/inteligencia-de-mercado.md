@@ -9,7 +9,7 @@ title: Inteligência de Mercado & Simulador
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ horizonte_intel: '1825', choque_selic: '0', choque_ipca: '0', choque_fx: '0' }}>
       <ButtonGroup name=horizonte_intel>
         <ButtonGroupItem valueLabel="2 Anos" value="730" />
         <ButtonGroupItem valueLabel="5 Anos" value="1825" default />
@@ -38,10 +38,10 @@ title: Inteligência de Mercado & Simulador
         <DropdownOption value="5" valueLabel="+5%" />
         <DropdownOption value="10" valueLabel="+10%" />
       </Dropdown>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip"><span class="status-chip-accent">Simulador ativo</span> · DuckDB-WASM</span>
+      <span class="status-chip"><span class="status-chip-accent">{(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'Choque ativo' : 'Cenário base'}</span> · {inputs.horizonte_intel === '730' ? '2 Anos' : inputs.horizonte_intel === '1825' ? '5 Anos' : '10 Anos'}</span>
     </div>
   </div>
 </div>
@@ -140,8 +140,8 @@ FROM cenarios
 ```
 
 <div class="terminal-panel" style="margin-block-end: 18px;">
-  <div class="terminal-panel-title">Qual o impacto imediato dos choques escolhidos?</div>
-  <div class="terminal-panel-sub">Cenário recalculado em tempo real sobre a última posição de Selic, IPCA Focus e PTAX</div>
+  <div class="terminal-panel-title">{(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'Qual o impacto imediato dos choques escolhidos?' : 'Posição atual antes da simulação de choques'}</div>
+  <div class="terminal-panel-sub">{(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'Choques aplicados: Selic ' + inputs.choque_selic.value + ' pp · IPCA ' + inputs.choque_ipca.value + ' pp · Câmbio ' + inputs.choque_fx.value + '%' : 'Cenário base recalculado em tempo real sobre a última posição de Selic, IPCA Focus e PTAX'}</div>
   <div class="kpi-grid-6" style="margin-block-end: 0;">
     <KPITerminalCard data={simulador} value="selic_simulada" code="SIMULAÇÃO" title="Selic Simulada" suffix="%" decimals={2} subtitle="Taxa nominal" icon="percent" />
     <KPITerminalCard data={simulador} value="ipca_simulado" code="SIMULAÇÃO" title="IPCA Simulado" suffix="%" decimals={2} subtitle="Expectativa 12m" icon="trend" />

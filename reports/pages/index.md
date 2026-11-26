@@ -9,7 +9,7 @@ title: Panorama Macroeconômico — BCB
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ horizonte_overview: '1825', base_focus: '0', moeda_overview: 'USD' }}>
       <ButtonGroup name=horizonte_overview>
         <ButtonGroupItem valueLabel="2 Anos" value="730" />
         <ButtonGroupItem valueLabel="5 Anos" value="1825" default />
@@ -26,10 +26,10 @@ title: Panorama Macroeconômico — BCB
         <ButtonGroupItem valueLabel="USD" value="USD" default />
         <ButtonGroupItem valueLabel="EUR" value="EUR" />
       </ButtonGroup>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip"><span class="status-chip-accent">Atualização útil</span> · 09:30 BRT</span>
+      <span class="status-chip"><span class="status-chip-accent">{inputs.moeda_overview}/BRL</span> · {inputs.horizonte_overview === '730' ? '2 Anos' : inputs.horizonte_overview === '1825' ? '5 Anos' : inputs.horizonte_overview === '3650' ? '10 Anos' : 'Máx'} · {inputs.base_focus === '1' ? 'Focus 5d' : 'Focus 30d'}</span>
     </div>
   </div>
 </div>
@@ -134,13 +134,13 @@ ORDER BY p.data_referencia
   </div>
 
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Como a PTAX ({inputs.moeda_overview}/BRL) se comporta frente ao Focus?</div>
-    <div class="terminal-panel-sub">Cotação diária de fechamento (laranja) frente à mediana anual do Focus (cinza, para USD)</div>
+    <div class="terminal-panel-title">{inputs.moeda_overview === 'USD' ? 'Como a PTAX (USD/BRL) se comporta frente ao Focus?' : 'Como evoluiu a PTAX de fechamento (' + inputs.moeda_overview + '/BRL)?'}</div>
+    <div class="terminal-panel-sub">{inputs.moeda_overview === 'USD' ? 'Cotação diária de fechamento (laranja) frente à mediana anual do Focus (cinza)' : 'Cotação diária de fechamento (laranja) · Boletim Focus não publica projeção para ' + inputs.moeda_overview}</div>
     <TerminalLineChart
       data={ptax_vs_focus}
       x="data"
       y={['ptax_venda', 'consenso_focus']}
-      labels={['PTAX Venda', 'Consenso Focus']}
+      labels={['PTAX Venda (' + inputs.moeda_overview + ')', 'Consenso Focus (USD)']}
       colors={['#ff6b00', '#737373']}
       dashedIndices={[1]}
       prefix="R$ "
@@ -321,8 +321,8 @@ ORDER BY v.indicador, v.periodo_referencia
 
 <ConditionalTable
   data={focus_resumo}
-  title="Consenso Boletim Focus — Projeções Anuais (Base {inputs.base_focus})"
-  subtitle="Medianas mais recentes das expectativas de mercado para os próximos 4 exercícios"
+  title={inputs.base_focus === '1' ? 'Consenso Boletim Focus — Projeções Anuais (Base 1 · 5d úteis)' : 'Consenso Boletim Focus — Projeções Anuais (Base 0 · 30d)'}
+  subtitle={inputs.base_focus === '1' ? 'Medianas coletadas nos últimos 5 dias úteis para os próximos 4 exercícios' : 'Medianas coletadas nos últimos 30 dias para os próximos 4 exercícios'}
   minWidth="480px"
   columns={[
     { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },

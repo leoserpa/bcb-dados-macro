@@ -9,17 +9,17 @@ title: Inflação, Trabalho & Transmissão Monetária
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ horizonte_inf: '1825' }}>
       <ButtonGroup name=horizonte_inf>
         <ButtonGroupItem valueLabel="2 Anos" value="730" />
         <ButtonGroupItem valueLabel="5 Anos" value="1825" default />
         <ButtonGroupItem valueLabel="10 Anos" value="3650" />
         <ButtonGroupItem valueLabel="Máx" value="36500" />
       </ButtonGroup>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Meta CMN · <span class="status-chip-accent">3,0% ± 1,5 p.p.</span></span>
+      <span class="status-chip">Janela · {inputs.horizonte_inf === '730' ? '2 Anos' : inputs.horizonte_inf === '1825' ? '5 Anos' : inputs.horizonte_inf === '3650' ? '10 Anos' : 'Máx'} · Meta CMN <span class="status-chip-accent">3,0% ± 1,5 pp</span></span>
     </div>
   </div>
 </div>

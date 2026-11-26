@@ -6,6 +6,12 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o 
 
 ## [Não lançado]
 
+### Adicionado
+- Componente `FilterBar.svelte` com botão **Limpar filtros** em todas as páginas filtráveis (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus`), com destaque em laranja quando algum filtro difere do padrão e restauração instantânea sem recarregar a página.
+
+### Alterado
+- Títulos, subtítulos, rótulos de série e chips de status sincronizados dinamicamente com os filtros ativos em todas as páginas (por exemplo, ao trocar para `EUR` no Panorama, o gráfico PTAX adapta título e subtítulo informando que o Focus não publica projeção para Euro; no Câmbio, KPIs exibem a moeda ativa; no Focus e na Inteligência, títulos e subtítulos refletem base e choques aplicados).
+
 ## [0.1.0] - 2026-11-25
 
 ### Adicionado

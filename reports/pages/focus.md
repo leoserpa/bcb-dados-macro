@@ -9,17 +9,17 @@ title: Expectativas de Mercado — Boletim Focus
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ indicador: 'IPCA', ano_ref: '2026', base_calculo: '0' }}>
       <Dropdown data={focus_indicadores} name=indicador value=indicador title="Indicador" defaultValue="IPCA" />
       <Dropdown data={focus_anos} name=ano_ref value=data_referencia title="Ano Ref." defaultValue="2026" />
       <ButtonGroup name=base_calculo>
         <ButtonGroupItem valueLabel="Base 0 · 30d" value="0" default />
         <ButtonGroupItem valueLabel="Base 1 · 5d" value="1" />
       </ButtonGroup>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Série selecionada · <span class="status-chip-accent">{inputs.indicador.value} ({inputs.ano_ref.value})</span></span>
+      <span class="status-chip">Série · <span class="status-chip-accent">{inputs.indicador.value} ({inputs.ano_ref.value})</span> · {inputs.base_calculo === '1' ? 'Base 1 (5d)' : 'Base 0 (30d)'}</span>
     </div>
   </div>
 </div>
@@ -80,7 +80,7 @@ ORDER BY data
 <div class="terminal-grid-2">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a mediana frente à média — {inputs.indicador.value} ({inputs.ano_ref.value})?</div>
-    <div class="terminal-panel-sub">Mediana em destaque (laranja) vs média institucional (cinza)</div>
+    <div class="terminal-panel-sub">Mediana em destaque (laranja) vs média institucional (cinza) · {inputs.base_calculo === '1' ? 'Base 1 (5 dias úteis)' : 'Base 0 (30 dias)'}</div>
     <TerminalLineChart
       data={focus_serie}
       x="data"
@@ -95,8 +95,8 @@ ORDER BY data
   </div>
 
   <div class="terminal-panel">
-    <div class="terminal-panel-title">Qual a amplitude entre piso e teto das projeções?</div>
-    <div class="terminal-panel-sub">Mediana (laranja) delimitada pelos extremos mínimo e máximo (cinza)</div>
+    <div class="terminal-panel-title">Qual a amplitude entre piso e teto — {inputs.indicador.value} ({inputs.ano_ref.value})?</div>
+    <div class="terminal-panel-sub">Mediana (laranja) delimitada pelos extremos mínimo e máximo (cinza) · {inputs.base_calculo === '1' ? 'Base 1 (5 dias úteis)' : 'Base 0 (30 dias)'}</div>
     <TerminalLineChart
       data={focus_serie}
       x="data"
@@ -173,8 +173,8 @@ ORDER BY t.indicador, t.data_referencia
 <ConditionalTable
   data={focus_curva}
   marginBottom={true}
-  title="Curva Completa de Expectativas (Base {inputs.base_calculo})"
-  subtitle="Última coleta por indicador e ano de referência nos próximos 5 exercícios"
+  title={inputs.base_calculo === '1' ? 'Curva Completa de Expectativas (Base 1 · 5d úteis)' : 'Curva Completa de Expectativas (Base 0 · 30d)'}
+  subtitle={inputs.base_calculo === '1' ? 'Última coleta dos últimos 5 dias úteis por indicador nos próximos 5 exercícios' : 'Última coleta dos últimos 30 dias por indicador nos próximos 5 exercícios'}
   minWidth="680px"
   columns={[
     { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },

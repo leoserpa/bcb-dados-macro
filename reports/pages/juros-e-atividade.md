@@ -9,17 +9,17 @@ title: Juros, Atividade, Crédito & Fiscal
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ horizonte: '1825' }}>
       <ButtonGroup name=horizonte>
         <ButtonGroupItem valueLabel="2 Anos" value="730" />
         <ButtonGroupItem valueLabel="5 Anos" value="1825" default />
         <ButtonGroupItem valueLabel="10 Anos" value="3650" />
         <ButtonGroupItem valueLabel="Máx" value="36500" />
       </ButtonGroup>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Séries SGS · Histórico desde 2010</span>
+      <span class="status-chip">Séries SGS · <span class="status-chip-accent">{inputs.horizonte === '730' ? '2 Anos' : inputs.horizonte === '1825' ? '5 Anos' : inputs.horizonte === '3650' ? '10 Anos' : 'Máx (desde 2010)'}</span></span>
     </div>
   </div>
 </div>

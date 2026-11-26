@@ -161,7 +161,7 @@ The quality gate runs critical assertions against `bcb_macro.duckdb`:
   - `/focus` (`focus.md`) — Expectativas Focus
   - `/qualidade-e-linhagem` (`qualidade-e-linhagem.md`) — Qualidade & Linhagem
 - **SQL sources (`reports/sources/bcb_macro/`):** 11 queries mirroring `sgs_series`, `focus_expectations`, `focus_top5`, `ptax_daily`, `ptax_risk_metrics`, `vw_macro_latest`, `vw_focus_repricing`, `vw_macro_regime`, `vw_juro_real_completo`, `vw_focus_top5_vs_geral`, and `vw_lakehouse_lineage`.
-- **Custom Svelte components (`reports/components/`):** `KPITerminalCard.svelte`, `ExecutiveTable.svelte`, `ConditionalTable.svelte`, `TerminalLineChart.svelte`.
+- **Custom Svelte components (`reports/components/`):** `KPITerminalCard.svelte`, `ExecutiveTable.svelte`, `ConditionalTable.svelte`, `TerminalLineChart.svelte`, `FilterBar.svelte`.
 
 ## Network, logging, and CI/CD
 

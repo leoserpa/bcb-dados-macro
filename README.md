@@ -143,7 +143,7 @@ Se uma fonte falhar, os dados Silver anteriores dela são preservados, o erro en
 
 ## Dashboard (Evidence.dev + GitHub Pages)
 
-O diretório `reports/` publica um terminal analítico estático em **Evidence.dev** com 7 páginas (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus` e `Linhagem`), 11 consultas SQL em `reports/sources/bcb_macro/` e 4 componentes Svelte customizados (`KPITerminalCard`, `ExecutiveTable`, `ConditionalTable`, `TerminalLineChart`).
+O diretório `reports/` publica um terminal analítico estático em **Evidence.dev** com 7 páginas (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus` e `Linhagem`), 11 consultas SQL em `reports/sources/bcb_macro/` e 5 componentes Svelte customizados (`KPITerminalCard`, `ExecutiveTable`, `ConditionalTable`, `TerminalLineChart`, `FilterBar`).
 
 Para rodar ou validar localmente (Node.js 20+ recomendado):
 

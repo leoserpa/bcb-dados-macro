@@ -161,7 +161,7 @@ O quality gate executa verificações críticas em `bcb_macro.duckdb`:
   - `/focus` (`focus.md`) — Expectativas Focus
   - `/qualidade-e-linhagem` (`qualidade-e-linhagem.md`) — Qualidade & Linhagem
 - **Fontes SQL (`reports/sources/bcb_macro/`):** 11 consultas espelhando `sgs_series`, `focus_expectations`, `focus_top5`, `ptax_daily`, `ptax_risk_metrics`, `vw_macro_latest`, `vw_focus_repricing`, `vw_macro_regime`, `vw_juro_real_completo`, `vw_focus_top5_vs_geral` e `vw_lakehouse_lineage`.
-- **Componentes customizados (`reports/components/`):** `KPITerminalCard.svelte`, `ExecutiveTable.svelte`, `ConditionalTable.svelte`, `TerminalLineChart.svelte`.
+- **Componentes customizados (`reports/components/`):** `KPITerminalCard.svelte`, `ExecutiveTable.svelte`, `ConditionalTable.svelte`, `TerminalLineChart.svelte`, `FilterBar.svelte`.
 
 ## Rede, logs e CI/CD
 

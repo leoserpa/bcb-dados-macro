@@ -9,7 +9,7 @@ title: Câmbio (PTAX) & Setor Externo
   </div>
 
   <div class="controls-bar">
-    <div class="controls-left">
+    <FilterBar defaults={{ moeda_ptax: 'USD', horizonte_cambio: '1825' }}>
       <ButtonGroup name=moeda_ptax>
         <ButtonGroupItem valueLabel="USD — Dólar" value="USD" default />
         <ButtonGroupItem valueLabel="EUR — Euro" value="EUR" />
@@ -21,10 +21,10 @@ title: Câmbio (PTAX) & Setor Externo
         <ButtonGroupItem valueLabel="10 Anos" value="3650" />
         <ButtonGroupItem valueLabel="Máx" value="36500" />
       </ButtonGroup>
-    </div>
+    </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Moeda ativa · <span class="status-chip-accent">{inputs.moeda_ptax}/BRL</span></span>
+      <span class="status-chip">Moeda · <span class="status-chip-accent">{inputs.moeda_ptax}/BRL</span> · {inputs.horizonte_cambio === '365' ? '1 Ano' : inputs.horizonte_cambio === '1825' ? '5 Anos' : inputs.horizonte_cambio === '3650' ? '10 Anos' : 'Máx'}</span>
     </div>
   </div>
 </div>
@@ -55,9 +55,9 @@ WHERE fonte = 'SGS'
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title="Cotação Compra" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
-  <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title="Cotação Venda" prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
-  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title="Spread Compra/Venda" prefix="R$ " decimals={4} subtitle="Venda − compra" icon="flow" />
+  <KPITerminalCard data={ptax_ultima} value="cotacao_compra" dateCol="data_referencia" code="PTAX COMPRA" title={'Cotação Compra (' + inputs.moeda_ptax + ')'} prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
+  <KPITerminalCard data={ptax_ultima} value="cotacao_venda" dateCol="data_referencia" code="PTAX VENDA" title={'Cotação Venda (' + inputs.moeda_ptax + ')'} prefix="R$ " decimals={4} subtitle="Fechamento" icon="dollar" />
+  <KPITerminalCard data={ptax_ultima} value="spread" dateCol="data_referencia" code="SPREAD" title={'Spread (' + inputs.moeda_ptax + ')'} prefix="R$ " decimals={4} subtitle="Venda − compra" icon="flow" />
   <KPITerminalCard data={externo_sgs} value="reservas_usd_bi" dateCol="d13982" code="SGS 13982" title="Reservas Internac." prefix="US$ " suffix=" bi" decimals={1} subtitle="Conceito liquidez" icon="globe" />
   <KPITerminalCard data={externo_sgs} value="fluxo_com" dateCol="d13967" code="SGS 13967" title="Fluxo Comercial" prefix="US$ " suffix=" mi" decimals={0} signed={true} subtitle="Fluxo diário" icon="flow" />
   <KPITerminalCard data={externo_sgs} value="fluxo_fin" dateCol="d13970" code="SGS 13970" title="Fluxo Financeiro" prefix="US$ " suffix=" mi" decimals={0} signed={true} subtitle="Fluxo diário" icon="flow" />
@@ -96,12 +96,12 @@ LIMIT 10
 <div class="terminal-grid-asym">
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como evoluiu a PTAX de fechamento ({inputs.moeda_ptax}/BRL)?</div>
-    <div class="terminal-panel-sub">Taxa oficial de venda publicada pelo Banco Central · priorizando fechamento</div>
+    <div class="terminal-panel-sub">Taxa oficial de venda {inputs.moeda_ptax}/BRL publicada pelo Banco Central · priorizando fechamento</div>
     <TerminalLineChart
       data={ptax_historico}
       x="data"
       y="cotacao_venda"
-      labels={['PTAX Venda']}
+      labels={['PTAX Venda (' + inputs.moeda_ptax + ')']}
       prefix="R$ "
       decimals={2}
       height="325px"
