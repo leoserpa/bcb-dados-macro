@@ -44,11 +44,21 @@ FROM bcb_macro.ptax_daily
 </div>
 
 ```sql lineage_donut
+WITH base AS (
+    SELECT
+        fonte,
+        registros,
+        ROW_NUMBER() OVER (ORDER BY registros DESC) AS rn,
+        registros * 1.0 / SUM(registros) OVER () AS participacao
+    FROM bcb_macro.vw_lakehouse_lineage
+    WHERE tabela IN ('sgs_series', 'focus_expectations', 'focus_top5', 'ptax_quotes')
+)
 SELECT
     fonte,
-    registros
-FROM bcb_macro.vw_lakehouse_lineage
-WHERE tabela IN ('sgs_series', 'focus_expectations', 'focus_top5', 'ptax_quotes')
+    registros,
+    CASE WHEN rn = 1 THEN participacao ELSE 0.0 END AS lider,
+    CASE WHEN rn > 1 THEN participacao ELSE 0.0 END AS demais
+FROM base
 ORDER BY registros DESC
 ```
 
@@ -109,7 +119,26 @@ ORDER BY codigo_serie
   <div class="terminal-panel">
     <div class="terminal-panel-title">Como os registros se distribuem por fonte oficial?</div>
     <div class="terminal-panel-sub">Participação dos quatro conjuntos primários ingeridos na camada Silver · líder em laranja</div>
-    <HorizontalShareBars data={lineage_donut} nameCol="fonte" valueCol="registros" />
+    <BarChart
+      data={lineage_donut}
+      x=fonte
+      y={['lider', 'demais']}
+      type=stacked
+      swapXY=true
+      legend=false
+      labels=true
+      seriesLabels=false
+      stackTotalLabel=true
+      labelPosition=outside
+      labelFmt=pct1
+      yFmt=pct1
+      yAxisLabels=false
+      xGridlines=false
+      yGridlines=false
+      colorPalette={['#ff6b00', '#737373']}
+      echartsOptions={{ backgroundColor: 'transparent' }}
+      chartAreaHeight=210
+    />
   </div>
 
   <div class="terminal-panel">
