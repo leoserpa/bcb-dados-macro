@@ -55,11 +55,11 @@ LIMIT 1
 ```
 
 <div class="kpi-grid-6">
-  <KPITerminalCard data={focus_kpi} value="mediana" dateCol="data" code="MEDIANA" title="Mediana Focus" decimals={2} subtitle="Consenso" icon="trend" />
-  <KPITerminalCard data={focus_kpi} value="media" dateCol="data" code="MÉDIA" title="Média Focus" decimals={2} subtitle="Média" icon="activity" />
-  <KPITerminalCard data={focus_kpi} value="minimo" dateCol="data" code="MÍNIMO" title="Piso das Projeções" decimals={2} subtitle="Mínimo" icon="flow" />
-  <KPITerminalCard data={focus_kpi} value="maximo" dateCol="data" code="MÁXIMO" title="Teto das Projeções" decimals={2} subtitle="Máximo" icon="alert" />
-  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" decimals={2} subtitle="Dispersão" icon="percent" />
+  <KPITerminalCard data={focus_kpi} value="mediana" dateCol="data" code="MEDIANA" title="Mediana Focus" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Consenso" icon="trend" />
+  <KPITerminalCard data={focus_kpi} value="media" dateCol="data" code="MÉDIA" title="Média Focus" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Média" icon="activity" />
+  <KPITerminalCard data={focus_kpi} value="minimo" dateCol="data" code="MÍNIMO" title="Piso das Projeções" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Mínimo" icon="flow" />
+  <KPITerminalCard data={focus_kpi} value="maximo" dateCol="data" code="MÁXIMO" title="Teto das Projeções" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'} decimals={2} subtitle="Máximo" icon="alert" />
+  <KPITerminalCard data={focus_kpi} value="desvio_padrao" dateCol="data" code="DESVIO" title="Desvio-Padrão" prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''} suffix={inputs.indicador.value === 'Câmbio' ? '' : ' p.p.'} decimals={2} subtitle="Dispersão" icon="percent" />
   <KPITerminalCard data={focus_kpi} value="numero_respondentes" dateCol="data" code="AMOSTRA" title="Respondentes" decimals={0} subtitle="Instituições" icon="users" />
 </div>
 
@@ -87,6 +87,8 @@ ORDER BY data
       y={['mediana', 'media']}
       labels={['Mediana', 'Média']}
       colors={['#ff6b00', '#737373']}
+      prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''}
+      suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'}
       decimals={2}
       height="245px"
     />
@@ -102,6 +104,8 @@ ORDER BY data
       labels={['Mediana', 'Mínimo', 'Máximo']}
       colors={['#ff6b00', '#525252', '#525252']}
       dashedIndices={[1, 2]}
+      prefix={inputs.indicador.value === 'Câmbio' ? 'R$ ' : ''}
+      suffix={inputs.indicador.value === 'Câmbio' ? '' : '%'}
       decimals={2}
       height="245px"
     />
