@@ -31,20 +31,68 @@ uv run python -m src.pipelines.quality \
 
 ## Architecture
 
-```text
-BCB SGS (17 series) + Olinda (Focus, Focus Top 5, PTAX)
-        |
-        v
-Bronze (data/bronze/): immutable SHA-256 content-addressed JSON snapshots
-        |
-        v
-Silver (data/silver/): 4 typed ZSTD Parquet datasets (Pydantic v2 + Polars)
-        |
-        v
-Gold (data/gold/bcb_macro.duckdb + 2 Parquets): atomic rebuild (7 tables + 6 views)
-        |
-        v
-Dashboard (reports/): Evidence.dev + DuckDB-WASM -> GitHub Pages
+```mermaid
+flowchart TB
+    subgraph SRC["Public Sources — Central Bank of Brazil"]
+        SGS(["SGS API<br/>17 macro series"])
+        FOCUS(["Olinda Focus<br/>Annual Expectations"])
+        TOP5(["Olinda Focus Top 5<br/>Short · Medium · Long"])
+        PTAX(["Olinda PTAX<br/>USD · EUR Bulletins"])
+    end
+
+    subgraph BRZ_L["Bronze Layer · data/bronze/"]
+        BRZ[("Immutable JSON Snapshots<br/>SHA-256 Hash · Metadata · Atomic Write")]
+    end
+
+    ETL["Validation & Idempotent Upsert<br/>Strict Pydantic v2 · Polars · 7d Lookback"]
+
+    subgraph SLV_L["Silver Layer · data/silver/ (ZSTD Parquet)"]
+        S_SGS[("sgs.parquet<br/>PK: data, codigo_serie")]
+        S_FOC[("focus.parquet<br/>PK: 5 columns")]
+        S_T5[("focus_top5.parquet<br/>PK: 4 columns")]
+        S_PTAX[("ptax.parquet<br/>PK: time, currency, bulletin")]
+    end
+
+    subgraph GLD_L["Gold Layer · data/gold/ (Atomic Rebuild)"]
+        DUCK[("bcb_macro.duckdb<br/>7 tables + 6 analytical views<br/>CHECKPOINT + .replace")]
+    end
+
+    subgraph OUT_L["Export, Quality & Serving"]
+        GPARQ[("Gold ZSTD Parquets<br/>macro_indicators · ptax_daily")]
+        QUAL{{"Quality Gate<br/>src.pipelines.quality<br/>Schema · PK · 17 SGS · Staleness"}}
+        EVID(["Evidence.dev + DuckDB-WASM<br/>7 pages · build:strict · GitHub Pages"])
+    end
+
+    SGS & FOCUS & TOP5 & PTAX --> BRZ
+    BRZ --> ETL
+    ETL --> S_SGS & S_FOC & S_T5 & S_PTAX
+    S_SGS & S_FOC & S_T5 & S_PTAX --> DUCK
+    DUCK --> GPARQ
+    DUCK --> QUAL
+    DUCK --> EVID
+
+    classDef source fill:#1c1f26,stroke:#525252,stroke-width:1.5px,color:#f5f5f5
+    classDef bronze fill:#261a10,stroke:#c27803,stroke-width:1.5px,color:#f5f5f5
+    classDef transform fill:#161616,stroke:#737373,stroke-width:1.5px,stroke-dasharray:4 3,color:#e5e5e5
+    classDef silver fill:#161b22,stroke:#94a3b8,stroke-width:1.5px,color:#f5f5f5
+    classDef gold fill:#291507,stroke:#ff6b00,stroke-width:2.5px,color:#ffffff,font-weight:bold
+    classDef quality fill:#161616,stroke:#a6a6a6,stroke-width:1.5px,color:#f5f5f5
+    classDef serving fill:#ff6b00,stroke:#ff8533,stroke-width:2px,color:#0f0f0f,font-weight:bold
+
+    class SGS,FOCUS,TOP5,PTAX source
+    class BRZ bronze
+    class ETL transform
+    class S_SGS,S_FOC,S_T5,S_PTAX silver
+    class DUCK gold
+    class GPARQ silver
+    class QUAL quality
+    class EVID serving
+
+    style SRC fill:transparent,stroke:#404040,stroke-dasharray:3 3
+    style BRZ_L fill:transparent,stroke:#404040,stroke-dasharray:3 3
+    style SLV_L fill:transparent,stroke:#404040,stroke-dasharray:3 3
+    style GLD_L fill:transparent,stroke:#ff6b00,stroke-dasharray:3 3
+    style OUT_L fill:transparent,stroke:#404040,stroke-dasharray:3 3
 ```
 
 Each run writes content-addressed Bronze JSON snapshots with request metadata, performs idempotent Silver upserts that preserve original `ingested_at` timestamps when business columns are unchanged, and atomically rebuilds the Gold layer (`bcb_macro.tmp.duckdb` + `CHECKPOINT` + `.replace()`) only when Silver changes or the DuckDB file is missing. Design rationales and rejected alternatives are recorded in [docs/decisions/](docs/decisions/README.md).
