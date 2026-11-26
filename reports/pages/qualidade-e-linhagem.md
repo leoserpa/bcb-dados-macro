@@ -46,7 +46,7 @@ FROM bcb_macro.ptax_daily
 ```sql lineage_donut
 WITH base AS (
     SELECT
-        fonte,
+        REPLACE(fonte, ' (boletins)', '') AS fonte,
         registros,
         ROW_NUMBER() OVER (ORDER BY registros DESC) AS rn,
         registros * 1.0 / SUM(registros) OVER () AS participacao
@@ -135,8 +135,9 @@ ORDER BY codigo_serie
       yAxisLabels=false
       xGridlines=false
       yGridlines=false
+      yMax=0.60
       colorPalette={['#ff6b00', '#737373']}
-      echartsOptions={{ backgroundColor: 'transparent' }}
+      echartsOptions={{ backgroundColor: 'transparent', grid: { left: 8, right: 48, containLabel: true } }}
       chartAreaHeight=210
     />
   </div>
