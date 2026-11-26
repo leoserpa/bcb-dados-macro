@@ -1,50 +1,68 @@
 # Tutorial: first run
 
-This tutorial takes you from environment setup to a validated Gold database.
+This tutorial guides you from environment setup to a validated Gold database and a running local dashboard.
 
 ## 1. Set up the environment
 
-From the repository root in PowerShell:
+From the repository root (Linux/macOS shell; PowerShell equivalents work identically):
 
-```powershell
+```bash
 uv python install 3.14
-uv sync --dev
+uv sync --frozen --dev
 ```
 
-## 2. Check the code
+> If your local host only has Python 3.12 installed, pass `--frozen --python 3.12` after `uv run` in the steps below.
 
-```powershell
+## 2. Check code quality and tests
+
+```bash
 uv run ruff check .
 uv run ruff format --check .
-uv run pytest -q
+uv run pytest --cov=src --cov-fail-under=85 -q
 ```
 
-## 3. Download the historical data
+## 3. Download the historical dataset
 
-```powershell
-uv run python -m src.pipelines.run `
-  --start-date 2010-01-01 `
-  --end-date 2026-10-21 `
+```bash
+uv run python -m src.pipelines.run \
+  --start-date 2010-01-01 \
+  --end-date 2026-11-25 \
+  --currency USD,EUR \
   --log-dir logs
 ```
 
-Replace `2026-10-21` with the desired end date. The run writes Bronze snapshots, updates Silver Parquet files, and rebuilds Gold when the data changes.
+Replace `2026-11-25` with your target date (`YYYY-MM-DD`). This run writes Bronze JSON snapshots, updates the 4 Silver Parquet datasets, and builds `data/gold/bcb_macro.duckdb` alongside `macro_indicators.parquet` and `ptax_daily.parquet`.
 
-## 4. Validate the data
+## 4. Validate data quality
 
-```powershell
-uv run python -m src.pipelines.quality `
-  --database data\gold\bcb_macro.duckdb `
-  --as-of-date 2026-10-21 `
+```bash
+uv run python -m src.pipelines.quality \
+  --database data/gold/bcb_macro.duckdb \
+  --as-of-date 2026-11-25 \
   --max-staleness-days 10
 ```
 
-The `passed` field should be `true`.
+The JSON output field `passed` should be `true`.
 
-## 5. Query the tables
+## 5. Query the Gold database
 
-```powershell
-uv run python -c "import duckdb; c=duckdb.connect('data/gold/bcb_macro.duckdb'); print(c.sql('SHOW TABLES'))"
+```bash
+uv run python -c "import duckdb; c=duckdb.connect('data/gold/bcb_macro.duckdb'); print(c.sql('SHOW ALL TABLES'))"
 ```
 
-Portuguese version: [Tutorial: primeira execução](../pt/tutorial.md).
+This lists all 7 tables (`sgs_series`, `focus_expectations`, `focus_top5`, `ptax_quotes`, `macro_indicators`, `ptax_daily`, `ptax_risk_metrics`) and 6 analytical views.
+
+## 6. Start the Evidence dashboard locally (optional)
+
+Requires Node.js 18+ (Node 20 recommended):
+
+```bash
+cd reports
+npm install
+npm run sources
+npm run dev
+```
+
+The local server opens at `http://localhost:3000/bcb-dados-macro`.
+
+Versão em português: [Tutorial: primeira execução](../pt/tutorial.md).
