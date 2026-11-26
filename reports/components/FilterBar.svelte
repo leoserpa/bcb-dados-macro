@@ -87,7 +87,7 @@
     min-block-size: max(34px, var(--target-size, 28px));
     padding: 6px 12px;
     border-radius: 6px;
-    border: 1px solid #262626;
+    border: 1px solid #2a2a2a;
     background: #161616;
     color: #575757;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
@@ -96,11 +96,11 @@
     line-height: 1;
     white-space: nowrap;
     cursor: default;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .filter-reset-btn.is-dirty {
-    border-color: rgba(255, 107, 0, 0.55);
+    border-color: #2a2a2a;
     background: #212121;
     color: #ff6b00;
     font-weight: 600;
@@ -108,9 +108,8 @@
   }
 
   .filter-reset-btn.is-dirty:hover {
-    background: #2a190d;
-    border-color: #ff6b00;
-    color: #ff8533;
+    background: #2a2a2a;
+    color: #ff6b00;
   }
 
   .filter-reset-btn:focus-visible {
