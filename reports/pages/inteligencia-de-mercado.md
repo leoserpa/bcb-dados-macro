@@ -41,7 +41,7 @@ title: Inteligência de Mercado & Simulador
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip"><span class="status-chip-accent">{(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'Choque ativo' : 'Cenário base'}</span> · {inputs.horizonte_intel === '730' ? '2 Anos' : inputs.horizonte_intel === '1825' ? '5 Anos' : '10 Anos'}</span>
+      <span class="status-chip"><span class={(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'status-chip-alert' : 'status-chip-accent'}>{(inputs.choque_selic.value !== '0' || inputs.choque_ipca.value !== '0' || inputs.choque_fx.value !== '0') ? 'Choque ativo' : 'Cenário base'}</span><span class="status-chip-sep" aria-hidden="true">/</span>{inputs.horizonte_intel === '730' ? '2 Anos' : inputs.horizonte_intel === '1825' ? '5 Anos' : '10 Anos'}</span>
     </div>
   </div>
 </div>

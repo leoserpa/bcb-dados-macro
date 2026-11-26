@@ -19,7 +19,7 @@ title: Expectativas de Mercado — Boletim Focus
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Série · <span class="status-chip-accent">{inputs.indicador.value} ({inputs.ano_ref.value})</span> · {inputs.base_calculo === '1' ? 'Base 1 (5d)' : 'Base 0 (30d)'}</span>
+      <span class="status-chip"><span class="status-chip-accent">{inputs.indicador.value} ({inputs.ano_ref.value})</span><span class="status-chip-sep" aria-hidden="true">/</span>{inputs.base_calculo === '1' ? 'Base 1 (5d)' : 'Base 0 (30d)'}</span>
     </div>
   </div>
 </div>

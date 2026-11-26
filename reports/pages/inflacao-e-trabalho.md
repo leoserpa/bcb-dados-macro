@@ -19,7 +19,7 @@ title: Inflação, Trabalho & Transmissão Monetária
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Janela · {inputs.horizonte_inf === '730' ? '2 Anos' : inputs.horizonte_inf === '1825' ? '5 Anos' : inputs.horizonte_inf === '3650' ? '10 Anos' : 'Máx'} · Meta CMN <span class="status-chip-accent">3,0% ± 1,5 pp</span></span>
+      <span class="status-chip">{inputs.horizonte_inf === '730' ? '2 Anos' : inputs.horizonte_inf === '1825' ? '5 Anos' : inputs.horizonte_inf === '3650' ? '10 Anos' : 'Máx'}<span class="status-chip-sep" aria-hidden="true">/</span>Meta CMN <span class="status-chip-accent">3,0% ± 1,5 pp</span></span>
     </div>
   </div>
 </div>

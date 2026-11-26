@@ -24,7 +24,7 @@ title: Câmbio (PTAX) & Setor Externo
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Moeda · <span class="status-chip-accent">{inputs.moeda_ptax}/BRL</span> · {inputs.horizonte_cambio === '365' ? '1 Ano' : inputs.horizonte_cambio === '1825' ? '5 Anos' : inputs.horizonte_cambio === '3650' ? '10 Anos' : 'Máx'}</span>
+      <span class="status-chip"><span class="status-chip-accent">{inputs.moeda_ptax}/BRL</span><span class="status-chip-sep" aria-hidden="true">/</span>{inputs.horizonte_cambio === '365' ? '1 Ano' : inputs.horizonte_cambio === '1825' ? '5 Anos' : inputs.horizonte_cambio === '3650' ? '10 Anos' : 'Máx'}</span>
     </div>
   </div>
 </div>

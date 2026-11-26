@@ -672,22 +672,39 @@
   :global(.status-chip) {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    min-block-size: 32px;
-    padding: 5px 12px;
-    border-radius: 6px;
-    background: #161616;
-    border: 1px solid #2a2a2a;
-    font-family: 'IBM Plex Mono', ui-monospace, monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: #a6a6a6;
+    gap: 8px;
+    min-block-size: 34px;
+    padding: 0 2px;
+    border: 0;
+    background: transparent;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: #737373;
     white-space: nowrap;
   }
 
+  :global(.status-chip + .status-chip) {
+    min-block-size: 16px;
+    padding-inline-start: 12px;
+    border-inline-start: 1px solid #2a2a2a;
+  }
+
   :global(.status-chip-accent) {
+    color: #e5e5e5;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :global(.status-chip-alert) {
     color: #ff6b00;
     font-weight: 600;
+  }
+
+  :global(.status-chip-sep) {
+    color: #3f3f3f;
+    user-select: none;
   }
 
   /* ==================== BUTTON GROUPS & DROPDOWNS (BLOOMBERG ORANGE) ==================== */

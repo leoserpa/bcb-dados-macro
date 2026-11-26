@@ -29,7 +29,7 @@ title: Panorama Macroeconômico — BCB
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip"><span class="status-chip-accent">{inputs.moeda_overview}/BRL</span> · {inputs.horizonte_overview === '730' ? '2 Anos' : inputs.horizonte_overview === '1825' ? '5 Anos' : inputs.horizonte_overview === '3650' ? '10 Anos' : 'Máx'} · {inputs.base_focus === '1' ? 'Focus 5d' : 'Focus 30d'}</span>
+      <span class="status-chip"><span class="status-chip-accent">{inputs.moeda_overview}/BRL</span><span class="status-chip-sep" aria-hidden="true">/</span>{inputs.horizonte_overview === '730' ? '2 Anos' : inputs.horizonte_overview === '1825' ? '5 Anos' : inputs.horizonte_overview === '3650' ? '10 Anos' : 'Máx'}<span class="status-chip-sep" aria-hidden="true">/</span>{inputs.base_focus === '1' ? 'Focus 5d' : 'Focus 30d'}</span>
     </div>
   </div>
 </div>

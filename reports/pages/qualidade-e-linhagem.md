@@ -10,8 +10,8 @@ title: Qualidade & Linhagem do Lakehouse
 
   <div class="controls-bar">
     <div class="controls-left">
-      <span class="status-chip"><span class="status-chip-accent">Quality Gates OK</span> · Contrato validado</span>
-      <span class="status-chip">Pipeline diário · Seg–Sex 09:30 BRT</span>
+      <span class="status-chip"><span class="status-chip-accent">Quality Gates OK</span><span class="status-chip-sep" aria-hidden="true">/</span>Contrato validado</span>
+      <span class="status-chip">Pipeline diário<span class="status-chip-sep" aria-hidden="true">/</span>Seg–Sex 09:30 BRT</span>
     </div>
   </div>
 </div>

@@ -19,7 +19,7 @@ title: Juros, Atividade, Crédito & Fiscal
     </FilterBar>
 
     <div class="controls-right">
-      <span class="status-chip">Séries SGS · <span class="status-chip-accent">{inputs.horizonte === '730' ? '2 Anos' : inputs.horizonte === '1825' ? '5 Anos' : inputs.horizonte === '3650' ? '10 Anos' : 'Máx (desde 2010)'}</span></span>
+      <span class="status-chip">Séries SGS<span class="status-chip-sep" aria-hidden="true">/</span><span class="status-chip-accent">{inputs.horizonte === '730' ? '2 Anos' : inputs.horizonte === '1825' ? '5 Anos' : inputs.horizonte === '3650' ? '10 Anos' : 'Desde 2010'}</span></span>
     </div>
   </div>
 </div>
