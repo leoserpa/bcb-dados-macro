@@ -7,10 +7,22 @@
   const inputs = getInputContext();
   let resetKey = 0;
 
+  function isInputObject(entry) {
+    // Evidence's setTrackProxy wraps objects around a function (() => {}), so typeof can be 'function'
+    return (
+      entry !== null &&
+      entry !== undefined &&
+      (typeof entry === 'object' || typeof entry === 'function') &&
+      'value' in entry
+    );
+  }
+
   function readValue(entry) {
     if (entry === null || entry === undefined) return '';
-    if (typeof entry === 'object' && 'value' in entry) {
-      return entry.value === null || entry.value === undefined ? '' : String(entry.value);
+    if (isInputObject(entry)) {
+      const v = entry.value;
+      if (v === null || v === undefined) return '';
+      return String(v);
     }
     return String(entry);
   }
@@ -19,24 +31,24 @@
 
   $: isDirty = defaultEntries.some(([key, defVal]) => {
     if (!$inputs || !(key in $inputs)) return false;
-    return readValue($inputs[key]) !== String(defVal);
+    const val = readValue($inputs[key]);
+    if (!val || val.includes('An Input has not been set')) return false;
+    return val !== String(defVal);
   });
 
   function resetFilters() {
     if (!isDirty) return;
-    inputs.update((store) => {
-      const next = { ...store };
-      for (const [key, defVal] of defaultEntries) {
-        const current = next[key];
-        if (current && typeof current === 'object' && 'value' in current) {
-          // Omit rawValues so remounted Evidence Dropdown re-initializes from defaultValue cleanly
-          next[key] = { value: defVal, label: String(defVal) };
-        } else {
-          next[key] = defVal;
-        }
+    // Mutate properties directly on the existing setTrackProxy store without spreading it
+    for (const [key, defVal] of defaultEntries) {
+      const current = $inputs[key];
+      if (isInputObject(current)) {
+        // Omit rawValues so remounted Dropdown sees ('rawValues' in $inputs[name] === false)
+        // and re-initializes cleanly from defaultValue while keeping .value defined during remount
+        $inputs[key] = { value: defVal, label: String(defVal) };
+      } else {
+        $inputs[key] = defVal;
       }
-      return next;
-    });
+    }
     resetKey += 1;
   }
 </script>
