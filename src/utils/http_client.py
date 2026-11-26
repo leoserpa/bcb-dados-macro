@@ -49,7 +49,7 @@ def create_http_session() -> requests.Session:
     session.headers.update(
         {
             "Accept": "application/json",
-            "User-Agent": "bcb-macro-lakehouse/0.1",
+            "User-Agent": "bcb-macro-lakehouse/0.2",
         }
     )
     session.mount("https://", adapter)

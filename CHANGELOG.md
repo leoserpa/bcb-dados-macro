@@ -6,11 +6,16 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o 
 
 ## [Não lançado]
 
+## [0.2.0] - 2026-11-26
+
 ### Adicionado
-- Componente `FilterBar.svelte` com botão **Limpar filtros** em todas as páginas filtráveis (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus`), com destaque em laranja quando algum filtro difere do padrão e restauração instantânea sem recarregar a página.
+- Componente `FilterBar.svelte` com botão **Limpar filtros** em todas as páginas filtráveis (`Panorama`, `Inteligência`, `Juros`, `Inflação`, `Câmbio`, `Focus`), preservando o `setTrackProxy` do Evidence para restaurar `<ButtonGroup>` e `<Dropdown>` instantaneamente sem recarregar a página.
 
 ### Alterado
-- Títulos, subtítulos, rótulos de série e chips de status sincronizados dinamicamente com os filtros ativos em todas as páginas (por exemplo, ao trocar para `EUR` no Panorama, o gráfico PTAX adapta título e subtítulo informando que o Focus não publica projeção para Euro; no Câmbio, KPIs exibem a moeda ativa; no Focus e na Inteligência, títulos e subtítulos refletem base e choques aplicados).
+- Títulos, subtítulos, rótulos de série e indicadores laterais sincronizados dinamicamente com os filtros ativos em todas as páginas (por exemplo, ao trocar para `EUR` no Panorama, o gráfico PTAX adapta título e subtítulo para refletir a ausência de projeção Focus para Euro; no Câmbio, KPIs exibem a moeda ativa; no Focus e na Inteligência, títulos e subtítulos refletem base e choques aplicados).
+- Substituídas as pílulas monoespaçadas de status por metadados editoriais limpos sem borda (`IBM Plex Sans`, separadores `/` e alinhamento vertical uniforme com divisor `::before` em `Qualidade & Linhagem`).
+- Estilizado o botão **Limpar filtros** com a mesma borda neutra (`#2a2a2a`) e fundo escuro (`#212121`) dos demais botões, destacando apenas o texto e o ícone em `#ff6b00` quando há filtro alterado.
+- Documentação ([README.md](README.md), [README.en.md](README.en.md), [docs/pt/reference.md](docs/pt/reference.md), [docs/en/reference.md](docs/en/reference.md)) atualizada para refletir os 5 componentes Svelte customizados.
 
 ## [0.1.0] - 2026-11-25
 
@@ -31,5 +36,6 @@ O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o 
 - Remoção de fundo interno escuro em gráficos ECharts nos painéis, ajuste de razão entre colunas de gráfico e tabela, prevenção de truncamento nos subtítulos KPI e ajuste de padding/`yMax` no gráfico horizontal de linhagem.
 - Exibição dinâmica de unidades (`%`, `pp`, `R$`, `US$`), posicionamento do sinal negativo antes do prefixo monetário (`-US$ 1.279 mi`) e remoção de `.0` em códigos inteiros do SGS.
 
-[Não lançado]: https://github.com/leoserpa/bcb-dados-macro/compare/v0.1.0...HEAD
+[Não lançado]: https://github.com/leoserpa/bcb-dados-macro/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/leoserpa/bcb-dados-macro/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/leoserpa/bcb-dados-macro/releases/tag/v0.1.0
