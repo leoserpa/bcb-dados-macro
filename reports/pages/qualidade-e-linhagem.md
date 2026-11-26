@@ -167,7 +167,7 @@ ORDER BY codigo_serie
     { key: 'observacoes', label: 'Obs.', align: 'right', format: 'num0', emphasis: 'muted' },
     { key: 'data_inicial', label: 'Início', format: 'date', emphasis: 'muted' },
     { key: 'data_final', label: 'Última Data', format: 'date', emphasis: 'muted', alertCol: 'alerta_atraso' },
-    { key: 'ultimo_valor', label: 'Último Valor', align: 'right', format: 'num2', emphasis: 'primary' },
+    { key: 'ultimo_valor', label: 'Último Valor', align: 'right', format: 'sgsVal', emphasis: 'primary' },
     { key: 'sla_status', label: 'SLA', align: 'right', format: 'text', emphasis: 'muted', alertCol: 'alerta_atraso' }
   ]}
 />

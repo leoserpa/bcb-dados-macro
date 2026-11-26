@@ -90,7 +90,7 @@ SELECT
 FROM bcb_macro.ptax_daily
 WHERE moeda = '${inputs.moeda_ptax}'
 ORDER BY data_referencia DESC
-LIMIT 30
+LIMIT 10
 ```
 
 <div class="terminal-grid-asym">
@@ -108,17 +108,19 @@ LIMIT 30
     />
   </div>
 
-  <div class="terminal-panel">
-    <div class="terminal-panel-title">Últimos Boletins PTAX ({inputs.moeda_ptax})</div>
-    <div class="terminal-panel-sub">30 observações mais recentes com spread compra/venda</div>
-    <DataTable data={ptax_tabela} rows=8>
-      <Column id=data title="Data" />
-      <Column id=tipo_boletim title="Boletim" />
-      <Column id=cotacao_compra title="Compra" fmt=num4 />
-      <Column id=cotacao_venda title="Venda" fmt=num4 />
-      <Column id=spread title="Spread" fmt=num4 />
-    </DataTable>
-  </div>
+  <ConditionalTable
+    data={ptax_tabela}
+    title="Últimos Boletins PTAX ({inputs.moeda_ptax})"
+    subtitle="10 observações mais recentes com spread compra/venda"
+    minWidth="420px"
+    columns={[
+      { key: 'data', label: 'Data', format: 'date', emphasis: 'muted' },
+      { key: 'tipo_boletim', label: 'Boletim', format: 'text', emphasis: 'muted' },
+      { key: 'cotacao_compra', label: 'Compra', align: 'right', format: 'brl4', emphasis: 'muted' },
+      { key: 'cotacao_venda', label: 'Venda', align: 'right', format: 'brl4', emphasis: 'primary' },
+      { key: 'spread', label: 'Spread', align: 'right', format: 'brl4', emphasis: 'muted' }
+    ]}
+  />
 </div>
 
 ```sql reservas_serie

@@ -218,10 +218,10 @@ ORDER BY f.indicador, ano
     columns={[
       { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
       { key: 'ano', label: 'Ano', format: 'id', emphasis: 'muted' },
-      { key: 'base_30d', label: '30d', align: 'right', format: 'num2', emphasis: 'muted' },
-      { key: 'base_5d', label: '5d', align: 'right', format: 'num2', emphasis: 'primary' },
-      { key: 'repricing_5d_vs_30d', label: 'Repricing', align: 'right', format: 'signed3' },
-      { key: 'drift_30d', label: 'Drift 30d', align: 'right', format: 'signed3', emphasis: 'muted' },
+      { key: 'base_30d', label: '30d', align: 'right', format: 'focusVal', emphasis: 'muted' },
+      { key: 'base_5d', label: '5d', align: 'right', format: 'focusVal', emphasis: 'primary' },
+      { key: 'repricing_5d_vs_30d', label: 'Repricing', align: 'right', format: 'focusDelta' },
+      { key: 'drift_30d', label: 'Drift 30d', align: 'right', format: 'focusDelta', emphasis: 'muted' },
       { key: 'sinal', label: 'Sinal', align: 'right', format: 'text', toneCol: 'sinal_tone' }
     ]}
   />

@@ -170,33 +170,36 @@ WHERE t.tipo_calculo = 'M'
 ORDER BY t.indicador, t.data_referencia
 ```
 
-<div class="terminal-panel" style="margin-block-end: 18px;">
-  <div class="terminal-panel-title">Curva Completa de Expectativas (Base {inputs.base_calculo})</div>
-  <div class="terminal-panel-sub">Última coleta por indicador e ano de referência nos próximos 5 exercícios</div>
-  <DataTable data={focus_curva} rows=16>
-    <Column id=indicador title="Indicador" />
-    <Column id=ano_referencia title="Ano" />
-    <Column id=data_coleta title="Coleta" />
-    <Column id=mediana title="Mediana" fmt=num2 />
-    <Column id=media title="Média" fmt=num2 />
-    <Column id=minimo title="Mín." fmt=num2 />
-    <Column id=maximo title="Máx." fmt=num2 />
-    <Column id=respondentes title="Resp." fmt=num0 />
-  </DataTable>
-</div>
+<ConditionalTable
+  data={focus_curva}
+  marginBottom={true}
+  title="Curva Completa de Expectativas (Base {inputs.base_calculo})"
+  subtitle="Última coleta por indicador e ano de referência nos próximos 5 exercícios"
+  minWidth="680px"
+  columns={[
+    { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
+    { key: 'ano_referencia', label: 'Ano', format: 'id', emphasis: 'muted' },
+    { key: 'data_coleta', label: 'Coleta', format: 'date', emphasis: 'muted' },
+    { key: 'mediana', label: 'Mediana', align: 'right', format: 'focusVal', emphasis: 'primary' },
+    { key: 'media', label: 'Média', align: 'right', format: 'focusVal', emphasis: 'muted' },
+    { key: 'minimo', label: 'Mín.', align: 'right', format: 'focusVal', emphasis: 'muted' },
+    { key: 'maximo', label: 'Máx.', align: 'right', format: 'focusVal', emphasis: 'muted' },
+    { key: 'respondentes', label: 'Resp.', align: 'right', format: 'num0', emphasis: 'muted' }
+  ]}
+/>
 
 <ConditionalTable
   data={focus_top5_comparativo}
   title="Focus Top 5 (Médio Prazo) vs Consenso Geral"
-  subtitle="Spread em laranja quando Top 5 diverge do consenso (≥ 0,10 em IPCA/Selic/PIB ou ≥ 0,05 em Câmbio)"
+  subtitle="Spread em laranja quando Top 5 diverge do consenso (≥ 0,10 pp em IPCA/Selic/PIB ou ≥ R$ 0,05 em Câmbio)"
   minWidth="640px"
   columns={[
     { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
     { key: 'ano', label: 'Ano', format: 'id', emphasis: 'muted' },
     { key: 'coleta', label: 'Coleta', format: 'date', emphasis: 'muted' },
-    { key: 'mediana_top5', label: 'Top 5', align: 'right', format: 'num2', emphasis: 'primary' },
-    { key: 'mediana_geral', label: 'Geral', align: 'right', format: 'num2', emphasis: 'muted' },
-    { key: 'spread_top5_geral', label: 'Spread', align: 'right', format: 'signed3', emphasis: 'muted', alertCol: 'alerta_spread' },
-    { key: 'desvio_top5', label: 'Desvio', align: 'right', format: 'num2', emphasis: 'muted' }
+    { key: 'mediana_top5', label: 'Top 5', align: 'right', format: 'focusVal', emphasis: 'primary' },
+    { key: 'mediana_geral', label: 'Geral', align: 'right', format: 'focusVal', emphasis: 'muted' },
+    { key: 'spread_top5_geral', label: 'Spread', align: 'right', format: 'focusDelta', emphasis: 'muted', alertCol: 'alerta_spread' },
+    { key: 'desvio_top5', label: 'Desvio', align: 'right', format: 'focusDesvio', emphasis: 'muted' }
   ]}
 />

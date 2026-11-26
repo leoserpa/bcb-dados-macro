@@ -318,13 +318,15 @@ WHERE v.fonte = 'FOCUS'
 ORDER BY v.indicador, v.periodo_referencia
 ```
 
-<div class="terminal-panel">
-  <div class="terminal-panel-title">Consenso Boletim Focus — Projeções Anuais (Base {inputs.base_focus})</div>
-  <div class="terminal-panel-sub">Medianas mais recentes das expectativas de mercado para os próximos 4 exercícios</div>
-  <DataTable data={focus_resumo} rows=16>
-    <Column id=indicador title="Indicador" />
-    <Column id=ano title="Ano" />
-    <Column id=data_coleta title="Coleta" />
-    <Column id=mediana title="Mediana" fmt=num2 />
-  </DataTable>
-</div>
+<ConditionalTable
+  data={focus_resumo}
+  title="Consenso Boletim Focus — Projeções Anuais (Base {inputs.base_focus})"
+  subtitle="Medianas mais recentes das expectativas de mercado para os próximos 4 exercícios"
+  minWidth="480px"
+  columns={[
+    { key: 'indicador', label: 'Indicador', format: 'text', emphasis: 'primary' },
+    { key: 'ano', label: 'Ano', format: 'id', emphasis: 'muted' },
+    { key: 'data_coleta', label: 'Coleta', format: 'date', emphasis: 'muted' },
+    { key: 'mediana', label: 'Mediana', align: 'right', format: 'focusVal', emphasis: 'primary' }
+  ]}
+/>

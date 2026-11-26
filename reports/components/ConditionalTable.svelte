@@ -14,7 +14,7 @@
       ? Array.from(data)
       : [];
 
-  function formatCell(val, col) {
+  function formatCell(val, col, row) {
     if (val === null || val === undefined) return '—';
     const fmt = col.format || 'text';
     if (fmt === 'date') {
@@ -38,6 +38,65 @@
     }
     const num = Number(val);
     if (Number.isNaN(num)) return String(val);
+
+    if (fmt === 'focusVal') {
+      const ind = String(row[col.indicatorKey || 'indicador'] ?? '');
+      const formatted = num.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return ind === 'Câmbio' ? `R$ ${formatted}` : `${formatted}%`;
+    }
+    if (fmt === 'focusDelta') {
+      const ind = String(row[col.indicatorKey || 'indicador'] ?? '');
+      const sign = num > 0 ? '+' : '';
+      const formatted = num.toLocaleString('pt-BR', {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3,
+      });
+      return ind === 'Câmbio' ? `${sign}${formatted}` : `${sign}${formatted} pp`;
+    }
+    if (fmt === 'focusDesvio') {
+      const ind = String(row[col.indicatorKey || 'indicador'] ?? '');
+      const formatted = num.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return ind === 'Câmbio' ? `R$ ${formatted}` : `${formatted} pp`;
+    }
+    if (fmt === 'sgsVal') {
+      const rawCode = row[col.codeKey || 'codigo'];
+      const nCode = Number(rawCode);
+      const id =
+        !Number.isNaN(nCode) && Number.isInteger(nCode)
+          ? String(nCode)
+          : String(rawCode ?? '');
+      if (id === '11') {
+        return `${num.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}%`;
+      }
+      if (id === '13982') {
+        return `$ ${num.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} mi`;
+      }
+      if (id === '20631') {
+        return `R$ ${num.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} mi`;
+      }
+      if (id === '13967' || id === '13970') {
+        const sign = num > 0 ? '+' : '';
+        return `${sign}$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} mi`;
+      }
+      if (id === '24364') {
+        return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      if (id === '20783') {
+        return `${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} pp`;
+      }
+      const sign = id === '5793' && num > 0 ? '+' : '';
+      return `${sign}${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+    }
+    if (fmt === 'brl4') {
+      return `R$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
+    }
+
     const signed = fmt.startsWith('signed');
     const digits = fmt.endsWith('0') ? 0 : fmt.endsWith('3') ? 3 : fmt.endsWith('4') ? 4 : 2;
     const sign = signed && num > 0 ? '+' : '';
@@ -91,7 +150,7 @@
                 class:tone-primary={tone === 'primary' || tone === 'neutral'}
                 class:tone-muted={tone === 'muted'}
               >
-                {formatCell(row[col.key], col)}
+                {formatCell(row[col.key], col, row)}
               </td>
             {/each}
           </tr>
@@ -124,7 +183,7 @@
 
   .cond-table thead th {
     text-align: left;
-    padding: 9px 10px;
+    padding: 9px 8px;
     font-family: 'IBM Plex Mono', ui-monospace, monospace;
     font-size: 10px;
     font-weight: 600;
@@ -139,7 +198,7 @@
   }
 
   .cond-table tbody td {
-    padding: 9px 10px;
+    padding: 9px 8px;
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 12px;
     color: #d4d4d4;
